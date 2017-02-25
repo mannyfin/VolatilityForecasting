@@ -36,6 +36,7 @@ class ArchModelQ(object):
         arch_q_forecasts = pd.Series(arch_q_forecasts)
         output = mse(observed, arch_q_forecasts)
         SE(observed, arch_q_forecasts)
+        plt.title(str(lags) + " Day Lag's SE: ARCH(" + str(q) + ") ")
 
         # plt.show()
         return output

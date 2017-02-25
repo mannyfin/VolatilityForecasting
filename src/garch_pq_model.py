@@ -35,7 +35,7 @@ class garch_model(object):
         garch_pq_forecasts = pd.Series(garch_pq_forecasts)
         output = mse(observed, garch_pq_forecasts)
         SE(observed,garch_pq_forecasts)
-
+        plt.title(str(lags) + " Day Lag's SE: GARCH("+str(p)+","+str(q)+") ")
         # plt.show()
         return output
 

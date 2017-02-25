@@ -28,39 +28,33 @@ daily_ret = RetCalculator.daily_ret_df(df, df_single_day, num_days_per_year)
 # TODO: add weekly_vol_result
 
 # TODO: add string to each function, such as "GARCH", or "Daily", or "Weekly" for a more generalized plot
+
 """Past as Present"""
 MSE_PastAsPresent = PastAsPresent.today_tomorrow(daily_vol_result)
-plt.title("Daily PastAsPresent MSE is " + str(MSE_PastAsPresent))
 print("Daily PastAsPresent MSE is " + str(MSE_PastAsPresent))
 
 
 """Linear Regression"""
 one_lag_results = LinRegression.lin_reg(daily_vol_result, 1)
-plt.title("Daily 1 Lag's MSE is " + str(one_lag_results[0]))
 print("Daily 1 Lag's MSE is " + str(one_lag_results[0]))
 
 three_lag_results = LinRegression.lin_reg(daily_vol_result, 3)
-plt.title("Daily 3 Lag's MSE is " + str(three_lag_results[0]))
 print("Daily 3 Lag's MSE is " + str(three_lag_results[0]))
 
 five_lag_results = LinRegression.lin_reg(daily_vol_result, 5)
-plt.title("Daily 5 Lag's MSE is " + str(five_lag_results[0]))
 print("Daily 5 Lag's MSE is " + str(five_lag_results[0]))
 
 ten_lag_results = LinRegression.lin_reg(daily_vol_result, 10)
-plt.title("Daily 10 Lag's MSE is " + str(ten_lag_results[0]))
 print("Daily 10 Lag's MSE is " + str(ten_lag_results[0]))
 
 
 """ARCH"""
 daily_arch1_mse = am.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1)
 print("Daily ARCH(1) MSE is :" + str(daily_arch1_mse))
-plt.title("Daily ARCH(1) MSE is :" + str(daily_arch1_mse))
 
 
 """GARCH(p,q)"""
 daily_garch11_mse = gm.garch_pq_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1, 1)
-plt.title("Daily GARCH(1,1) MSE is :" + str(daily_garch11_mse))
 print("Daily GARCH(1,1) MSE is :" + str(daily_garch11_mse))
 
 

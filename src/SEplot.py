@@ -27,25 +27,9 @@ def se_plot(y, y_fit):
     plt.figure(se_plot.counter)
     plt.plot(SE)
     # TODO make LR(n)
-    # plt.title("Squared Error LR(" + str(n) + ") - Daily Volatility" )
+
 
     plt.xlabel("t")
     plt.ylabel("SE")
 
-    # TODO change x-axis to time series
-
-    '''
-    using the formula QL
-    '''
-    # TODO QL DOES NOT WORK DUE TO ZEROES IN DATA SERIES
-    # value = y_fit1.reshape(len(y), 1) / y.reshape(len(y), 1)
-    # Ones = np.ones(len(y))
-    #
-    # (1 / len(y)) * (np.sum(value - np.log(value) - Ones.reshape(len(y), 1)))
-
-    # # this only works with single parameter LR
-    # plt.scatter(x, y, color='black')
-    # plt.plot(x, y_fit1, color='blue', linewidth=3)
-    # plt.xticks(())
-    # plt.yticks(())
 
