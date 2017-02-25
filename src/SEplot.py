@@ -1,21 +1,21 @@
+import matplotlib.pyplot as plt
 
-def se_plot(y, y_fit, n):
+def se_plot(y, y_fit):
     """
-
-    :param y: source data
+     :param y: source data
     :param y_fit: fit from LR
     :param n: the num of trailing days. This is an [int]
-    :return:
+   :return:
     """
     # def se_plot(x, y, y_fit1):
-    import matplotlib.pyplot as plt
+
     import numpy as np
     # Squared error
     SE = (y_fit.reshape(len(y), 1) - y.reshape(len(y), 1)) ** 2
-    plt.figure(n)
+    # plt.figure(n)
     plt.plot(SE)
     # TODO make LR(n)
-    plt.title("Squared Error LR(" + str(n) + ") - Daily Volatility" )
+    # plt.title("Squared Error LR(" + str(n) + ") - Daily Volatility" )
     plt.xlabel("t")
     plt.ylabel("SE")
 

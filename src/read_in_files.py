@@ -16,6 +16,7 @@ def read_in_files(file_names):
     df = pd.DataFrame(file1)
     df.Date = pd.to_datetime(df.Date, format='%m/%d/%Y')
 
+
     # this is a timestamp obj
     df['year'], df['month'] = df['Date'].dt.year, df['Date'].dt.month
     df['date'] = df['Date'].dt.day

@@ -135,3 +135,4 @@ class LinRegression:
     #     print("intercept5 is " + str(c5))
     #     print("slope5 for b5 is " + str(b5))
     #     return c5, b1, b2, b3, b4, b5, MSE5
+

@@ -33,6 +33,8 @@ class garch_model(object):
         garch_pq_forecasts = pd.Series(garch_pq_forecasts)
         output = mse(observed, garch_pq_forecasts)
         SE(observed,garch_pq_forecasts)
+        print("PastAsPresent MSE is :" + str(MSE_oneday))
+
         plt.show()
         return output
 
