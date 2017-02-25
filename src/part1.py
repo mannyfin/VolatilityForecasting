@@ -1,13 +1,9 @@
-from main import daily_vol_result
-from sklearn.metrics import mean_squared_error as mse
-from SEplot import se_plot as SE
-
 
 def today_tomorrow(data):
-    # from main import daily_vol_result
-    from sklearn.metrics import mean_squared_error as mse
-    # from SEplot import se_plot as SE
 
+    from sklearn.metrics import mean_squared_error as mse
+    import matplotlib.pyplot as plt
+    from SEplot import se_plot as SE
     """
     starting prediction point is t1
     end point is tn
@@ -25,11 +21,15 @@ def today_tomorrow(data):
     """
 
     # first vec is the prediction
-    first_vector = data['Volatility_Daily'][:-1]
+    prediction = data['Volatility_Daily'][:-1]
     # second vec is the true values to compare
-    second_vector = data['Volatility_Daily'][1:]
+    observed = data['Volatility_Daily'][1:]
     # mse(y_true, y pred)
-    MSE_oneday = mse(second_vector, first_vector)
+    MSE_oneday = mse(observed, prediction)
     print("MSE one day is :" + str(MSE_oneday))
+
+    """ return a plot of the Squared error"""
+    SE(observed, prediction, 1)
+    plt.title("Squared Error part1 (" + str(1) + ") - Daily Volatility")
 
     return MSE_oneday
