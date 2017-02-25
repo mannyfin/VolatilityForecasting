@@ -61,7 +61,7 @@ class LinRegression:
 
         MSE = mse(y, yfit)
         SE(y, yfit, n)
-        print("MSE is " + str(MSE))
+        print(str(n)+" Lag's "+"MSE is " + str(MSE))
 
         return MSE, b, c
 
