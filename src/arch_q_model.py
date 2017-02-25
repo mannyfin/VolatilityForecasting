@@ -3,38 +3,38 @@ import pandas as pd
 from arch import arch_model
 
 
-class garch_model(object):
+class arch_model(object):
     """
-            garch(p,q) model generalized for daily, weekly and monthly data
+            arch(q) model generalized for daily, weekly and monthly data
 
     :return: weekly_ret
     """
     def __init__(self, df):
         self.df = df
 
-    def garch_pq(ret, p, q,lags):
+    def arch_q(ret, q,lags):
 
         from arch import arch_model
         # The default set of options produces a model with a constant mean, GARCH(1,1) conditional variance and normal errors.
-        garchpq = arch_model(ret,p=p, q=q,lags=lags)
-        res = garchpq.fit(update_freq=1)
+        archq = arch_model(ret,q=q,lags=lags,vol="Arch")
+        res = archq.fit(update_freq=1)
         forecasts = res.forecast()
 
         return forecasts.variance['h.1'][1]
 
-    def garch_pq_mse(data,ret,p,q,lags):
+    def arch_q_mse(data,ret,q,lags):
         from sklearn.metrics import mean_squared_error as mse
         import matplotlib.pyplot as plt
 
 
-        garch_pq_forecasts = []
+        arch_q_forecasts = []
         for i in range(len(ret)-2):
-            garch_pq_forecasts.append(garch_model.garch_pq(ret[i:(i+lags+1)], p, q,lags))
+            arch_q_forecasts.append(arch_model.arch_q(ret[i:(i+lags+1)], q,lags))
         # observed daily vol
         observed = data['Volatility_Daily'][2:]
-        garch_pq_forecasts = pd.Series(garch_pq_forecasts)
-        output = mse(observed, garch_pq_forecasts)
-        SE(observed,garch_pq_forecasts)
+        arch_q_forecasts = pd.Series(arch_q_forecasts)
+        output = mse(observed, arch_q_forecasts)
+        SE(observed,arch_q_forecasts)
 
         plt.show()
         return output
