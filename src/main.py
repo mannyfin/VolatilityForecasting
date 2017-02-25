@@ -11,7 +11,7 @@ from PastAsPresent import *
 from RetCalculator import *
 from sklearn.metrics import mean_squared_error as mse
 from garch_pq_model import garch_model as gm
-from arch_q_model import arch_model as am
+from arch_q_model import ArchModelQ as am
 import numpy as np
 
 
@@ -27,7 +27,7 @@ daily_ret = RetCalculator.daily_ret_df(df, df_single_day, num_days_per_year)
 # TODO: add monthly_vol_result
 # TODO: add weekly_vol_result
 
-
+# TODO: add string to each function, such as "GARCH", or "Daily", or "Weekly" for a more generalized plot
 """Past as Present"""
 MSE_PastAsPresent = PastAsPresent.today_tomorrow(daily_vol_result)
 plt.title("Daily PastAsPresent MSE is " + str(MSE_PastAsPresent))
@@ -53,13 +53,13 @@ print("Daily 10 Lag's MSE is " + str(ten_lag_results[0]))
 
 
 """ARCH"""
-daily_arch1_mse = am.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']),1,1)
+daily_arch1_mse = am.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1)
 print("Daily ARCH(1) MSE is :" + str(daily_arch1_mse))
 plt.title("Daily ARCH(1) MSE is :" + str(daily_arch1_mse))
 
 
 """GARCH(p,q)"""
-daily_garch11_mse = gm.garch_pq_mse(daily_vol_result, np.array(daily_ret['Return_Daily']),1,1,1)
+daily_garch11_mse = gm.garch_pq_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1, 1)
 plt.title("Daily GARCH(1,1) MSE is :" + str(daily_garch11_mse))
 print("Daily GARCH(1,1) MSE is :" + str(daily_garch11_mse))
 
