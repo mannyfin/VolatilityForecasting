@@ -7,7 +7,7 @@ class Volatility(object):
         self.df = df
         
     # @staticmethod
-    def daily_vol(df, num_days_per__yenum_days_per__year):
+    def daily_vol(df, num_days_per_year):
         """
         :pnum_days_per__yearam df: df in the input is a data frame containing data of a pnum_days_per__yearticulnum_days_per__year day
         :pnum_days_per__yearam n: n is the number of trading days in a pnum_days_per__yearticulnum_days_per__year yenum_days_per__year
@@ -17,14 +17,13 @@ class Volatility(object):
         import numpy as np
         vol = np.std(np.log(df.Close) - np.log(df.Close.shift(1)))
         
-        annualized_daily_vol = vol * np.sqrt(num_days_per__yenum_days_per__year)
+        annualized_daily_vol = vol * np.sqrt(num_days_per_year)
         return annualized_daily_vol
     
     
 def daily_vol_calc(df, df_single_day, num_days_per_year):
     import pandas as pd
     # num_days_per_year = [NumDays2008,NumDays2009,NumDays2010,NumDays2011,NumDays2012,NumDays2013]
-    # df is the input, which can be file1...file9
     # TODO LOOP THIS AND ALSO MAKE MORE USE OF THE VOLATILITY CLASS
     daily_vols = []
     for i in range(num_days_per_year[0]):
