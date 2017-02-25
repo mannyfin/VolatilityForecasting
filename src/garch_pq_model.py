@@ -1,3 +1,6 @@
+from SEplot import se_plot as SE
+import pandas as pd
+
 class garch_model(object):
     """
             garch
@@ -14,16 +17,23 @@ class garch_model(object):
         garchpq = arch_model(ret,p=p, q=q,lags=lags)
         res = garchpq.fit(update_freq=1)
         forecasts = res.forecast()
+
         return forecasts.variance['h.1'][1]
 
     def garch_pq_mse(data,ret,p,q,lags):
         from sklearn.metrics import mean_squared_error as mse
+        import matplotlib.pyplot as plt
+
 
         garch_pq_forecasts = []
         for i in range(len(ret)-2):
             garch_pq_forecasts.append(garch_model.garch_pq(ret[i:(i+lags+1)], p, q,lags))
+        # observed daily vol
         observed = data['Volatility_Daily'][2:]
+        garch_pq_forecasts = pd.Series(garch_pq_forecasts)
         output = mse(observed, garch_pq_forecasts)
+        SE(observed,garch_pq_forecasts)
+        plt.show()
         return output
 
 
