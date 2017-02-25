@@ -27,7 +27,7 @@ class PastAsPresent(object):
         observed = data['Volatility_Daily'][1:]
         # mse(y_true, y pred)
         MSE_oneday = mse(observed, prediction)
-        print("MSE one day is :" + str(MSE_oneday))
+        print("PastAsPresent MSE is :" + str(MSE_oneday))
 
         """ return a plot of the Squared error"""
         SE(observed, prediction, 1)

@@ -22,11 +22,12 @@ daily_ret = RetCalculator.daily_ret_df(df, df_single_day, num_days_per_year)
 
 MSE_oneday = PastAsPresent.today_tomorrow(daily_vol_result)
 plt.show()
-one_day_results = LinRegression.one_day_trailing(daily_vol_result)
+one_day_results = LinRegression.lin_reg(daily_vol_result, 1)
 
-three_day_results = LinRegression.three_day_trailing(daily_vol_result)
 
-five_day_results = LinRegression.five_day_trailing(daily_vol_result)
+three_day_results = LinRegression.lin_reg(daily_vol_result, 3)
+
+five_day_results = LinRegression.lin_reg(daily_vol_result, 5)
 plt.show()
 
 daily_garch11_mse = gm.garch_pq_mse(daily_vol_result,np.array(daily_ret['Return_Daily']),1,1,1)
