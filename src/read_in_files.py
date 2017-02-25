@@ -9,7 +9,7 @@ def read_in_files(filenames):
     import pandas as pd
     # change working directory to where the files are located
     # startdir = os.chdir(os.path.join(os.getenv('userprofile'), 'Desktop\\FIN580\\Homework1'))
-    os.chdir(os.path.join(os.getenv('userprofile'), 'Desktop\\FIN580\\Homework1'))
+    os.chdir(os.path.join(os.getenv('userprofile'), 'Desktop\\FIN580\\Homework1\\VolatilityForecasting\\src'))
 
     file1 = pd.read_csv(filenames)
 

@@ -3,7 +3,11 @@ from sklearn.metrics import mean_squared_error as mse
 from SEplot import se_plot as SE
 
 
-def part1_today_tomorrow(data):
+def today_tomorrow(data):
+    # from main import daily_vol_result
+    from sklearn.metrics import mean_squared_error as mse
+    # from SEplot import se_plot as SE
+
     """
     starting prediction point is t1
     end point is tn
@@ -19,6 +23,7 @@ def part1_today_tomorrow(data):
 
     :return:
     """
+
     # first vec is the prediction
     first_vector = data['Volatility_Daily'][:-1]
     # second vec is the true values to compare
