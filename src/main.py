@@ -8,7 +8,7 @@ from Volatility import *
 from linear_regression import *
 import matplotlib.pyplot as plt
 # import linear_regression
-from part1 import *
+from PastAsPresent import *
 from garch_model import *
 from RetCalculator import *
 
@@ -20,7 +20,7 @@ daily_vol_result = daily_vol_calc(df, df_single_day, num_days_per_year)
 daily_ret = RetCalculator.daily_ret_df(df, df_single_day, num_days_per_year)
 #daily_garch_results = garch_model.garch_model(daily_vol_result)
 
-MSE_oneday = part1.today_tomorrow(daily_vol_result)
+MSE_oneday = PastAsPresent.today_tomorrow(daily_vol_result)
 plt.show()
 one_day_results = LinRegression.one_day_trailing(daily_vol_result)
 
