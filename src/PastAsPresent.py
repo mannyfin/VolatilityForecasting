@@ -1,10 +1,4 @@
-class part1(object):
-    """
-            this is part one of HW1
-
-    """
-    # def __init__(self, df):
-    #     self.df = df
+class PastAsPresent(object):
 
     def today_tomorrow(data):
 
@@ -37,6 +31,6 @@ class part1(object):
 
         """ return a plot of the Squared error"""
         SE(observed, prediction, 1)
-        plt.title("Squared Error part1 (" + str(1) + ") - Daily Volatility")
+        plt.title("Squared Error PastAsPresent (" + str(1) + ") - Daily Volatility")
 
         return MSE_oneday

@@ -7,10 +7,11 @@ from NumDaysWeeksMonths import NumDaysWeeksMonths
 from Volatility import *
 from linear_regression import *
 import matplotlib.pyplot as plt
-# import linear_regression
 from PastAsPresent import *
-from garch_model import *
 from RetCalculator import *
+from sklearn.metrics import mean_squared_error as mse
+from garch_pq_model import garch_model as gm
+
 
 filenames = 'AUDUSD.csv'
 #  reads in the files and puts them into dataframes, returns a dataframe called df
@@ -18,7 +19,6 @@ df, df_single_day, df_single_month = read_in_files(filenames)
 days_weeks_months, num_days_per_year = NumDaysWeeksMonths(df=df)
 daily_vol_result = daily_vol_calc(df, df_single_day, num_days_per_year)
 daily_ret = RetCalculator.daily_ret_df(df, df_single_day, num_days_per_year)
-#daily_garch_results = garch_model.garch_model(daily_vol_result)
 
 MSE_oneday = PastAsPresent.today_tomorrow(daily_vol_result)
 plt.show()
@@ -28,6 +28,10 @@ three_day_results = LinRegression.three_day_trailing(daily_vol_result)
 
 five_day_results = LinRegression.five_day_trailing(daily_vol_result)
 plt.show()
+
+daily_garch11_mse = gm.garch_pq_mse(daily_vol_result,np.array(daily_ret['Return_Daily']),1,1,1)
+
+
 print("hi")
 
 
