@@ -1,4 +1,3 @@
-
 # This main file is a sketch of the overall program
 #  if you dont have this installed then here's how to install the module:
 #  conda install -c https://conda.binstar.org/bashtage arch
@@ -9,16 +8,19 @@ from Volatility import *
 from linear_regression import *
 import matplotlib.pyplot as plt
 # import linear_regression
-from part1 import today_tomorrow
+from part1 import *
+from garch_model import *
+from RetCalculator import *
 
 filenames = 'AUDUSD.csv'
 #  reads in the files and puts them into dataframes, returns a dataframe called df
 df, df_single_day, df_single_month = read_in_files(filenames)
 days_weeks_months, num_days_per_year = NumDaysWeeksMonths(df=df)
 daily_vol_result = daily_vol_calc(df, df_single_day, num_days_per_year)
+daily_ret = RetCalculator.daily_ret_df(df, df_single_day, num_days_per_year)
+#daily_garch_results = garch_model.garch_model(daily_vol_result)
 
-MSE_oneday = today_tomorrow(daily_vol_result)
-# part1.today_tomorrow(daily_vol_result)
+MSE_oneday = part1.today_tomorrow(daily_vol_result)
 plt.show()
 one_day_results = LinRegression.one_day_trailing(daily_vol_result)
 
@@ -47,3 +49,4 @@ print("hi")
 #
 # errorplots()
 #
+
