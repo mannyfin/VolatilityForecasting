@@ -8,8 +8,6 @@ class RetCalculator(object):
     def __init__(self, df):
         self.df = df
 
-    @staticmethod
-
     def ret(df):
         """
                 df here contains daily 5-minute data
@@ -54,7 +52,9 @@ class RetCalculator(object):
         for i in range(len(df_single_month)):
             monthly_rets.append(RetCalculator.ret(df_single_month[i]))
 
-        d = {'Date': df.Date.unique(), 'Return_Monthly': monthly_rets}
+        d = {'Index': range(1,len(df_single_month)+1), 'Return_Monthly': monthly_rets}
         monthly_ret_result = pd.DataFrame(d)
 
         return monthly_ret_result
+
+
