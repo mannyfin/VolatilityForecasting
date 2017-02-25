@@ -46,7 +46,7 @@ class RetCalculator(object):
         return daily_ret_result
 
     def monthly_ret_df(df, df_single_month):
-        # import pandas as pd
+        import pandas as pd
         # num_days_per_year = [NumDays2008,NumDays2009,NumDays2010,NumDays2011,NumDays2012,NumDays2013]
 
         monthly_rets = []
