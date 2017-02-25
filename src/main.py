@@ -13,7 +13,7 @@ from part1 import today_tomorrow
 
 filenames = 'AUDUSD.csv'
 #  reads in the files and puts them into dataframes, returns a dataframe called df
-df, df_single_day = read_in_files(filenames)
+df, df_single_day, df_single_month = read_in_files(filenames)
 days_weeks_months, num_days_per_year = NumDaysWeeksMonths(df=df)
 daily_vol_result = daily_vol_calc(df, df_single_day, num_days_per_year)
 

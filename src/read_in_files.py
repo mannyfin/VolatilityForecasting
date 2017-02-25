@@ -27,4 +27,8 @@ def read_in_files(file_names):
     for group in df.groupby(df.Date, sort=False):
         df_single_day.append(group[1])
 
-    return df, df_single_day
+    df_single_month = []
+    for group in df.groupby(['month', 'year'], sort=False):
+        df_single_month.append(group[1])
+
+    return df, df_single_day, df_single_month
