@@ -6,36 +6,54 @@ class RetCalculator(object):
         self.df = df
 
     @staticmethod
-    def daily_ret(df):
+
+    def ret(df):
         """
-                df here is daily 5-minute data
+                df here contains daily 5-minute data
 
         :return: daily_ret
         """
         import numpy as np
-        daily_ret = np.log(df.Close)[len(df.Close)-1] - np.log(df.Close[0])
+        ret = np.mean(np.log(df.Close) - np.log(df.Close.shift(len(df.Close)-1)))
+        return ret
 
-        return daily_ret
 
-    def weekly_ret(df):
-        """
-                df here is weekly 5-minute data
+    def daily_ret_df(df, df_single_day, num_days_per_year):
+        # import pandas as pd
+        # num_days_per_year = [NumDays2008,NumDays2009,NumDays2010,NumDays2011,NumDays2012,NumDays2013]
 
-        :return: weekly_ret
-        """
-        import numpy as np
-        weekly_ret = np.log(df.Close)[len(df.Close)-1] - np.log(df.Close[0])
+        daily_rets = []
+        for i in range(num_days_per_year[0]):
+            daily_rets.append(RetCalculator.ret(df_single_day[i]))
+        for i in range(num_days_per_year[1]):
+            daily_rets.append(RetCalculator.ret(df_single_day[i + num_days_per_year[0]]))
+        for i in range(num_days_per_year[2]):
+            daily_rets.append(RetCalculator.ret(df_single_day[i + num_days_per_year[0] + num_days_per_year[1]]))
+        for i in range(num_days_per_year[3]):
+            daily_rets.append(RetCalculator._ret(
+                df_single_day[i + num_days_per_year[0] + num_days_per_year[1] + num_days_per_year[2]]))
+        for i in range(num_days_per_year[4]):
+            daily_rets.append(RetCalculator.ret(df_single_day[i + num_days_per_year[0] + num_days_per_year[1] +
+                                                                 num_days_per_year[2] + num_days_per_year[3]]))
+        for i in range(num_days_per_year[5]):
+            daily_rets.append(RetCalculator.ret(df_single_day[i + num_days_per_year[0] + num_days_per_year[1] +
+                                                                 num_days_per_year[2] + num_days_per_year[3] +
+                                                                 num_days_per_year[4]]))
 
-        return weekly_ret
+        d = {'Date': df.Date.unique(), 'Return_Daily': daily_rets}
+        daily_ret_result = pd.DataFrame(d)
 
-    def monthly_ret(df):
-        """
-                df here is monthly 5-minute data
+        return daily_ret_result
 
-        :return: monthly_ret
-        """
-        import numpy as np
-        monthly_ret = np.log(df.Close)[len(df.Close)-1] - np.log(df.Close[0])
+    def monthly_ret_df(df, df_single_month):
+        # import pandas as pd
+        # num_days_per_year = [NumDays2008,NumDays2009,NumDays2010,NumDays2011,NumDays2012,NumDays2013]
 
-        return monthly_ret
+        monthly_rets = []
+        for i in range(len(df_single_month)):
+            monthly_rets.append(RetCalculator.ret(df_single_month[i]))
 
+        d = {'Date': df.Date.unique(), 'Return_Monthly': monthly_rets}
+        monthly_ret_result = pd.DataFrame(d)
+
+        return monthly_ret_result
