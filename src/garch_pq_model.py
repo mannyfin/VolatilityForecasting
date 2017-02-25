@@ -36,7 +36,7 @@ class garch_model(object):
         output = mse(observed, garch_pq_forecasts)
         SE(observed,garch_pq_forecasts)
 
-        plt.show()
+        # plt.show()
         return output
 
 

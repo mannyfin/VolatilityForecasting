@@ -36,7 +36,7 @@ class arch_model(object):
         output = mse(observed, arch_q_forecasts)
         SE(observed,arch_q_forecasts)
 
-        plt.show()
+        # plt.show()
         return output
 
 

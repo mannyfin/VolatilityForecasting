@@ -33,7 +33,7 @@ class PastAsPresent(object):
         # SE(observed, prediction, 1)
         SE(observed, prediction)
         plt.title("Squared Error PastAsPresent (" + str(1) + ") - Daily Volatility")
-        plt.show()
+        # plt.show()
 
         return MSE_oneday
 
