@@ -17,32 +17,6 @@ class LinRegression:
     #     # self.data = data
     # TODO FIX LR.FIT POSITIONAL ARG FOR Y
 
-# @staticmethod
-    def one_day_trailing(data):
-        """
-        Compute one day trailing volatility
-        :return: Mean Squared error, slope: b, and y-int: c
-        """
-
-        fitting = sklr
-        data = np.asarray(data['Volatility_Daily'])
-        x = data[:-1]
-        y = data[1:]
-        x = x.reshape(len(x), 1)
-        A = lr()
-        A.fit(x, y)
-        b = A.coef_[0]
-        c = A.intercept_
-        y_fit1 = b * x + c
-        MSE1 = mse(y, y_fit1)
-        print("MSE1 is " + str(MSE1))
-        print("intercept is " + str(c))
-        print("slope is " + str(b))
-
-        SE(y, y_fit1, 1)
-
-        return MSE1, b, c
-
     def lin_reg(data, n):
         data = np.asarray(data['Volatility_Daily'])
         # x = [data[(n-i-1):(-i-1)].reshape(len(data[(n-i-1):(-i-1)]), 1) for i in range(n)]
@@ -61,9 +35,36 @@ class LinRegression:
 
         MSE = mse(y, yfit)
         SE(y, yfit)
-        print(str(n)+" Lag's "+"MSE is " + str(MSE))
+        print(str(n) + " Lag's " + "MSE is " + str(MSE))
 
         return MSE, b, c
+# @staticmethod
+#     def one_day_trailing(data):
+#         """
+#         Compute one day trailing volatility
+#         :return: Mean Squared error, slope: b, and y-int: c
+#         """
+#
+#         fitting = sklr
+#         data = np.asarray(data['Volatility_Daily'])
+#         x = data[:-1]
+#         y = data[1:]
+#         x = x.reshape(len(x), 1)
+#         A = lr()
+#         A.fit(x, y)
+#         b = A.coef_[0]
+#         c = A.intercept_
+#         y_fit1 = b * x + c
+#         MSE1 = mse(y, y_fit1)
+#         print("MSE1 is " + str(MSE1))
+#         print("intercept is " + str(c))
+#         print("slope is " + str(b))
+#
+#         SE(y, y_fit1, 1)
+#
+#         return MSE1, b, c
+
+
 
     # def three_day_trailing(data):
     #     """
