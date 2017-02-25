@@ -60,7 +60,7 @@ class LinRegression:
         yfit = np.matmul(x, b) + c
 
         MSE = mse(y, yfit)
-        SE(y, yfit, n)
+        SE(y, yfit)
         print(str(n)+" Lag's "+"MSE is " + str(MSE))
 
         return MSE, b, c
