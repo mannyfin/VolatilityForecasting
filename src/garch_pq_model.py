@@ -1,5 +1,6 @@
 from SEplot import se_plot as SE
 import pandas as pd
+from Performance_Measure import *
 from arch import arch_model
 
 
@@ -14,18 +15,17 @@ class garch_model(object):
 
     def garch_pq(ret, p, q,lags):
 
-        from arch import arch_model
+        # from arch import arch_model
         # The default set of options produces a model with a constant mean, GARCH(1,1) conditional variance and normal errors.
-        garchpq = arch_model(ret,p=p, q=q,lags=lags)
-        res = garchpq.fit(update_freq=1)
+        garchpq = arch_model(ret, p=p, q=q, lags=lags)
+        res = garchpq.fit(update_freq=1, disp='off', show_warning=False)
         forecasts = res.forecast()
 
         return forecasts.variance['h.1'][1]
 
-    def garch_pq_mse(data,ret,p,q,lags):
+    def garch_pq_mse(data, ret, p, q, lags):
         from sklearn.metrics import mean_squared_error as mse
         import matplotlib.pyplot as plt
-
 
         garch_pq_forecasts = []
         for i in range(len(ret)-2):
@@ -33,11 +33,19 @@ class garch_model(object):
         # observed daily vol
         observed = data['Volatility_Daily'][2:]
         garch_pq_forecasts = pd.Series(garch_pq_forecasts)
-        output = mse(observed, garch_pq_forecasts)
-        SE(observed,garch_pq_forecasts)
+
+        # Instantiate the class and pass the mean_se and quasi_likelihood functions
+        Performance_ = PerformanceMeasure()
+        MSE = Performance_.mean_se(observed=observed, prediction=garch_pq_forecasts)
+        QL = Performance_.quasi_likelihood(observed=observed, prediction=garch_pq_forecasts)
+
+        # output = mse(observed, garch_pq_forecasts)
+
+        SE(observed, garch_pq_forecasts)
+
         plt.title(str(lags) + " Day Lag's SE: GARCH("+str(p)+","+str(q)+") ")
         # plt.show()
-        return output
+        return MSE, QL
 
 
 

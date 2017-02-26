@@ -1,3 +1,5 @@
+from Performance_Measure import *
+
 class PastAsPresent(object):
 
     def today_tomorrow(data):
@@ -25,15 +27,19 @@ class PastAsPresent(object):
         prediction = data['Volatility_Daily'][:-1]
         # second vec is the true values to compare
         observed = data['Volatility_Daily'][1:]
-        # mse(y_true, y pred)
-        MSE_oneday = mse(observed, prediction)
+
+        # Instantiate the class and pass the mean_se and quasi_likelihood functions
+        Performance_ = PerformanceMeasure()
+        MSE = Performance_.mean_se(observed=observed, prediction=prediction)
+        QL = Performance_.quasi_likelihood(observed=observed, prediction=prediction)
+
+        # MSE_oneday = mse(observed, prediction)
         # print("PastAsPresent MSE is :" + str(MSE_oneday))
 
         """ return a plot of the Squared error"""
-        # SE(observed, prediction, 1)
         SE(observed, prediction)
         plt.title("Squared Error PastAsPresent (" + str(1) + ") - Daily Volatility")
         # plt.show()
 
-        return MSE_oneday
+        return MSE, QL
 

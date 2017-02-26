@@ -41,6 +41,12 @@ class RetCalculator(object):
                                                                  num_days_per_year[4]]))
 
         d = {'Date': df.Date.unique(), 'Return_Daily': daily_rets}
+
+        # need to make a comparison between Daily Return and Daily Volatility. For our test sample, only one data point/
+        # in daily volatility is zero, but multiple data points in daily return are zero. We need to compare these and
+        # remove the common elements
+
+
         daily_ret_result = pd.DataFrame(d)
 
         return daily_ret_result

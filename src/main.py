@@ -21,8 +21,8 @@ counter = 0
 #  reads in the files and puts them into dataframes, returns a dataframe called df
 df, df_single_day, df_single_month = read_in_files(filenames)
 days_weeks_months, num_days_per_year = NumDaysWeeksMonths(df=df)
-daily_vol_result = daily_vol_calc(df, df_single_day, num_days_per_year)
-daily_ret = RetCalculator.daily_ret_df(df, df_single_day, num_days_per_year)
+daily_vol_result, daily_ret_ = daily_vol_calc(df, df_single_day, num_days_per_year)
+# daily_ret = RetCalculator.daily_ret_df(df, df_single_day, num_days_per_year)
 
 # TODO: add monthly_vol_result
 # TODO: add weekly_vol_result
@@ -31,31 +31,31 @@ daily_ret = RetCalculator.daily_ret_df(df, df_single_day, num_days_per_year)
 
 """Past as Present"""
 MSE_PastAsPresent = PastAsPresent.today_tomorrow(daily_vol_result)
-print("Daily PastAsPresent MSE is " + str(MSE_PastAsPresent))
+print("Daily PastAsPresent MSE and QL are: " + str(MSE_PastAsPresent[0:2]))
 
 
 """Linear Regression"""
 one_lag_results = LinRegression.lin_reg(daily_vol_result, 1)
-print("Daily 1 Lag's MSE is " + str(one_lag_results[0]))
+print("Daily 1 Lag's MSE and QL are: " + str(one_lag_results[0:2]))
 
 three_lag_results = LinRegression.lin_reg(daily_vol_result, 3)
-print("Daily 3 Lag's MSE is " + str(three_lag_results[0]))
+print("Daily 3 Lag's MSE and QL are: " + str(three_lag_results[0:2]))
 
 five_lag_results = LinRegression.lin_reg(daily_vol_result, 5)
-print("Daily 5 Lag's MSE is " + str(five_lag_results[0]))
+print("Daily 5 Lag's MSE and QL are: " + str(five_lag_results[0:2]))
 
 ten_lag_results = LinRegression.lin_reg(daily_vol_result, 10)
-print("Daily 10 Lag's MSE is " + str(ten_lag_results[0]))
+print("Daily 10 Lag's MSE and QL are: " + str(ten_lag_results[0:2]))
 
 
 """ARCH"""
 daily_arch1_mse = am.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1)
-print("Daily ARCH(1) MSE is :" + str(daily_arch1_mse))
+print("Daily ARCH(1) MSE and QL are:" + str(daily_arch1_mse))
 
 
 """GARCH(p,q)"""
 daily_garch11_mse = gm.garch_pq_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1, 1)
-print("Daily GARCH(1,1) MSE is :" + str(daily_garch11_mse))
+print("Daily GARCH(1,1) MSE and QL are:" + str(daily_garch11_mse))
 
 
 print("hi")

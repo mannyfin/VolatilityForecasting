@@ -1,9 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.linear_model import LinearRegression as sklr
-from sklearn.metrics import mean_squared_error as mse
+
+# from sklearn.metrics import mean_squared_error as mse
 from SEplot import se_plot as SE
 from sklearn.linear_model import LinearRegression as lr
+from Performance_Measure import *
 
 class LinRegression:
     from sklearn.linear_model import LinearRegression as sklr
@@ -33,13 +34,17 @@ class LinRegression:
         c = A.intercept_
         yfit = np.matmul(x, b) + c
 
-        MSE = mse(y, yfit)
+        Performance_ = PerformanceMeasure()
+        MSE = Performance_.mean_se(observed=y, prediction=yfit)
+        QL = Performance_.quasi_likelihood(observed=y, prediction=yfit)
+
+        # MSE = mse(y, yfit)
         SE(y, yfit)
         plt.title(str(n) + " Day Lag's SE: Linear Regression ")
         # print(str(n) + " Lag's " + "MSE is " + str(MSE))
         # plt.show()
 
-        return MSE, b, c
+        return MSE, QL, b, c
 # @staticmethod
 #     def one_day_trailing(data):
 #         """

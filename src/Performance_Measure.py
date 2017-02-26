@@ -1,20 +1,31 @@
 from sklearn.metrics import mean_squared_error as mse
+import numpy as np
 
 
 class PerformanceMeasure(object):
+    QL = 0
+    MSE = 0
 
-    def MeanSE(self, observed,prediction):
-        PerformanceMeasure.MSE = mse(observed, prediction)
-        return PerformanceMeasure.MSE
+    def __init__(self, QL = 0, MSE= 0):
+        self.QL = QL
+        self.MSE = MSE
 
-    def Quasi_Liklihood(self, observed, prediction):
+    def mean_se(self, observed, prediction):
+        self.MSE = mse(observed, prediction)
+        print("MSE is: " + str(self.MSE))
+        return self.MSE
 
-        # TODO QL DOES NOT WORK DUE TO ZEROES IN DATA SERIES
-        #
-        # value = y_fit1.reshape(len(y), 1) / y.reshape(len(y), 1)
-        # Ones = np.ones(len(y))
-        #
-        # PerformanceMeasure.QL = (1 / len(y)) * (np.sum(value - np.log(value) - Ones.reshape(len(y), 1)))
+    def quasi_likelihood(self, observed, prediction):
+        """Note: QL DOES NOT WORK IF THERE ARE ZEROES IN DATA SERIES"""
+
+        value = prediction.reshape(len(observed), 1) / observed.reshape(len(observed), 1)
+        ones = np.ones(len(observed))
+
+        self.QL = (1 / len(observed)) * (np.sum(value - np.log(value) - ones.reshape(len(observed), 1)))
+        print("QL is: " + str(self.QL))
+        return self.QL
+
+
 
         # import numpy as np
         #
@@ -33,7 +44,7 @@ class PerformanceMeasure(object):
         # '''
         # using the formula QL
         # '''
-        # # TODO QL DOES NOT WORK DUE TO ZEROES IN DATA SERIES
+        # #
         # # value = y_fit1.reshape(len(y), 1) / y.reshape(len(y), 1)
         # # Ones = np.ones(len(y))
         # #
@@ -44,4 +55,4 @@ class PerformanceMeasure(object):
         # # plt.plot(x, y_fit1, color='blue', linewidth=3)
         # # plt.xticks(())
         # # plt.yticks(())
-        print("hi")
+        # print("hi")
