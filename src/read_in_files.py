@@ -37,6 +37,7 @@ def read_in_files(file_names):
     for group in df.groupby(['month', 'year'], sort=False):
         df_single_month.append(group[1])
 
+    # these are the chunks of the daily, weekly, and monthly data
     return df, df_single_day, df_single_week, df_single_month
 """
 this code may be useful

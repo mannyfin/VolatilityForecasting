@@ -9,7 +9,6 @@ from linear_regression import *
 import matplotlib.pyplot as plt
 from PastAsPresent import *
 from RetCalculator import *
-from sklearn.metrics import mean_squared_error as mse
 from garch_pq_model import garch_model as gm
 from arch_q_model import ArchModelQ as am
 import numpy as np
@@ -20,8 +19,10 @@ filenames = 'AUDUSD.csv'
 counter = 0
 #  reads in the files and puts them into dataframes, returns a dataframe called df
 df, df_single_day, df_single_week, df_single_month = read_in_files(filenames)
-days_weeks_months, num_days_per_year = NumDaysWeeksMonths(df=df)
+days_weeks_months, num_days_per_year, num_weeks_per_year, num_months_per_year = NumDaysWeeksMonths(df=df)
 daily_vol_result, daily_ret = daily_vol_calc(df, df_single_day, num_days_per_year)
+weekly_vol_result, weekly_ret = daily_vol_calc(df, df_single_week, num_weeks_per_year)
+monthly_vol_result, monthly_ret = daily_vol_calc(df, df_single_month, num_months_per_year)
 # daily_ret = RetCalculator.daily_ret_df(df, df_single_day, num_days_per_year)
 
 # TODO: add monthly_vol_result

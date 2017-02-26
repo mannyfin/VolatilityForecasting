@@ -71,9 +71,12 @@ def daily_vol_calc(df, df_single_day, num_days_per_year):
                                                           num_days_per_year[4]]))
 
     # TODO reformat code to include dvol and dret as a single DataFrame
-
-    dvol = {'Date': df.Date.unique(), 'Volatility_Daily': daily_vols}
-    dret = {'Date': df.Date.unique(), 'Return_Daily': daily_rets}
+    # gives an error for df.Date.unique() when using week and month because the num vals are not the same
+    dvol = {'Date': [df_single_day[i]['Date'][df_single_day[i]['Date'].first_valid_index()] for i in range(0, len(df_single_day))], 'Volatility_Daily': daily_vols}
+    dret = {'Date': [df_single_day[i]['Date'][df_single_day[i]['Date'].first_valid_index()] for i in range(0, len(df_single_day))], 'Return_Daily': daily_rets}
+    len(daily_vols)  # outputs 260
+    len(daily_rets)   # outputs 260
+    len([df_single_day[i]['Date'][df_single_day[i]['Date'].first_valid_index()] for i in range(0, len(df_single_day))])  # outputs 263
 
     daily_vol_result = pd.DataFrame(dvol)
     daily_ret_result = pd.DataFrame(dret)
@@ -92,7 +95,7 @@ def daily_vol_calc(df, df_single_day, num_days_per_year):
     return daily_vol_result, daily_ret_result
 
 
-    # TODO refactor code below
+
     # def monthly_df(df, df_single_month):
     #     # num_days_per_year = [NumDays2008,NumDays2009,NumDays2010,NumDays2011,NumDays2012,NumDays2013]
     #
