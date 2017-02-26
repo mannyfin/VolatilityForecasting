@@ -34,7 +34,7 @@ class Volatility(object):
         return annualized_daily_vol
     
     
-def daily_vol_calc(df, df_single_day, num_days_per_year):
+def daily_vol_calc(df, df_single_time, num_days_per_year):
 
     # num_days_per_year = [NumDays2008,NumDays2009,NumDays2010,NumDays2011,NumDays2012,NumDays2013]
     # TODO LOOP THIS AND ALSO MAKE MORE USE OF THE VOLATILITY CLASS
@@ -43,40 +43,40 @@ def daily_vol_calc(df, df_single_day, num_days_per_year):
     daily_rets = []
 
     for i in range(num_days_per_year[0]):
-        daily_vols.append(Volatility.daily_vol(df_single_day[i], num_days_per_year[0]))
-        daily_rets.append(Volatility.ret(df_single_day[i]))
+        daily_vols.append(Volatility.daily_vol(df_single_time[i], num_days_per_year[0]))
+        daily_rets.append(Volatility.ret(df_single_time[i]))
 
     for i in range(num_days_per_year[1]):
-        daily_vols.append(Volatility.daily_vol(df_single_day[i + num_days_per_year[0]], num_days_per_year[1]))
-        daily_rets.append(Volatility.ret(df_single_day[i + num_days_per_year[0]]))
+        daily_vols.append(Volatility.daily_vol(df_single_time[i + num_days_per_year[0]], num_days_per_year[1]))
+        daily_rets.append(Volatility.ret(df_single_time[i + num_days_per_year[0]]))
 
     for i in range(num_days_per_year[2]):
-        daily_vols.append(Volatility.daily_vol(df_single_day[i + num_days_per_year[0] + num_days_per_year[1]], num_days_per_year[2]))
-        daily_rets.append(Volatility.ret(df_single_day[i + num_days_per_year[0] + num_days_per_year[1]]))
+        daily_vols.append(Volatility.daily_vol(df_single_time[i + num_days_per_year[0] + num_days_per_year[1]], num_days_per_year[2]))
+        daily_rets.append(Volatility.ret(df_single_time[i + num_days_per_year[0] + num_days_per_year[1]]))
 
     for i in range(num_days_per_year[3]):
-        daily_vols.append(Volatility.daily_vol(df_single_day[i + num_days_per_year[0] + num_days_per_year[1] + num_days_per_year[2]], num_days_per_year[3]))
+        daily_vols.append(Volatility.daily_vol(df_single_time[i + num_days_per_year[0] + num_days_per_year[1] + num_days_per_year[2]], num_days_per_year[3]))
         daily_rets.append(Volatility.ret(
-            df_single_day[i + num_days_per_year[0] + num_days_per_year[1] + num_days_per_year[2]]))
+            df_single_time[i + num_days_per_year[0] + num_days_per_year[1] + num_days_per_year[2]]))
 
     for i in range(num_days_per_year[4]):
-        daily_vols.append(Volatility.daily_vol(df_single_day[i + num_days_per_year[0] + num_days_per_year[1] + num_days_per_year[2] + num_days_per_year[3]], num_days_per_year[4]))
-        daily_rets.append(Volatility.ret(df_single_day[i + num_days_per_year[0] + num_days_per_year[1] +
+        daily_vols.append(Volatility.daily_vol(df_single_time[i + num_days_per_year[0] + num_days_per_year[1] + num_days_per_year[2] + num_days_per_year[3]], num_days_per_year[4]))
+        daily_rets.append(Volatility.ret(df_single_time[i + num_days_per_year[0] + num_days_per_year[1] +
                                                           num_days_per_year[2] + num_days_per_year[3]]))
 
     for i in range(num_days_per_year[5]):
-        daily_vols.append(Volatility.daily_vol(df_single_day[i + num_days_per_year[0] + num_days_per_year[1] + num_days_per_year[2] + num_days_per_year[3] + num_days_per_year[4]], num_days_per_year[5]))
-        daily_rets.append(Volatility.ret(df_single_day[i + num_days_per_year[0] + num_days_per_year[1] +
+        daily_vols.append(Volatility.daily_vol(df_single_time[i + num_days_per_year[0] + num_days_per_year[1] + num_days_per_year[2] + num_days_per_year[3] + num_days_per_year[4]], num_days_per_year[5]))
+        daily_rets.append(Volatility.ret(df_single_time[i + num_days_per_year[0] + num_days_per_year[1] +
                                                           num_days_per_year[2] + num_days_per_year[3] +
                                                           num_days_per_year[4]]))
 
     # TODO reformat code to include dvol and dret as a single DataFrame
     # gives an error for df.Date.unique() when using week and month because the num vals are not the same
-    dvol = {'Date': [df_single_day[i]['Date'][df_single_day[i]['Date'].first_valid_index()] for i in range(0, len(df_single_day))], 'Volatility_Daily': daily_vols}
-    dret = {'Date': [df_single_day[i]['Date'][df_single_day[i]['Date'].first_valid_index()] for i in range(0, len(df_single_day))], 'Return_Daily': daily_rets}
+    dvol = {'Date': [df_single_time[i]['Date'][df_single_time[i]['Date'].first_valid_index()] for i in range(0, len(df_single_time))], 'Volatility_Daily': daily_vols}
+    dret = {'Date': [df_single_time[i]['Date'][df_single_time[i]['Date'].first_valid_index()] for i in range(0, len(df_single_time))], 'Return_Daily': daily_rets}
     len(daily_vols)  # outputs 260
     len(daily_rets)   # outputs 260
-    len([df_single_day[i]['Date'][df_single_day[i]['Date'].first_valid_index()] for i in range(0, len(df_single_day))])  # outputs 263
+    len([df_single_time[i]['Date'][df_single_time[i]['Date'].first_valid_index()] for i in range(0, len(df_single_time))])  # outputs 263
 
     daily_vol_result = pd.DataFrame(dvol)
     daily_ret_result = pd.DataFrame(dret)
