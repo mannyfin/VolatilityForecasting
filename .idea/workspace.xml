@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e3c6b6ca-c3c5-4504-ae2d-e78ea577aa4e" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.py" afterPath="$PROJECT_DIR$/src/main.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -495,7 +494,14 @@
       <option name="project" value="LOCAL" />
       <updated>1488081795769</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="1. arch_q_model: comment out sklearn import and add to top of file. Added Performance Measure class, also added disp='off' and show_warning=False tags to the model fitting. Change return output to MSE, QL&#10;2. garch_pq_model. Same as 1.&#10;3.  Add Performance Measure call&#10;4. Comment out daily_ret line  since RetCalc is merged with Volatility class&#10;5. PastasPresent: Same as 3.&#10;6. Performance_Measure: Created performance measure using MSE and QL and added this function to all the models&#10;7. RetCalculator: For the daily calcs, I just merged with Volatility class for simplicity. I will eventually add monthly calcs together here too&#10;8. See 7. In addition, I create a comparison array of returns and volatility. If the returns and volatility for a particular day are zero, then remove this row from the dataframe for daily_vol_result and daily_ret_result">
+      <created>1488083111128</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1488083111128</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
