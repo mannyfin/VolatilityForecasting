@@ -80,9 +80,10 @@ def daily_vol_calc(df, df_single_day, num_days_per_year):
 
     inters_ret = daily_ret_result.query('Return_Daily == 0').index.values
     inters_vol = daily_vol_result.query(('Volatility_Daily ==0')).index.values
-
+    """
     # this line below removes days where the vols were zero
     # daily_vol_result = daily_vol_result.query('Volatility_Daily != 0')
+    """
     comparison_array = list(set(inters_ret).intersection(inters_vol))
 
     daily_vol_result = daily_vol_result.drop(daily_vol_result.index[comparison_array])

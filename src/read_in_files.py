@@ -20,6 +20,7 @@ def read_in_files(file_names):
     # this is a timestamp obj
     df['year'], df['month'] = df['Date'].dt.year, df['Date'].dt.month
     df['date'] = df['Date'].dt.day
+    df['week'] = df['Date'].dt.week
 
     """
     these three lines below chunk the data by dates
@@ -28,8 +29,18 @@ def read_in_files(file_names):
     for group in df.groupby(df.Date, sort=False):
         df_single_day.append(group[1])
 
+    df_single_week = []
+    for group in df.groupby(['week', 'year'], sort=False):
+        df_single_week.append(group[1])
+
     df_single_month = []
     for group in df.groupby(['month', 'year'], sort=False):
         df_single_month.append(group[1])
 
-    return df, df_single_day, df_single_month
+    return df, df_single_day, df_single_week, df_single_month
+"""
+this code may be useful
+kw = lambda x: x.isocalendar()[1];
+kw_year = lambda x: str(x.year) + ' - ' + str(x.isocalendar()[1])
+grouped = df.groupby([df['Date'].map(kw_year)], sort=False, as_index=False)
+"""

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e3c6b6ca-c3c5-4504-ae2d-e78ea577aa4e" name="Default" comment="">
+    <list default="true" id="e3c6b6ca-c3c5-4504-ae2d-e78ea577aa4e" name="Default" comment="1. added df_single_week to main.py&#10;2. added ability to chunk by week in read_in_files and output df_single_week">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Volatility.py" afterPath="$PROJECT_DIR$/src/Volatility.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.py" afterPath="$PROJECT_DIR$/src/main.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/read_in_files.py" afterPath="$PROJECT_DIR$/src/read_in_files.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -12,7 +15,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/VolatilityForecasting$main.coverage" NAME="main Coverage Results" MODIFIED="1488081064436" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/VolatilityForecasting$main.coverage" NAME="main Coverage Results" MODIFIED="1488104610170" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -28,6 +31,16 @@
               <folding>
                 <element signature="e#0#53#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="read_in_files.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/read_in_files.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="650">
+              <caret line="41" column="23" lean-forward="false" selection-start-line="41" selection-start-column="23" selection-end-line="41" selection-end-column="23" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -52,23 +65,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="257">
-              <caret line="23" column="27" lean-forward="true" selection-start-line="23" selection-start-column="27" selection-end-line="23" selection-end-column="27" />
-              <folding>
-                <element signature="e#187#226#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Volatility.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Volatility.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="80" column="59" lean-forward="false" selection-start-line="80" selection-start-column="59" selection-end-line="80" selection-end-column="59" />
+            <state relative-caret-position="798">
+              <caret line="105" column="35" lean-forward="true" selection-start-line="105" selection-start-column="35" selection-end-line="105" selection-end-column="35" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -76,11 +77,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RetCalculator.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/RetCalculator.py">
+      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="53" column="4" lean-forward="false" selection-start-line="53" selection-start-column="4" selection-end-line="63" selection-end-column="33" />
+            <state relative-caret-position="267">
+              <caret line="18" column="2" lean-forward="false" selection-start-line="18" selection-start-column="2" selection-end-line="18" selection-end-column="2" />
+              <folding>
+                <element signature="e#187#226#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NumDaysWeeksMonths.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/NumDaysWeeksMonths.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="16" column="48" lean-forward="false" selection-start-line="16" selection-start-column="48" selection-end-line="16" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -89,7 +102,7 @@
       <file leaf-file-name="garch_pq_model.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/garch_pq_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
+            <state relative-caret-position="512">
               <caret line="32" column="28" lean-forward="true" selection-start-line="32" selection-start-column="28" selection-end-line="32" selection-end-column="28" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
@@ -101,7 +114,7 @@
       <file leaf-file-name="arch_q_model.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/arch_q_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="816">
+            <state relative-caret-position="881">
               <caret line="54" column="5" lean-forward="true" selection-start-line="54" selection-start-column="5" selection-end-line="54" selection-end-column="5" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
@@ -113,7 +126,7 @@
       <file leaf-file-name="linear_regression.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/linear_regression.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="663">
+            <state relative-caret-position="634">
               <caret line="39" column="0" lean-forward="false" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
@@ -127,7 +140,9 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>mse</find>
+      <find>pandas.core.groupby.DataFrameGroupBy</find>
       <find>garch_pq_forecasts</find>
+      <find>groupby</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -144,8 +159,10 @@
         <option value="$PROJECT_DIR$/src/garch_pq_model.py" />
         <option value="$PROJECT_DIR$/src/arch_q_model.py" />
         <option value="$PROJECT_DIR$/src/RetCalculator.py" />
-        <option value="$PROJECT_DIR$/src/Volatility.py" />
+        <option value="$PROJECT_DIR$/src/NumDaysWeeksMonths.py" />
         <option value="$PROJECT_DIR$/src/main.py" />
+        <option value="$PROJECT_DIR$/src/read_in_files.py" />
+        <option value="$PROJECT_DIR$/src/Volatility.py" />
       </list>
     </option>
   </component>
@@ -501,7 +518,14 @@
       <option name="project" value="LOCAL" />
       <updated>1488083111128</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="1. arch_q_model: comment out sklearn import and add to top of file. Added Performance Measure class, also added disp='off' and show_warning=False tags to the model fitting. Change return output to MSE, QL&#10;2. garch_pq_model. Same as 1.&#10;3.  Add Performance Measure call&#10;4. Comment out daily_ret line  since RetCalc is merged with Volatility class&#10;5. PastasPresent: Same as 3.&#10;6. Performance_Measure: Created performance measure using MSE and QL and added this function to all the models&#10;7. RetCalculator: For the daily calcs, I just merged with Volatility class for simplicity. I will eventually add monthly calcs together here too&#10;8. See 7. In addition, I create a comparison array of returns and volatility. If the returns and volatility for a particular day are zero, then remove this row from the dataframe for daily_vol_result and daily_ret_result">
+      <created>1488083120385</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1488083120385</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -517,23 +541,23 @@
     <frame x="-8" y="-8" width="2576" height="1416" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25198728" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969603" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.122019075" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32969603" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3997833" sideWeight="0.5053305" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32969603" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969603" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969603" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2567714" sideWeight="0.49626866" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969603" sideWeight="0.49841017" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3585347" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3998441" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37879968" sideWeight="0.4946695" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969603" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -568,7 +592,8 @@
     <MESSAGE value="1. Renamed arch_model to ArchModelQ because of name conflict with arch_model module and fixed references in arch_q_model&#10;2. Changed import statement in main.py to reflect this&#10;3. Deleted arch_model.py--which was an empty file anyways&#10;4. Added TODO line to rename plots using strings in their respective function calls" />
     <MESSAGE value="1. put plot titles in the functions, &#10;2. deleted empty files&#10;3. Working on PerformanceMeasure class for integration" />
     <MESSAGE value="1. arch_q_model: comment out sklearn import and add to top of file. Added Performance Measure class, also added disp='off' and show_warning=False tags to the model fitting. Change return output to MSE, QL&#10;2. garch_pq_model. Same as 1.&#10;3.  Add Performance Measure call&#10;4. Comment out daily_ret line  since RetCalc is merged with Volatility class&#10;5. PastasPresent: Same as 3.&#10;6. Performance_Measure: Created performance measure using MSE and QL and added this function to all the models&#10;7. RetCalculator: For the daily calcs, I just merged with Volatility class for simplicity. I will eventually add monthly calcs together here too&#10;8. See 7. In addition, I create a comparison array of returns and volatility. If the returns and volatility for a particular day are zero, then remove this row from the dataframe for daily_vol_result and daily_ret_result" />
-    <option name="LAST_COMMIT_MESSAGE" value="1. arch_q_model: comment out sklearn import and add to top of file. Added Performance Measure class, also added disp='off' and show_warning=False tags to the model fitting. Change return output to MSE, QL&#10;2. garch_pq_model. Same as 1.&#10;3.  Add Performance Measure call&#10;4. Comment out daily_ret line  since RetCalc is merged with Volatility class&#10;5. PastasPresent: Same as 3.&#10;6. Performance_Measure: Created performance measure using MSE and QL and added this function to all the models&#10;7. RetCalculator: For the daily calcs, I just merged with Volatility class for simplicity. I will eventually add monthly calcs together here too&#10;8. See 7. In addition, I create a comparison array of returns and volatility. If the returns and volatility for a particular day are zero, then remove this row from the dataframe for daily_vol_result and daily_ret_result" />
+    <MESSAGE value="1. added df_single_week to main.py&#10;2. added ability to chunk by week in read_in_files and output df_single_week" />
+    <option name="LAST_COMMIT_MESSAGE" value="1. added df_single_week to main.py&#10;2. added ability to chunk by week in read_in_files and output df_single_week" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -579,7 +604,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="18" />
+      <option name="time" value="20" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -683,13 +708,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/arch_model.py" />
     <entry file="file://$PROJECT_DIR$/src/forcaster.py" />
-    <entry file="file://$PROJECT_DIR$/src/NumDaysWeeksMonths.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/hwcode.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2825">
@@ -697,17 +715,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/read_in_files.py">
+    <entry file="file://$PROJECT_DIR$/src/DailyVol.py" />
+    <entry file="file://$PROJECT_DIR$/src/RetCalculator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="952">
+          <caret line="57" column="40" lean-forward="false" selection-start-line="57" selection-start-column="23" selection-end-line="57" selection-end-column="40" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/DailyVol.py" />
+    <entry file="file://$PROJECT_DIR$/src/garch_pq_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="512">
+          <caret line="32" column="28" lean-forward="true" selection-start-line="32" selection-start-column="28" selection-end-line="32" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/arch_q_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="816">
+        <state relative-caret-position="881">
           <caret line="54" column="5" lean-forward="true" selection-start-line="54" selection-start-column="5" selection-end-line="54" selection-end-column="5" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
@@ -717,11 +746,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/linear_regression.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="663">
+        <state relative-caret-position="634">
           <caret line="39" column="0" lean-forward="false" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SEplot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="28" column="21" lean-forward="false" selection-start-line="28" selection-start-column="21" selection-end-line="28" selection-end-column="21" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -730,24 +767,6 @@
         <state relative-caret-position="493">
           <caret line="29" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/RetCalculator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="53" column="4" lean-forward="false" selection-start-line="53" selection-start-column="4" selection-end-line="63" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/garch_pq_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="32" column="28" lean-forward="true" selection-start-line="32" selection-start-column="28" selection-end-line="32" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -761,18 +780,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/SEplot.py">
+    <entry file="file://$PROJECT_DIR$/src/read_in_files.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="28" column="21" lean-forward="false" selection-start-line="28" selection-start-column="21" selection-end-line="28" selection-end-column="21" />
+        <state relative-caret-position="650">
+          <caret line="41" column="23" lean-forward="false" selection-start-line="41" selection-start-column="23" selection-end-line="41" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NumDaysWeeksMonths.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="48" lean-forward="false" selection-start-line="16" selection-start-column="48" selection-end-line="16" selection-end-column="48" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Volatility.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="80" column="59" lean-forward="false" selection-start-line="80" selection-start-column="59" selection-end-line="80" selection-end-column="59" />
+        <state relative-caret-position="798">
+          <caret line="105" column="35" lean-forward="true" selection-start-line="105" selection-start-column="35" selection-end-line="105" selection-end-column="35" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
@@ -781,8 +808,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="257">
-          <caret line="23" column="27" lean-forward="true" selection-start-line="23" selection-start-column="27" selection-end-line="23" selection-end-column="27" />
+        <state relative-caret-position="267">
+          <caret line="18" column="2" lean-forward="false" selection-start-line="18" selection-start-column="2" selection-end-line="18" selection-end-column="2" />
           <folding>
             <element signature="e#187#226#0" expanded="true" />
           </folding>
