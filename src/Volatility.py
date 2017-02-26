@@ -34,7 +34,7 @@ class Volatility(object):
         return annualized_daily_vol
     
     
-def daily_vol_calc(df, df_single_time, num_days_per_year):
+def time_vol_calc(df, df_single_time, num_days_per_year):
 
     # num_days_per_year = [NumDays2008,NumDays2009,NumDays2010,NumDays2011,NumDays2012,NumDays2013]
     # TODO LOOP THIS AND ALSO MAKE MORE USE OF THE VOLATILITY CLASS
