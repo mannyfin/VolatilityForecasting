@@ -21,7 +21,7 @@ counter = 0
 #  reads in the files and puts them into dataframes, returns a dataframe called df
 df, df_single_day, df_single_month = read_in_files(filenames)
 days_weeks_months, num_days_per_year = NumDaysWeeksMonths(df=df)
-daily_vol_result, daily_ret_ = daily_vol_calc(df, df_single_day, num_days_per_year)
+daily_vol_result, daily_ret = daily_vol_calc(df, df_single_day, num_days_per_year)
 # daily_ret = RetCalculator.daily_ret_df(df, df_single_day, num_days_per_year)
 
 # TODO: add monthly_vol_result
