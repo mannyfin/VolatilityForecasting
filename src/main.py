@@ -8,47 +8,76 @@ from Volatility import *
 from linear_regression import *
 import matplotlib.pyplot as plt
 from PastAsPresent import *
-from RetCalculator import *
+
 from garch_pq_model import garch_model as gm
 from arch_q_model import ArchModelQ as am
 import numpy as np
 
 
 filenames = 'AUDUSD.csv'
-# TODO: scale factor for volatility
-counter = 0
+# TODO: scale factor for volatility--PLEASE CHECK IF COMPLETED CORRECTLY
+
 #  reads in the files and puts them into dataframes, returns a dataframe called df
 df, df_single_day, df_single_week, df_single_month = read_in_files(filenames)
-days_weeks_months, num_days_per_year, num_weeks_per_year, num_months_per_year = NumDaysWeeksMonths(df=df)
+# THE LINE BELOW IS NOT REALLY NEEDED IF SCALING IS CONSTANT
+# days_weeks_months, num_days_per_year, num_weeks_per_year, num_months_per_year = NumDaysWeeksMonths(df=df)
 
-num_days_per_year = 313
-daily_vol_result, daily_ret = time_vol_calc(df, df_single_day, num_days_per_year)
-weekly_vol_result, weekly_ret = time_vol_calc(df, df_single_week, num_weeks_per_year)
-monthly_vol_result, monthly_ret = time_vol_calc(df, df_single_month, num_months_per_year)
-# daily_ret = RetCalculator.daily_ret_df(df, df_single_day, num_days_per_year)
-
-# TODO: add monthly_vol_result
-# TODO: add weekly_vol_result
+daily_vol_result, daily_ret = time_vol_calc(df_single_day)
+weekly_vol_result, weekly_ret = time_vol_calc(df_single_week)
+monthly_vol_result, monthly_ret = time_vol_calc(df_single_month)
 
 # TODO: add string to each function, such as "GARCH", or "Daily", or "Weekly" for a more generalized plot
 
 """Past as Present"""
-MSE_PastAsPresent = PastAsPresent.today_tomorrow(daily_vol_result)
-print("Daily PastAsPresent MSE and QL are: " + str(MSE_PastAsPresent[0:2]))
+DAILY_PastAsPresent = PastAsPresent.tn_pred_tn_plus_1(daily_vol_result)
+print("Daily PastAsPresent MSE and QL are: " + str(DAILY_PastAsPresent[0:2]))
+
+WEEKLY_PastAsPresent = PastAsPresent.tn_pred_tn_plus_1(weekly_vol_result)
+print("Daily PastAsPresent MSE and QL are: " + str(WEEKLY_PastAsPresent[0:2]))
+
+MONTHLY_PastAsPresent = PastAsPresent.tn_pred_tn_plus_1(monthly_vol_result)
+print("Daily PastAsPresent MSE and QL are: " + str(MONTHLY_PastAsPresent[0:2]))
 
 
 """Linear Regression"""
-one_lag_results = LinRegression.lin_reg(daily_vol_result, 1)
-print("Daily 1 Lag's MSE and QL are: " + str(one_lag_results[0:2]))
+"""DAILY"""
+DAILY_one_lag_results = LinRegression.lin_reg(daily_vol_result, 1)
+print("Daily 1 Lag's MSE and QL are: " + str(DAILY_one_lag_results[0:2]))
 
-three_lag_results = LinRegression.lin_reg(daily_vol_result, 3)
-print("Daily 3 Lag's MSE and QL are: " + str(three_lag_results[0:2]))
+DAILY_three_lag_results = LinRegression.lin_reg(daily_vol_result, 3)
+print("Daily 3 Lag's MSE and QL are: " + str(DAILY_three_lag_results[0:2]))
 
-five_lag_results = LinRegression.lin_reg(daily_vol_result, 5)
-print("Daily 5 Lag's MSE and QL are: " + str(five_lag_results[0:2]))
+DAILY_five_lag_results = LinRegression.lin_reg(daily_vol_result, 5)
+print("Daily 5 Lag's MSE and QL are: " + str(DAILY_five_lag_results[0:2]))
 
-ten_lag_results = LinRegression.lin_reg(daily_vol_result, 10)
-print("Daily 10 Lag's MSE and QL are: " + str(ten_lag_results[0:2]))
+DAILY_ten_lag_results = LinRegression.lin_reg(daily_vol_result, 10)
+print("Daily 10 Lag's MSE and QL are: " + str(DAILY_ten_lag_results[0:2]))
+
+"""WEEK"""
+WEEKLY_one_lag_results = LinRegression.lin_reg(weekly_vol_result, 1)
+print("WEEKLY 1 Lag's MSE and QL are: " + str(WEEKLY_one_lag_results[0:2]))
+
+WEEKLY_three_lag_results = LinRegression.lin_reg(weekly_vol_result, 3)
+print("WEEKLY 3 Lag's MSE and QL are: " + str(WEEKLY_three_lag_results[0:2]))
+
+WEEKLY_five_lag_results = LinRegression.lin_reg(weekly_vol_result, 5)
+print("WEEKLY 5 Lag's MSE and QL are: " + str(WEEKLY_five_lag_results[0:2]))
+
+WEEKLY_ten_lag_results = LinRegression.lin_reg(weekly_vol_result, 10)
+print("WEEKLY 10 Lag's MSE and QL are: " + str(WEEKLY_ten_lag_results[0:2]))
+
+"""MONTH"""
+MONTHLY_one_lag_results = LinRegression.lin_reg(monthly_vol_result, 1)
+print("MONTHLY 1 Lag's MSE and QL are: " + str(MONTHLY_one_lag_results[0:2]))
+
+MONTHLY_three_lag_results = LinRegression.lin_reg(monthly_vol_result, 3)
+print("MONTHLY 3 Lag's MSE and QL are: " + str(MONTHLY_three_lag_results[0:2]))
+
+MONTHLY_five_lag_results = LinRegression.lin_reg(monthly_vol_result, 5)
+print("MONTHLY 5 Lag's MSE and QL are: " + str(MONTHLY_five_lag_results[0:2]))
+
+MONTHLY_ten_lag_results = LinRegression.lin_reg(monthly_vol_result, 10)
+print("MONTHLY 10 Lag's MSE and QL are: " + str(MONTHLY_ten_lag_results[0:2]))
 
 
 """ARCH"""
@@ -64,23 +93,4 @@ print("Daily GARCH(1,1) MSE and QL are:" + str(daily_garch11_mse))
 print("hi")
 # show plots at the very end
 plt.show()
-
-
-# DailyVolDF(df_single_day, num_days_per_year)
-
-
-# predict tomorrows volatility based on today (same for weekly and monthly
-# #     -this also looks like linear regression
-#
-# # perform linear regression (using past 1, 3, 5, vols)
-# linear_regression()
-#
-# # perform ARCH
-# arch_model()
-#
-# # perform GARCH(1,1)
-# garch11_model()
-#
-# errorplots()
-#
 

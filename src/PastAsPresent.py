@@ -2,9 +2,8 @@ from Performance_Measure import *
 
 class PastAsPresent(object):
 
-    def today_tomorrow(data):
+    def tn_pred_tn_plus_1(data):
 
-        from sklearn.metrics import mean_squared_error as mse
         import matplotlib.pyplot as plt
         from SEplot import se_plot as SE
         """
@@ -33,12 +32,9 @@ class PastAsPresent(object):
         MSE = Performance_.mean_se(observed=observed, prediction=prediction)
         QL = Performance_.quasi_likelihood(observed=observed, prediction=prediction)
 
-        # MSE_oneday = mse(observed, prediction)
-        # print("PastAsPresent MSE is :" + str(MSE_oneday))
-
         """ return a plot of the Squared error"""
         SE(observed, prediction)
-        plt.title("Squared Error PastAsPresent (" + str(1) + ") - Daily Volatility")
+        plt.title("Squared Error PastAsPresent (" + str(1) + ") - XYZCHANGETHIS Volatility")
         # plt.show()
 
         return MSE, QL

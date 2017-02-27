@@ -12,10 +12,10 @@ def count(func):
 @count
 def se_plot(y, y_fit):
     """
-     :param y: source data
+    :param y: source data
     :param y_fit: fit from LR
     :param n: the num of trailing days. This is an [int]
-   :return:
+    :return:
     """
 
     # def se_plot(x, y, y_fit1):
@@ -25,11 +25,11 @@ def se_plot(y, y_fit):
     SE = (y_fit.reshape(len(y), 1) - y.reshape(len(y), 1)) ** 2
     # plt.figure(n)
     plt.figure(se_plot.counter)
-    plt.plot(SE)
+    plt.plot(np.log(SE))
     # TODO make LR(n)
 
-
+    # TODO make this plot vs months/years etc.
     plt.xlabel("t")
-    plt.ylabel("SE")
+    plt.ylabel("ln(SE)")
 
 
