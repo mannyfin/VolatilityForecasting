@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e3c6b6ca-c3c5-4504-ae2d-e78ea577aa4e" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/RetCalculator.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/hwcode.py" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/PastAsPresent.py" afterPath="$PROJECT_DIR$/src/PastAsPresent.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Performance_Measure.py" afterPath="$PROJECT_DIR$/src/Performance_Measure.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/SEplot.py" afterPath="$PROJECT_DIR$/src/SEplot.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Volatility.py" afterPath="$PROJECT_DIR$/src/Volatility.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/linear_regression.py" afterPath="$PROJECT_DIR$/src/linear_regression.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.py" afterPath="$PROJECT_DIR$/src/main.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,7 +13,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/VolatilityForecasting$main.coverage" NAME="main Coverage Results" MODIFIED="1488177007054" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/VolatilityForecasting$main.coverage" NAME="main Coverage Results" MODIFIED="1488181383800" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -28,49 +21,13 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Performance_Measure.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/Performance_Measure.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#53#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="21" column="60" lean-forward="false" selection-start-line="21" selection-start-column="60" selection-end-line="21" selection-end-column="60" />
+            <state relative-caret-position="98">
+              <caret line="81" column="42" lean-forward="false" selection-start-line="81" selection-start-column="42" selection-end-line="81" selection-end-column="42" />
               <folding>
                 <element signature="e#187#226#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Volatility.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Volatility.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="918">
-              <caret line="54" column="161" lean-forward="false" selection-start-line="54" selection-start-column="161" selection-end-line="54" selection-end-column="161" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="linear_regression.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/linear_regression.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="25" column="34" lean-forward="true" selection-start-line="25" selection-start-column="34" selection-end-line="25" selection-end-column="34" />
-              <folding>
-                <element signature="e#0#31#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -120,11 +77,11 @@
         <option value="$PROJECT_DIR$/src/NumDaysWeeksMonths.py" />
         <option value="$PROJECT_DIR$/src/RetCalculator.py" />
         <option value="$PROJECT_DIR$/src/SEplot.py" />
-        <option value="$PROJECT_DIR$/src/main.py" />
         <option value="$PROJECT_DIR$/src/linear_regression.py" />
         <option value="$PROJECT_DIR$/src/Volatility.py" />
         <option value="$PROJECT_DIR$/src/PastAsPresent.py" />
         <option value="$PROJECT_DIR$/src/Performance_Measure.py" />
+        <option value="$PROJECT_DIR$/src/main.py" />
       </list>
     </option>
   </component>
@@ -135,10 +92,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="2576" />
-    <option name="height" value="1416" />
+    <option name="x" value="2552" />
+    <option name="y" value="188" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -529,7 +486,14 @@
       <option name="project" value="LOCAL" />
       <updated>1488159139962</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="1. Added Weekly and Monthly calculations to problem 1 (tn-&gt;tn+1) and 2 (LR)&#10;2. Removed RetCalculator&#10;3. Comment out NumDaysWeeksMonths in main.py because the scaling is a constant factor. I do not delete it because it may be useful in the future&#10;4. Plots of SE are now ln(SE), did some preliminary fix to titles of plots&#10;5. General code cleanup&#10;6. The code runs much faster now. NumDaysWeeksMonths was a bottleneck">
+      <created>1488177195532</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1488177195532</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TodoView">
@@ -542,7 +506,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="2576" height="1416" extended-state="6" />
+    <frame x="2552" y="188" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4294622" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -550,9 +514,9 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3997833" sideWeight="0.5053305" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33125487" sideWeight="0.49626866" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969603" sideWeight="0.49841017" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3585347" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.49837488" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969603" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.122019075" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16364606" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969603" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -604,7 +568,8 @@
     <MESSAGE value="error in Volatility.py&#10;change to df_single_time for clarity&#10;change to time_vol_calc function" />
     <MESSAGE value="error in Volatility.py&#10;change from daily to &quot;time&quot;" />
     <MESSAGE value="fixed error: Valueerror: the truth value of a series is ambiguous. for the case that there are no elements with value zero for inters_vol.&#10;If inters_ret has no zero vals then it will skip over inters_vol." />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed error: Valueerror: the truth value of a series is ambiguous. for the case that there are no elements with value zero for inters_vol.&#10;If inters_ret has no zero vals then it will skip over inters_vol." />
+    <MESSAGE value="1. Added Weekly and Monthly calculations to problem 1 (tn-&gt;tn+1) and 2 (LR)&#10;2. Removed RetCalculator&#10;3. Comment out NumDaysWeeksMonths in main.py because the scaling is a constant factor. I do not delete it because it may be useful in the future&#10;4. Plots of SE are now ln(SE), did some preliminary fix to titles of plots&#10;5. General code cleanup&#10;6. The code runs much faster now. NumDaysWeeksMonths was a bottleneck" />
+    <option name="LAST_COMMIT_MESSAGE" value="1. Added Weekly and Monthly calculations to problem 1 (tn-&gt;tn+1) and 2 (LR)&#10;2. Removed RetCalculator&#10;3. Comment out NumDaysWeeksMonths in main.py because the scaling is a constant factor. I do not delete it because it may be useful in the future&#10;4. Plots of SE are now ln(SE), did some preliminary fix to titles of plots&#10;5. General code cleanup&#10;6. The code runs much faster now. NumDaysWeeksMonths was a bottleneck" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -838,16 +803,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="21" column="60" lean-forward="false" selection-start-line="21" selection-start-column="60" selection-end-line="21" selection-end-column="60" />
-          <folding>
-            <element signature="e#187#226#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/PastAsPresent.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="561">
@@ -862,6 +817,16 @@
           <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
           <folding>
             <element signature="e#0#53#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="98">
+          <caret line="81" column="42" lean-forward="false" selection-start-line="81" selection-start-column="42" selection-end-line="81" selection-end-column="42" />
+          <folding>
+            <element signature="e#187#226#0" expanded="true" />
           </folding>
         </state>
       </provider>
