@@ -60,15 +60,20 @@ def time_vol_calc(df, df_single_time, num_days_per_year):
     time_ret_result = pd.DataFrame(dret)
 
     inters_ret = time_ret_result.query('Return_Daily == 0').index.values
-    inters_vol = time_vol_result.query(('Volatility_Daily ==0')).index.values
-    """
-    # this line below removes days where the vols were zero
-    # time_vol_result = time_vol_result.query('Volatility_Daily != 0')
-    """
-    comparison_array = list(set(inters_ret).intersection(inters_vol))
+    # essentially you will only ever pass through this if statement if there are zero return values
+    if inters_ret.size > 0:
+        inters_vol = time_vol_result.query(('Volatility_Daily == 0')).index.values
+        """
+        # this line below removes days where the vols were zero
+        # time_vol_result = time_vol_result.query('Volatility_Daily != 0')
+        """
+        # bug point, maybe get an error if c
+        comparison_array = list(set(inters_ret).intersection(inters_vol))
 
-    time_vol_result = time_vol_result.drop(time_vol_result.index[comparison_array])
-    time_ret_result = time_ret_result.drop(time_ret_result.index[comparison_array])
+        time_vol_result = time_vol_result.drop(time_vol_result.index[comparison_array])
+        time_ret_result = time_ret_result.drop(time_ret_result.index[comparison_array])
+
+
 
     # time_vols = []
     # time_rets = []

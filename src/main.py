@@ -20,6 +20,8 @@ counter = 0
 #  reads in the files and puts them into dataframes, returns a dataframe called df
 df, df_single_day, df_single_week, df_single_month = read_in_files(filenames)
 days_weeks_months, num_days_per_year, num_weeks_per_year, num_months_per_year = NumDaysWeeksMonths(df=df)
+
+num_days_per_year = 313
 daily_vol_result, daily_ret = time_vol_calc(df, df_single_day, num_days_per_year)
 weekly_vol_result, weekly_ret = time_vol_calc(df, df_single_week, num_weeks_per_year)
 monthly_vol_result, monthly_ret = time_vol_calc(df, df_single_month, num_months_per_year)
