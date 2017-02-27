@@ -23,6 +23,9 @@ def se_plot(y, y_fit):
 
     # Squared error
     SE = (y_fit.reshape(len(y), 1) - y.reshape(len(y), 1)) ** 2
+
+    # reshape will be deprecated. the line below is not necessarily the correct one.
+    # SE = (y_fit.values.reshape(len(y), 1) - y.values.reshape(len(y), 1)) ** 2
     # plt.figure(n)
     plt.figure(se_plot.counter)
     plt.plot(np.log(SE))

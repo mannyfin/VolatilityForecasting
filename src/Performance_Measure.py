@@ -19,8 +19,10 @@ class PerformanceMeasure(object):
         """Note: QL DOES NOT WORK IF THERE ARE ZEROES IN DATA SERIES"""
 
         value = prediction.reshape(len(observed), 1) / observed.reshape(len(observed), 1)
+        # value = prediction.values.reshape(len(observed), 1) / observed.values.reshape(len(observed), 1)
         ones = np.ones(len(observed))
 
+        # self.QL = (1 / len(observed)) * (np.sum(value - np.log(value) - ones.values.reshape(len(observed), 1)))
         self.QL = (1 / len(observed)) * (np.sum(value - np.log(value) - ones.reshape(len(observed), 1)))
         print("QL is: " + str(self.QL))
         return self.QL

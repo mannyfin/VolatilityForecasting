@@ -9,10 +9,11 @@ from linear_regression import *
 import matplotlib.pyplot as plt
 from PastAsPresent import *
 
-from garch_pq_model import garch_model as gm
-from arch_q_model import ArchModelQ as am
+from garch_pq_model import GarchModel as gm
+# from arch_q_model import ArchModelQ as am
 import numpy as np
 
+from function_runs import *
 
 filenames = 'AUDUSD.csv'
 # TODO: scale factor for volatility--PLEASE CHECK IF COMPLETED CORRECTLY
@@ -26,6 +27,16 @@ daily_vol_result, daily_ret = time_vol_calc(df_single_day)
 weekly_vol_result, weekly_ret = time_vol_calc(df_single_week)
 monthly_vol_result, monthly_ret = time_vol_calc(df_single_month)
 
+plt.figure(1000)
+plt.plot(daily_vol_result.Date, np.log(daily_vol_result.Volatility_Daily))
+plt.show()
+
+# asdf = FunctionCalls()
+# Daily = asdf.function_runs('Daily,', daily_vol_result, 1, [1, 3, 5, 10], [np.array(daily_ret['Return_Daily']), 1, 1]
+#                            , 0 )
+
+
+
 # TODO: add string to each function, such as "GARCH", or "Daily", or "Weekly" for a more generalized plot
 
 """Past as Present"""
@@ -33,10 +44,10 @@ DAILY_PastAsPresent = PastAsPresent.tn_pred_tn_plus_1(daily_vol_result)
 print("Daily PastAsPresent MSE and QL are: " + str(DAILY_PastAsPresent[0:2]))
 
 WEEKLY_PastAsPresent = PastAsPresent.tn_pred_tn_plus_1(weekly_vol_result)
-print("Daily PastAsPresent MSE and QL are: " + str(WEEKLY_PastAsPresent[0:2]))
+print("Weekly PastAsPresent MSE and QL are: " + str(WEEKLY_PastAsPresent[0:2]))
 
 MONTHLY_PastAsPresent = PastAsPresent.tn_pred_tn_plus_1(monthly_vol_result)
-print("Daily PastAsPresent MSE and QL are: " + str(MONTHLY_PastAsPresent[0:2]))
+print("Monthly PastAsPresent MSE and QL are: " + str(MONTHLY_PastAsPresent[0:2]))
 
 
 """Linear Regression"""
@@ -81,13 +92,13 @@ print("MONTHLY 10 Lag's MSE and QL are: " + str(MONTHLY_ten_lag_results[0:2]))
 
 #  TODO FIX THE SCALING FOR ARCH AND GARCH
 """ARCH"""
-DAILY_arch1_mse = am.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1)
+DAILY_arch1_mse = gm.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1)
 print("Daily ARCH(1) MSE and QL are:" + str(DAILY_arch1_mse))
 
-WEEKLY_arch1_mse = am.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1)
+WEEKLY_arch1_mse = gm.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1)
 print("WEEKLY ARCH(1) MSE and QL are:" + str(WEEKLY_arch1_mse))
 
-MONTHLY_arch1_mse = am.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1)
+MONTHLY_arch1_mse = gm.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1)
 print("MONTHLY ARCH(1) MSE and QL are:" + str(MONTHLY_arch1_mse))
 
 
