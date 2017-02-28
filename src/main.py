@@ -34,6 +34,13 @@ for name in filenames:
     weekly_vol_result, weekly_ret = time_vol_calc(df_single_week)
     monthly_vol_result, monthly_ret = time_vol_calc(df_single_month)
 
+    daily_vol_result*=100
+    daily_ret*=100
+    weekly_vol_result*=100
+    weekly_ret*=100
+    monthly_vol_result*=100
+    monthly_ret*=100
+
     plt.figure(1000)
     plt.plot(daily_vol_result.Date, np.log(daily_vol_result.Volatility_Time))
     # plt.show()

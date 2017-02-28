@@ -19,7 +19,7 @@ class GarchModel(object):
         # from arch import arch_model
         # The default set of options produces a model with a constant mean, GARCH(1,1) conditional variance and normal errors.
         garchpq = arch_model(ret, p=p, q=q, lags=lags)
-        res = garchpq.fit(update_freq=0, disp='off', show_warning=False)
+        res = garchpq.fit(update_freq=0, disp='on', show_warning=True)
         forecasts = res.forecast()
 
         return np.sqrt(forecasts.variance['h.1'][len(ret)-1])
