@@ -29,91 +29,92 @@ monthly_vol_result, monthly_ret = time_vol_calc(df_single_month)
 
 plt.figure(1000)
 plt.plot(daily_vol_result.Date, np.log(daily_vol_result.Volatility_Daily))
+# plt.show()
+
+asdf = FunctionCalls()
+Daily = asdf.function_runs('Daily,', daily_vol_result, 1, [1, 3, 5, 10], [np.array(daily_ret['Return_Daily']), 1, 1], [np.array(daily_ret['Return_Daily']), 1, 1, 1])
+
 plt.show()
-
-# asdf = FunctionCalls()
-# Daily = asdf.function_runs('Daily,', daily_vol_result, 1, [1, 3, 5, 10], [np.array(daily_ret['Return_Daily']), 1, 1]
-#                            , 0 )
-
-
-
-# TODO: add string to each function, such as "GARCH", or "Daily", or "Weekly" for a more generalized plot
-
-"""Past as Present"""
-DAILY_PastAsPresent = PastAsPresent.tn_pred_tn_plus_1(daily_vol_result)
-print("Daily PastAsPresent MSE and QL are: " + str(DAILY_PastAsPresent[0:2]))
-
-WEEKLY_PastAsPresent = PastAsPresent.tn_pred_tn_plus_1(weekly_vol_result)
-print("Weekly PastAsPresent MSE and QL are: " + str(WEEKLY_PastAsPresent[0:2]))
-
-MONTHLY_PastAsPresent = PastAsPresent.tn_pred_tn_plus_1(monthly_vol_result)
-print("Monthly PastAsPresent MSE and QL are: " + str(MONTHLY_PastAsPresent[0:2]))
-
-
-"""Linear Regression"""
-"""DAILY"""
-DAILY_one_lag_results = LinRegression.lin_reg(daily_vol_result, 1)
-print("Daily 1 Lag's MSE and QL are: " + str(DAILY_one_lag_results[0:2]))
-
-DAILY_three_lag_results = LinRegression.lin_reg(daily_vol_result, 3)
-print("Daily 3 Lag's MSE and QL are: " + str(DAILY_three_lag_results[0:2]))
-
-DAILY_five_lag_results = LinRegression.lin_reg(daily_vol_result, 5)
-print("Daily 5 Lag's MSE and QL are: " + str(DAILY_five_lag_results[0:2]))
-
-DAILY_ten_lag_results = LinRegression.lin_reg(daily_vol_result, 10)
-print("Daily 10 Lag's MSE and QL are: " + str(DAILY_ten_lag_results[0:2]))
-
-"""WEEK"""
-WEEKLY_one_lag_results = LinRegression.lin_reg(weekly_vol_result, 1)
-print("WEEKLY 1 Lag's MSE and QL are: " + str(WEEKLY_one_lag_results[0:2]))
-
-WEEKLY_three_lag_results = LinRegression.lin_reg(weekly_vol_result, 3)
-print("WEEKLY 3 Lag's MSE and QL are: " + str(WEEKLY_three_lag_results[0:2]))
-
-WEEKLY_five_lag_results = LinRegression.lin_reg(weekly_vol_result, 5)
-print("WEEKLY 5 Lag's MSE and QL are: " + str(WEEKLY_five_lag_results[0:2]))
-
-WEEKLY_ten_lag_results = LinRegression.lin_reg(weekly_vol_result, 10)
-print("WEEKLY 10 Lag's MSE and QL are: " + str(WEEKLY_ten_lag_results[0:2]))
-
-"""MONTH"""
-MONTHLY_one_lag_results = LinRegression.lin_reg(monthly_vol_result, 1)
-print("MONTHLY 1 Lag's MSE and QL are: " + str(MONTHLY_one_lag_results[0:2]))
-
-MONTHLY_three_lag_results = LinRegression.lin_reg(monthly_vol_result, 3)
-print("MONTHLY 3 Lag's MSE and QL are: " + str(MONTHLY_three_lag_results[0:2]))
-
-MONTHLY_five_lag_results = LinRegression.lin_reg(monthly_vol_result, 5)
-print("MONTHLY 5 Lag's MSE and QL are: " + str(MONTHLY_five_lag_results[0:2]))
-
-MONTHLY_ten_lag_results = LinRegression.lin_reg(monthly_vol_result, 10)
-print("MONTHLY 10 Lag's MSE and QL are: " + str(MONTHLY_ten_lag_results[0:2]))
-
-#  TODO FIX THE SCALING FOR ARCH AND GARCH
-"""ARCH"""
-DAILY_arch1_mse = gm.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1)
-print("Daily ARCH(1) MSE and QL are:" + str(DAILY_arch1_mse))
-
-WEEKLY_arch1_mse = gm.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1)
-print("WEEKLY ARCH(1) MSE and QL are:" + str(WEEKLY_arch1_mse))
-
-MONTHLY_arch1_mse = gm.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1)
-print("MONTHLY ARCH(1) MSE and QL are:" + str(MONTHLY_arch1_mse))
-
-
-"""GARCH(p,q)"""
-DAILY_garch11_mse = gm.garch_pq_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1, 1)
-print("Daily GARCH(1,1) MSE and QL are:" + str(DAILY_garch11_mse))
-
-WEEKLY_garch11_mse = gm.garch_pq_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1, 1)
-print("WEEKLY GARCH(1,1) MSE and QL are:" + str(WEEKLY_garch11_mse))
-
-MONTHLY_garch11_mse = gm.garch_pq_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1, 1)
-print("MONTHLY GARCH(1,1) MSE and QL are:" + str(MONTHLY_garch11_mse))
-
 
 print("hi")
-# show plots at the very end
-plt.show()
+#
+# # TODO: add string to each function, such as "GARCH", or "Daily", or "Weekly" for a more generalized plot
+#
+# """Past as Present"""
+# DAILY_PastAsPresent = PastAsPresent.tn_pred_tn_plus_1(daily_vol_result)
+# print("Daily PastAsPresent MSE and QL are: " + str(DAILY_PastAsPresent[0:2]))
+#
+# WEEKLY_PastAsPresent = PastAsPresent.tn_pred_tn_plus_1(weekly_vol_result)
+# print("Weekly PastAsPresent MSE and QL are: " + str(WEEKLY_PastAsPresent[0:2]))
+#
+# MONTHLY_PastAsPresent = PastAsPresent.tn_pred_tn_plus_1(monthly_vol_result)
+# print("Monthly PastAsPresent MSE and QL are: " + str(MONTHLY_PastAsPresent[0:2]))
+#
+#
+# """Linear Regression"""
+# """DAILY"""
+# DAILY_one_lag_results = LinRegression.lin_reg(daily_vol_result, 1)
+# print("Daily 1 Lag's MSE and QL are: " + str(DAILY_one_lag_results[0:2]))
+#
+# DAILY_three_lag_results = LinRegression.lin_reg(daily_vol_result, 3)
+# print("Daily 3 Lag's MSE and QL are: " + str(DAILY_three_lag_results[0:2]))
+#
+# DAILY_five_lag_results = LinRegression.lin_reg(daily_vol_result, 5)
+# print("Daily 5 Lag's MSE and QL are: " + str(DAILY_five_lag_results[0:2]))
+#
+# DAILY_ten_lag_results = LinRegression.lin_reg(daily_vol_result, 10)
+# print("Daily 10 Lag's MSE and QL are: " + str(DAILY_ten_lag_results[0:2]))
+#
+# """WEEK"""
+# WEEKLY_one_lag_results = LinRegression.lin_reg(weekly_vol_result, 1)
+# print("WEEKLY 1 Lag's MSE and QL are: " + str(WEEKLY_one_lag_results[0:2]))
+#
+# WEEKLY_three_lag_results = LinRegression.lin_reg(weekly_vol_result, 3)
+# print("WEEKLY 3 Lag's MSE and QL are: " + str(WEEKLY_three_lag_results[0:2]))
+#
+# WEEKLY_five_lag_results = LinRegression.lin_reg(weekly_vol_result, 5)
+# print("WEEKLY 5 Lag's MSE and QL are: " + str(WEEKLY_five_lag_results[0:2]))
+#
+# WEEKLY_ten_lag_results = LinRegression.lin_reg(weekly_vol_result, 10)
+# print("WEEKLY 10 Lag's MSE and QL are: " + str(WEEKLY_ten_lag_results[0:2]))
+#
+# """MONTH"""
+# MONTHLY_one_lag_results = LinRegression.lin_reg(monthly_vol_result, 1)
+# print("MONTHLY 1 Lag's MSE and QL are: " + str(MONTHLY_one_lag_results[0:2]))
+#
+# MONTHLY_three_lag_results = LinRegression.lin_reg(monthly_vol_result, 3)
+# print("MONTHLY 3 Lag's MSE and QL are: " + str(MONTHLY_three_lag_results[0:2]))
+#
+# MONTHLY_five_lag_results = LinRegression.lin_reg(monthly_vol_result, 5)
+# print("MONTHLY 5 Lag's MSE and QL are: " + str(MONTHLY_five_lag_results[0:2]))
+#
+# MONTHLY_ten_lag_results = LinRegression.lin_reg(monthly_vol_result, 10)
+# print("MONTHLY 10 Lag's MSE and QL are: " + str(MONTHLY_ten_lag_results[0:2]))
+#
+# #  TODO FIX THE SCALING FOR ARCH AND GARCH
+# """ARCH"""
+# DAILY_arch1_mse = gm.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1)
+# print("Daily ARCH(1) MSE and QL are:" + str(DAILY_arch1_mse))
+#
+# WEEKLY_arch1_mse = gm.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1)
+# print("WEEKLY ARCH(1) MSE and QL are:" + str(WEEKLY_arch1_mse))
+#
+# MONTHLY_arch1_mse = gm.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1)
+# print("MONTHLY ARCH(1) MSE and QL are:" + str(MONTHLY_arch1_mse))
+#
+#
+# """GARCH(p,q)"""
+# DAILY_garch11_mse = gm.garch_pq_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1, 1)
+# print("Daily GARCH(1,1) MSE and QL are:" + str(DAILY_garch11_mse))
+#
+# WEEKLY_garch11_mse = gm.garch_pq_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1, 1)
+# print("WEEKLY GARCH(1,1) MSE and QL are:" + str(WEEKLY_garch11_mse))
+#
+# MONTHLY_garch11_mse = gm.garch_pq_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1, 1)
+# print("MONTHLY GARCH(1,1) MSE and QL are:" + str(MONTHLY_garch11_mse))
+#
+#
+# print("hi")
+# # show plots at the very end
+# plt.show()
 
