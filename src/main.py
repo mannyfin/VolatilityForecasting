@@ -14,8 +14,10 @@ from garch_pq_model import GarchModel as gm
 import numpy as np
 
 from function_runs import *
+import matplotlib.backends.backend_pdf
 
-filenames = ['AUDUSD.csv', 'CADUSD.csv', 'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+# filenames = ['AUDUSD.csv', 'CADUSD.csv', 'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+filenames = ['GBPUSD.csv']
 # TODO output tables after each for loop, or store them somehow
 for name in filenames:
     # TODO: scale factor for volatility--PLEASE CHECK IF COMPLETED CORRECTLY
@@ -32,7 +34,7 @@ for name in filenames:
     plt.figure(1000)
     plt.plot(daily_vol_result.Date, np.log(daily_vol_result.Volatility_Time))
     # plt.show()
-    initial = 0.5
+    initial = 0.5 # set the first 50% of the input data as in-sample data to fit the model
 
     fc = FunctionCalls()
     Daily = fc.function_runs('Daily', daily_vol_result, 1, [1, 3, 5, 10],
@@ -50,6 +52,11 @@ for name in filenames:
 
     print("yo")
 plt.show()
+"""Output multiple plots into a pdf file"""
+pdf = matplotlib.backends.backend_pdf.PdfPages("output.pdf")
+for fig in range(1, 22): ## will open an empty extra figure :(
+    pdf.savefig( fig )
+pdf.close()
 
 # TODO: add string to each function, such as "GARCH", or "Daily", or "Weekly" for a more generalized plot
 #
@@ -107,9 +114,9 @@ plt.show()
 
 # #  TODO FIX THE SCALING FOR ARCH AND GARCH
 # """ARCH"""
-# initialsize=3
+#initialsize=3
 #
-DAILY_arch1_mse = gm.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Time']), 1, 0,initialsize)
+# DAILY_arch1_mse = gm.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Time']), 1, 0,initialsize)
 # print("Daily ARCH(1) MSE and QL are:" + str(DAILY_arch1_mse))
 #
 # WEEKLY_arch1_mse = gm.arch_q_mse(weekly_vol_result, np.array(weekly_ret['Return_Time']), 1, 0,initialsize)
