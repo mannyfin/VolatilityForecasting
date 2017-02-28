@@ -51,7 +51,7 @@ class Volatility(object):
     
     
 def time_vol_calc(df_single_time):
-
+    import pandas as pd
     # num_days_per_year = 313
     # TODO LOOP THIS AND ALSO MAKE MORE USE OF THE VOLATILITY CLASS
 
@@ -83,5 +83,7 @@ def time_vol_calc(df_single_time):
 
         time_vol_result = time_vol_result.drop(time_vol_result.index[comparison_array])
         time_ret_result = time_ret_result.drop(time_ret_result.index[comparison_array])
+        time_vol_result.reset_index(drop=True, inplace=True)
+        time_ret_result.reset_index(drop=True, inplace=True)
 
     return time_vol_result, time_ret_result

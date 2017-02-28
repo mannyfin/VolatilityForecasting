@@ -93,26 +93,26 @@ plt.plot(daily_vol_result.Date, np.log(daily_vol_result.Volatility_Daily))
 
 #  TODO FIX THE SCALING FOR ARCH AND GARCH
 """ARCH"""
-initialsize=2
+initialsize=3
 
-DAILY_arch1_mse = gm.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1,initialsize)
+DAILY_arch1_mse = gm.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 0,initialsize)
 print("Daily ARCH(1) MSE and QL are:" + str(DAILY_arch1_mse))
 
-WEEKLY_arch1_mse = gm.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1,initialsize)
+WEEKLY_arch1_mse = gm.arch_q_mse(weekly_vol_result, np.array(weekly_ret['Return_Daily']), 1, 0,initialsize)
 print("WEEKLY ARCH(1) MSE and QL are:" + str(WEEKLY_arch1_mse))
 
-MONTHLY_arch1_mse = gm.arch_q_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1,initialsize)
+MONTHLY_arch1_mse = gm.arch_q_mse(monthly_vol_result, np.array(monthly_ret['Return_Daily']), 1, 0,initialsize)
 print("MONTHLY ARCH(1) MSE and QL are:" + str(MONTHLY_arch1_mse))
 
 
 """GARCH(p,q)"""
-DAILY_garch11_mse = gm.garch_pq_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1, 1,initialsize)
+DAILY_garch11_mse = gm.garch_pq_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1, 0,initialsize)
 print("Daily GARCH(1,1) MSE and QL are:" + str(DAILY_garch11_mse))
 
-WEEKLY_garch11_mse = gm.garch_pq_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1, 1,initialsize)
+WEEKLY_garch11_mse = gm.garch_pq_mse(weekly_vol_result, np.array(weekly_ret['Return_Daily']), 1, 1, 0,initialsize)
 print("WEEKLY GARCH(1,1) MSE and QL are:" + str(WEEKLY_garch11_mse))
 
-MONTHLY_garch11_mse = gm.garch_pq_mse(daily_vol_result, np.array(daily_ret['Return_Daily']), 1, 1, 1,initialsize)
+MONTHLY_garch11_mse = gm.garch_pq_mse(monthly_vol_result, np.array(monthly_ret['Return_Daily']), 1, 1, 0,initialsize)
 print("MONTHLY GARCH(1,1) MSE and QL are:" + str(MONTHLY_garch11_mse))
 
 

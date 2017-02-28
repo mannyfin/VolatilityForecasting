@@ -29,8 +29,9 @@ class GarchModel(object):
         :param p: p=1
         :param q: q=1
         :param lags: lags=0
-        :param initial: 2 <= initial <= len(ret)-1
+        :param initial: 3 <= initial <= len(ret)-1
         :return: MSE, QL
+
         """
 
         from sklearn.metrics import mean_squared_error as mse
@@ -38,14 +39,16 @@ class GarchModel(object):
 
         garch_pq_forecasts = []
         observed =[]
-        for i in range(len(ret)-initial+1):
+        for i in range(len(ret)-initial):
             garch_pq_forecasts.append(GarchModel.garch_pq(ret[0:initial+i-1], p, q,lags))
         # observed daily vol
-            observed.append(data['Volatility_Daily'][initial:])
+            observed.append(data['Volatility_Daily'][initial + i])
+
+        #     observed.append(data['Volatility_Daily'][initial:])
 
         # observed = data['Volatility_Daily'][2:]
         garch_pq_forecasts = pd.Series(garch_pq_forecasts)
-
+        observed=pd.Series(observed)
         # Instantiate the class and pass the mean_se and quasi_likelihood functions
         Performance_ = PerformanceMeasure()
         MSE = Performance_.mean_se(observed=observed, prediction=garch_pq_forecasts)
@@ -78,7 +81,7 @@ class GarchModel(object):
         :param ret: growing window returns
         :param q: q=1
         :param lags: lags=0
-        :param initial: 2 <= initial <= len(ret)-1
+        :param initial: 3 <= initial <= len(ret)-1
         :return: MSE, QL
         """
 
@@ -86,13 +89,16 @@ class GarchModel(object):
         import matplotlib.pyplot as plt
 
         arch_q_forecasts = []
-        for i in range(len(ret)-initial+1):
+        observed=[]
+        for i in range(len(ret)-initial):
             arch_q_forecasts.append(GarchModel.arch_q(ret[0:initial+i-1], q, lags))
-            observed = data['Volatility_Daily'][initial:]
-
+            observed.append(data['Volatility_Daily'][initial + i])
+        print("hi")
         # observed daily vol
         # observed = data['Volatility_Daily'][2:]
         arch_q_forecasts = pd.Series(arch_q_forecasts)
+        observed = pd.Series(observed)
+
 
         # Instantiate the class and pass the mean_se and quasi_likelihood functions
         Performance_ = PerformanceMeasure()
