@@ -11,15 +11,26 @@ class Volatility(object):
 
     def ret(df):
         """
-                df here contains daily 5-minute data
+                df here contains daily/weekly/monthly 5-minute data
 
-        :return: daily_ret
+        :return: ret
         """
 
-        ret = np.log(df['Close'][df.index[-1]]/df['Close'][df.index[0]])
-        # ret = np.sum(np.log(df.Close) - np.log(df.Close.shift(1)))
-        return ret
+        rets = np.log(df['Close'][df.index[-1]]/df['Close'][df.index[0]])
+        # rets = np.sum(np.log(df.Close) - np.log(df.Close.shift(1)))
+        return rets
 
+    def GrowWindowRet(df, initial):
+        """
+                df here contains daily/weekly/monthly 5-minute data
+                initial determines the size of the initial growing window
+
+        :return: GrowWindowRets
+        """
+        GrowWindowRets=[]
+        ret = np.log(df['Close'][df.index[-1]]/df['Close'][df.index[0]])
+
+        return GrowWindowRets
 
     # @staticmethod
     def vol_scaling(df):
