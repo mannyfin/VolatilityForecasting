@@ -16,8 +16,10 @@ class Volatility(object):
         :return: daily_ret
         """
 
-        ret = np.mean(np.log(df.Close) - np.log(df.Close.shift(len(df.Close)-1)))
+        ret = np.log(df['Close'][df.index[-1]]/df['Close'][df.index[0]])
+        # ret = np.sum(np.log(df.Close) - np.log(df.Close.shift(1)))
         return ret
+
 
     # @staticmethod
     def vol_scaling(df):
