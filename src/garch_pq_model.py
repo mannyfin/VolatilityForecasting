@@ -2,6 +2,7 @@ from SEplot import se_plot as SE
 import pandas as pd
 from Performance_Measure import *
 from arch import arch_model
+import numpy as np
 
 
 class GarchModel(object):
@@ -21,7 +22,7 @@ class GarchModel(object):
         res = garchpq.fit(update_freq=0, disp='off', show_warning=False)
         forecasts = res.forecast()
 
-        return forecasts.variance['h.1'][len(ret)-1]
+        return np.sqrt(forecasts.variance['h.1'][len(ret)-1])
 
     def garch_pq_mse(data, Timedt, ret, p, q, lags, initial):
 
@@ -87,7 +88,7 @@ class GarchModel(object):
             res = archq.fit(update_freq=0, disp='off', show_warning=False)
             forecasts = res.forecast()
 
-            return forecasts.variance['h.1'][len(ret)-1]
+            return np.sqrt(forecasts.variance['h.1'][len(ret)-1])
 
     def arch_q_mse(data,  Timedt, ret, q, lags,initial):
         """
