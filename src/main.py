@@ -17,7 +17,7 @@ from function_runs import *
 import matplotlib.backends.backend_pdf
 
 # filenames = ['AUDUSD.csv', 'CADUSD.csv', 'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-filenames = ['CADUSD.csv']
+filenames = ['CADUSD.csv','AUDUSD.csv']
 # TODO output tables after each for loop, or store them somehow
 for count, name in enumerate(filenames):
     # TODO: scale factor for volatility--PLEASE CHECK IF COMPLETED CORRECTLY
@@ -34,9 +34,9 @@ for count, name in enumerate(filenames):
     weekly_vol_result, weekly_ret = time_vol_calc(df_single_week)
     monthly_vol_result, monthly_ret = time_vol_calc(df_single_month)
 
-    plt.figure(len(filenames)*21+1)
+    plt.figure(len(filenames)*21+1+count)
     plt.plot(daily_vol_result.Date, np.log(daily_vol_result.Volatility_Time))
-    plt.title('Daily Vol Result for '+ str(name))
+    plt.title('Daily Vol Result for ' + str(name))
     plt.ylabel('Ln(Volatility)')
     # plt.show()
     initial = 0.5 # set the first 50% of the input data as in-sample data to fit the model
