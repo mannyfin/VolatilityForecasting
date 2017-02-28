@@ -17,7 +17,7 @@ from function_runs import *
 import matplotlib.backends.backend_pdf
 
 # filenames = ['AUDUSD.csv', 'CADUSD.csv', 'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-filenames = ['CADUSD.csv','AUDUSD.csv']
+filenames = ['CADUSD.csv']
 # TODO output tables after each for loop, or store them somehow
 for count, name in enumerate(filenames):
     # TODO: scale factor for volatility--PLEASE CHECK IF COMPLETED CORRECTLY
@@ -56,12 +56,14 @@ for count, name in enumerate(filenames):
 
 
     print("yo")
-plt.show()
+# plt.show()
 print("yo")
 """Output multiple plots into a pdf file"""
-# pdf = matplotlib.backends.backend_pdf.PdfPages("output.pdf")
-# for fig in range(1, 22): ## will open an empty extra figure :(
-#     pdf.savefig( fig )
-# pdf.close()
+pdf = matplotlib.backends.backend_pdf.PdfPages("output.pdf")
+for fig in range(1, len(filenames)*21+1+count): ## will open an empty extra figure :(
+    pdf.savefig( fig, dpi=1200 )
+pdf.close()
 
-# TODO: add string to each function, such as "GARCH", or "Daily", or "Weekly" for a more generalized plot
+plt.show()
+
+print("yo")
