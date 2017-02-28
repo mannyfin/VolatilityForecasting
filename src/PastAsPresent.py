@@ -2,7 +2,7 @@ from Performance_Measure import *
 
 class PastAsPresent(object):
 
-    def tn_pred_tn_plus_1(data):
+    def tn_pred_tn_plus_1(data, filename):
 
         import matplotlib.pyplot as plt
         from SEplot import se_plot as SE
@@ -26,15 +26,16 @@ class PastAsPresent(object):
         prediction = data['Volatility_Time'][:-1]
         # second vec is the true values to compare
         observed = data['Volatility_Time'][1:]
-
+        # added dates below for plotting purposes
+        dates = data['Date'][1:]
         # Instantiate the class and pass the mean_se and quasi_likelihood functions
         Performance_ = PerformanceMeasure()
         MSE = Performance_.mean_se(observed=observed, prediction=prediction)
         QL = Performance_.quasi_likelihood(observed=observed, prediction=prediction)
 
         """ return a plot of the Squared error"""
-        SE(observed, prediction)
-        plt.title("Squared Error PastAsPresent (" + str(1) + ") - XYZCHANGETHIS Volatility")
+        SE(observed, prediction, dates)
+        plt.title(str(filename)+" Squared Error PastAsPresent (" + str(1) + ") Volatility")
         # plt.show()
 
         return MSE, QL

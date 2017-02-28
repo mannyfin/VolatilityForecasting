@@ -10,7 +10,7 @@ def count(func):
 
 
 @count
-def se_plot(y, y_fit):
+def se_plot(y, y_fit, dates):
     """
     :param y: source data
     :param y_fit: fit from LR
@@ -20,19 +20,38 @@ def se_plot(y, y_fit):
 
     # def se_plot(x, y, y_fit1):
     import numpy as np
+    import pandas as pd
 
     # Squared error
-    SE = (y_fit.reshape(len(y), 1) - y.reshape(len(y), 1)) ** 2
+    # SE = (y_fit.reshape(len(y), 1) - y.reshape(len(y), 1)) ** 2
+    SE = (y_fit.ravel() - y.ravel()) ** 2
+
 
     # reshape will be deprecated. the line below is not necessarily the correct one.
     # SE = (y_fit.values.reshape(len(y), 1) - y.values.reshape(len(y), 1)) ** 2
     # plt.figure(n)
     plt.figure(se_plot.counter)
-    plt.plot(np.log(SE))
-    # TODO make LR(n)
+    # nplogse = pd.DataFrame._from_arrays(np.log(SE), index=dates1, columns=['SE'])
+    # dates = dates.dt.to_period(freq='m')
+
+    # TODO maybe make this line below a dataframe
+    # ts = pd.Series(np.ravel(np.log(SE)), index=pd.date_range(dates[dates.first_valid_index()], periods=(dates.last_valid_index()- dates.first_valid_index()+1)))
+    ts2 = pd.DataFrame({'SE': np.ravel(np.log(SE))})
+    # ts2['Date'] = pd.DataFrame(dates[dates.first_valid_index(): (dates.last_valid_index() - dates.first_valid_index() + 1)])
+    # may need to reset index..
+    dates = dates.reset_index()
+    dates = dates.Date
+
+    ts2['Date'] = pd.DataFrame(dates)
+
+    # ts.plot()
+    plt.plot(ts2['Date'], ts2['SE'])
+
+    # plt.plot(dates, np.log(SE))
+
 
     # TODO make this plot vs months/years etc.
-    plt.xlabel("t")
+    plt.xlabel("Years")
     plt.ylabel("ln(SE)")
 
 

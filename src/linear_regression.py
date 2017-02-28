@@ -9,16 +9,17 @@ from Performance_Measure import *
 
 class LinRegression:
 
-    def lin_reg(data, n):
-        data = np.asarray(data['Volatility_Time'])
+    def lin_reg(data, n, filename):
+
+        # data = np.asarray(data)
 
         x = [i for i in range(n)]
         for i in range(n):
-            x[i] = data[(n - i - 1):(-i - 1)]
-            x[i] = x[i].reshape(len(x[i]), 1)
+            x[i] = data['Volatility_Time'][(n - i - 1):(-i - 1)]
+            # x[i] = x[i].reshape(len(x[i]), 1)
         x = np.column_stack(x)
         # x[i] = data[(n-i-1):(-i-1)]
-        y = data[n:]
+        y = data['Volatility_Time'][n:]
         A = lr()
         A.fit(x, y)
         b = [A.coef_[i] for i in range(n)]
@@ -29,13 +30,10 @@ class LinRegression:
         MSE = Performance_.mean_se(observed=y, prediction=yfit)
         QL = Performance_.quasi_likelihood(observed=y, prediction=yfit)
 
-        # MSE = mse(y, yfit)
-        SE(y, yfit)
-        # TODO: FIX "DAY" IN LINE BELOW TO BE GENERALIZED
-        # PREVIOUS: DAY LAG'S SE:
-        plt.title(str(n) + " Past Vol's SE: Linear Regression ")
-        # print(str(n) + " Lag's " + "MSE is " + str(MSE))
-        # plt.show()
+        dates = data['Date'][n:]
+        SE(y, yfit, dates)
+
+        plt.title(str(filename)+" Linear Regression: "+str(n) + " Past Vol SE ")
 
         return MSE, QL, b, c
 

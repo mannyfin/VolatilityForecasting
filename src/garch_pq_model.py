@@ -24,7 +24,7 @@ class GarchModel(object):
 
         return np.sqrt(forecasts.variance['h.1'][len(ret)-1])
 
-    def garch_pq_mse(data, Timedt, ret, p, q, lags, initial):
+    def garch_pq_mse(data, Timedt, ret, p, q, lags, initial, filename):
 
         """
         :param data: observed data
@@ -52,12 +52,14 @@ class GarchModel(object):
 
 
         garch_pq_forecasts = []
-        observed =[]
+        observed = []
+        # dates=[]
         for i in range(len(ret)-initial+1):
         # for i in range(len(ret)-initial):
             garch_pq_forecasts.append(GarchModel.garch_pq(ret[0:initial+i-1], p, q,lags))
         # observed daily vol
             observed.append(data['Volatility_Time'][initial + i-1])
+            # dates.append(data['Date'][initial + i-1])
             # observed.append(data['Volatility_Time'][initial + i])
 
         #     observed.append(data['Volatility_Time'][initial:])
@@ -65,8 +67,11 @@ class GarchModel(object):
         # observed = data['Volatility_Time'][2:]
         # garch_pq_forecasts = pd.Series(garch_pq_forecasts)
 
+        #  TODO:  remove NA from garchpqforcastes and corresponding element in observed
         garch_pq_forecasts = pd.Series(garch_pq_forecasts)
         observed=pd.Series(observed)
+        dates = data['Date'][initial-1:(len(ret) + 1)]
+
         # Instantiate the class and pass the mean_se and quasi_likelihood functions
         Performance_ = PerformanceMeasure()
         MSE = Performance_.mean_se(observed=observed, prediction=garch_pq_forecasts * TimeScaling)
@@ -74,9 +79,9 @@ class GarchModel(object):
 
         # output = mse(observed, garch_pq_forecasts)
 
-        SE(observed, garch_pq_forecasts)
+        SE(observed, garch_pq_forecasts, dates)
 
-        plt.title(str("Daily/weekly/monthly") + "SE: GARCH("+str(p)+","+str(q)+") ")
+        plt.title(str(filename)+" "+str(Timedt) + " SE: GARCH("+str(p)+","+str(q)+") ")
         #TODO: change the name of plots
         # plt.show()
         return MSE, QL
@@ -93,8 +98,9 @@ class GarchModel(object):
 
             return np.sqrt(forecasts.variance['h.1'][len(ret)-1])
 
-    def arch_q_mse(data,  Timedt, ret, q, lags,initial):
+    def arch_q_mse(data,  Timedt, ret, q, lags, initial, filename):
         """
+        :param filename: the file name
         :param data: observed data
         :param ret: growing window returns
         :param Timedt:"Daily","Weekly", "Monthly"
@@ -114,20 +120,23 @@ class GarchModel(object):
         elif Timedt == "Monthly":
             TimeScaling = np.sqrt(12)
 
-
         arch_q_forecasts = []
-        observed=[]
+        observed = []
+        # dates = []
         for i in range(len(ret)-initial+1):
         # for i in range(len(ret)-initial):
             arch_q_forecasts.append(GarchModel.arch_q(ret[0:initial+i-1], q, lags))
             observed.append(data['Volatility_Time'][initial + i-1])
+            # dates.append(data['Date'][initial + i-1])
+
+
             # observed.append(data['Volatility_Time'][initial + i])
         # print("hi")
         # observed daily vol
         # observed = data['Volatility_Time'][2:]
         arch_q_forecasts = pd.Series(arch_q_forecasts)
         observed = pd.Series(observed)
-
+        dates = data['Date'][initial-1:(len(ret) + 1)]
 
         # Instantiate the class and pass the mean_se and quasi_likelihood functions
         Performance_ = PerformanceMeasure()
@@ -136,8 +145,9 @@ class GarchModel(object):
 
         # output = mse(observed, arch_q_forecasts)
 
-        SE(observed, arch_q_forecasts)
-        plt.title(str("Daily/weekly/monthly") + "SE: ARCH(" + str(q) + ") ")
+        SE(observed, arch_q_forecasts, dates)
+
+        plt.title(str(filename)+" "+str(Timedt) + " SE: ARCH(" + str(q) + ") ")
 
         # plt.show()
         return MSE, QL
