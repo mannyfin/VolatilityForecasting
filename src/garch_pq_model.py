@@ -27,6 +27,7 @@ class GarchModel(object):
     def garch_pq_mse(data, Timedt, ret, p, q, lags, initial):
 
         """
+        :param data: observed data
         :param ret: growing window returns
         :param Timedt:"Daily","Weekly", "Monthly"
         :param p: p=1
@@ -92,7 +93,7 @@ class GarchModel(object):
 
     def arch_q_mse(data,  Timedt, ret, q, lags,initial):
         """
-
+        :param data: observed data
         :param ret: growing window returns
         :param Timedt:"Daily","Weekly", "Monthly"
         :param q: q=1
