@@ -53,10 +53,12 @@ class GarchModel(object):
 
         garch_pq_forecasts = []
         observed =[]
-        for i in range(len(ret)-initial):
+        for i in range(len(ret)-initial+1):
+        # for i in range(len(ret)-initial):
             garch_pq_forecasts.append(GarchModel.garch_pq(ret[0:initial+i-1], p, q,lags))
         # observed daily vol
-            observed.append(data['Volatility_Time'][initial + i])
+            observed.append(data['Volatility_Time'][initial + i-1])
+            # observed.append(data['Volatility_Time'][initial + i])
 
         #     observed.append(data['Volatility_Time'][initial:])
 
@@ -115,9 +117,11 @@ class GarchModel(object):
 
         arch_q_forecasts = []
         observed=[]
-        for i in range(len(ret)-initial):
+        for i in range(len(ret)-initial+1):
+        # for i in range(len(ret)-initial):
             arch_q_forecasts.append(GarchModel.arch_q(ret[0:initial+i-1], q, lags))
-            observed.append(data['Volatility_Time'][initial + i])
+            observed.append(data['Volatility_Time'][initial + i-1])
+            # observed.append(data['Volatility_Time'][initial + i])
         # print("hi")
         # observed daily vol
         # observed = data['Volatility_Time'][2:]
