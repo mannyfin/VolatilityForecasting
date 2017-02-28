@@ -9,7 +9,7 @@ from Performance_Measure import *
 
 class LinRegression:
 
-    def lin_reg(data, n, filename):
+    def lin_reg(data, n, filename, stringinput):
 
         # data = np.asarray(data)
 
@@ -33,7 +33,7 @@ class LinRegression:
         dates = data['Date'][n:]
         SE(y, yfit, dates)
 
-        plt.title(str(filename)+" Linear Regression: "+str(n) + " Past Vol SE ")
+        plt.title(str(filename)+" "+str(stringinput)+" Linear Regression: "+str(n) + " Past Vol SE ")
 
         return MSE, QL, b, c
 

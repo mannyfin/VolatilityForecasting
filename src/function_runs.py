@@ -21,7 +21,7 @@ class FunctionCalls(object):
         """tnplus1"""
         try:
             if tnplus1 == 1:
-                part1 = PastAsPresent.tn_pred_tn_plus_1(data=input_data, filename=filename)
+                part1 = PastAsPresent.tn_pred_tn_plus_1(data=input_data, filename=filename, stringinput=stringinput)
                 output['PastAsPresent'] = part1
                 print("Above is Past as present")
             elif tnplus1 == 0:
@@ -34,7 +34,7 @@ class FunctionCalls(object):
             # not the best exception handling here...
             if len(lr)>= 1 & isinstance(lr, list):
                 for count, elem in enumerate(lr):
-                    LRmethod = LinRegression.lin_reg(data=input_data, n=elem, filename=filename)
+                    LRmethod = LinRegression.lin_reg(data=input_data, n=elem, filename=filename, stringinput=stringinput)
                     output['LinearRegression_' + str(elem)] = LRmethod[0:2]
                     print("Above is LR")
             else:

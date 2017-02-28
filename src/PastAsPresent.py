@@ -2,7 +2,7 @@ from Performance_Measure import *
 
 class PastAsPresent(object):
 
-    def tn_pred_tn_plus_1(data, filename):
+    def tn_pred_tn_plus_1(data, filename, stringinput):
 
         import matplotlib.pyplot as plt
         from SEplot import se_plot as SE
@@ -35,7 +35,7 @@ class PastAsPresent(object):
 
         """ return a plot of the Squared error"""
         SE(observed, prediction, dates)
-        plt.title(str(filename)+" Squared Error PastAsPresent (" + str(1) + ") Volatility")
+        plt.title(str(filename)+" "+str(stringinput)+" Squared Error PastAsPresent (" + str(1) + ") Volatility")
         # plt.show()
 
         return MSE, QL
