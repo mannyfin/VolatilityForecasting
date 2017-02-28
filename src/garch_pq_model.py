@@ -23,9 +23,11 @@ class GarchModel(object):
 
         return forecasts.variance['h.1'][len(ret)-1]
 
-    def garch_pq_mse(data, ret, p, q, lags, initial):
+    def garch_pq_mse(data, Timedt, ret, p, q, lags, initial):
+
         """
         :param ret: growing window returns
+        :param Timedt:"Daily","Weekly", "Monthly"
         :param p: p=1
         :param q: q=1
         :param lags: lags=0
@@ -36,6 +38,16 @@ class GarchModel(object):
 
         from sklearn.metrics import mean_squared_error as mse
         import matplotlib.pyplot as plt
+        import numpy as np
+        import numpy as np
+
+        if Timedt == "Daily":
+            TimeScaling = np.sqrt(313)
+        elif Timedt == "Weekly":
+            TimeScaling = np.sqrt(52)
+        elif Timedt == "Monthly":
+            TimeScaling = np.sqrt(12)
+
 
         garch_pq_forecasts = []
         observed =[]
@@ -47,12 +59,14 @@ class GarchModel(object):
         #     observed.append(data['Volatility_Daily'][initial:])
 
         # observed = data['Volatility_Daily'][2:]
+        # garch_pq_forecasts = pd.Series(garch_pq_forecasts)
+
         garch_pq_forecasts = pd.Series(garch_pq_forecasts)
         observed=pd.Series(observed)
         # Instantiate the class and pass the mean_se and quasi_likelihood functions
         Performance_ = PerformanceMeasure()
-        MSE = Performance_.mean_se(observed=observed, prediction=garch_pq_forecasts)
-        QL = Performance_.quasi_likelihood(observed=observed, prediction=garch_pq_forecasts)
+        MSE = Performance_.mean_se(observed=observed, prediction=garch_pq_forecasts * TimeScaling)
+        QL = Performance_.quasi_likelihood(observed=observed, prediction=garch_pq_forecasts * TimeScaling)
 
         # output = mse(observed, garch_pq_forecasts)
 
@@ -75,10 +89,11 @@ class GarchModel(object):
 
             return forecasts.variance['h.1'][len(ret)-1]
 
-    def arch_q_mse(data, ret, q, lags,initial):
+    def arch_q_mse(data,  Timedt, ret, q, lags,initial):
         """
 
         :param ret: growing window returns
+        :param Timedt:"Daily","Weekly", "Monthly"
         :param q: q=1
         :param lags: lags=0
         :param initial: 3 <= initial <= len(ret)-1
@@ -88,12 +103,20 @@ class GarchModel(object):
         # from sklearn.metrics import mean_squared_error as mse
         import matplotlib.pyplot as plt
 
+        if Timedt == "Daily":
+            TimeScaling = np.sqrt(313)
+        elif Timedt == "Weekly":
+            TimeScaling = np.sqrt(52)
+        elif Timedt == "Monthly":
+            TimeScaling = np.sqrt(12)
+
+
         arch_q_forecasts = []
         observed=[]
         for i in range(len(ret)-initial):
             arch_q_forecasts.append(GarchModel.arch_q(ret[0:initial+i-1], q, lags))
             observed.append(data['Volatility_Daily'][initial + i])
-        print("hi")
+        # print("hi")
         # observed daily vol
         # observed = data['Volatility_Daily'][2:]
         arch_q_forecasts = pd.Series(arch_q_forecasts)
@@ -102,8 +125,8 @@ class GarchModel(object):
 
         # Instantiate the class and pass the mean_se and quasi_likelihood functions
         Performance_ = PerformanceMeasure()
-        MSE = Performance_.mean_se(observed=observed, prediction=arch_q_forecasts)
-        QL = Performance_.quasi_likelihood(observed=observed, prediction=arch_q_forecasts)
+        MSE = Performance_.mean_se(observed=observed, prediction=arch_q_forecasts * TimeScaling)
+        QL = Performance_.quasi_likelihood(observed=observed, prediction=arch_q_forecasts * TimeScaling)
 
         # output = mse(observed, arch_q_forecasts)
 
