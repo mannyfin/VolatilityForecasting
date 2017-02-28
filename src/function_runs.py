@@ -22,7 +22,8 @@ class FunctionCalls(object):
         """tnplus1"""
         try:
             if tnplus1 == 1:
-                output['PastAsPresent'] = PastAsPresent.tn_pred_tn_plus_1(input_data)
+                part1 = PastAsPresent.tn_pred_tn_plus_1(input_data)
+                output['PastAsPresent'] = part1
             elif tnplus1 == 0:
                 pass
         except ValueError:
@@ -41,15 +42,16 @@ class FunctionCalls(object):
         except TypeError:
             print("Error: Please pass an array of ints...")
         try:
-            if len(arch) == 3:
-                ARCH = gm.arch_q_mse(data=input_data, ret=arch[0], q=arch[1], lags=arch[2])
+            if len(arch) == 4:
+                ARCH = gm.arch_q_mse(data=input_data,Timedt=stringinput, ret=arch[0], q=arch[1], lags=arch[2], initial=arch[3])
                 output['ARCH'] = ARCH
         except TypeError:
             print("Error: ARCH, make sure all the params are filled")
 
         try:
-            if len(garch11) == 4:
-                GARCH = gm.garch_pq_mse(data=input_data, ret=garch11[0], p=garch11[1], q=garch11[2], lags=garch11[3])
+            if len(garch11) == 5:
+                GARCH = gm.garch_pq_mse(data=input_data,Timedt=stringinput, ret=garch11[0], p=garch11[1], q=garch11[2], lags=garch11[3],
+                                        initial=garch11[4])
                 output['GARCH'] = GARCH
         except TypeError:
             print("Error: GARCH, make sure all the params are filled")
