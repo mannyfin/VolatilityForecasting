@@ -79,7 +79,7 @@ class GarchModel(object):
 
         # output = mse(observed, garch_pq_forecasts)
 
-        SE(observed, garch_pq_forecasts, dates)
+        SE(observed/100, garch_pq_forecasts/100, dates)
 
         plt.title(str(filename)+" "+str(Timedt) + " SE: GARCH("+str(p)+","+str(q)+") ")
         #TODO: change the name of plots
@@ -145,7 +145,7 @@ class GarchModel(object):
 
         # output = mse(observed, arch_q_forecasts)
 
-        SE(observed, arch_q_forecasts, dates)
+        SE(observed/100, arch_q_forecasts/100, dates)
 
         plt.title(str(filename)+" "+str(Timedt) + " SE: ARCH(" + str(q) + ") ")
 
