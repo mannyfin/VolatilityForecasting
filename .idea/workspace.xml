@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e3c6b6ca-c3c5-4504-ae2d-e78ea577aa4e" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Performance_Measure.py" afterPath="$PROJECT_DIR$/src/Performance_Measure.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Volatility.py" afterPath="$PROJECT_DIR$/src/Volatility.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.py" afterPath="$PROJECT_DIR$/src/main.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -14,7 +14,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/VolatilityForecasting$main.coverage" NAME="main Coverage Results" MODIFIED="1488313060104" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/VolatilityForecasting$main.coverage" NAME="main Coverage Results" MODIFIED="1488313255036" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -26,7 +26,7 @@
         <entry file="file://$PROJECT_DIR$/src/main.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="387">
-              <caret line="35" column="0" lean-forward="true" selection-start-line="35" selection-start-column="0" selection-end-line="41" selection-end-column="35" />
+              <caret line="35" column="0" lean-forward="true" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
               <folding>
                 <element signature="e#187#226#0" expanded="true" />
               </folding>
@@ -37,8 +37,8 @@
       <file leaf-file-name="Volatility.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Volatility.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="650">
-              <caret line="85" column="23" lean-forward="true" selection-start-line="85" selection-start-column="23" selection-end-line="85" selection-end-column="60" />
+            <state relative-caret-position="480">
+              <caret line="72" column="43" lean-forward="false" selection-start-line="72" selection-start-column="43" selection-end-line="72" selection-end-column="43" />
               <folding />
             </state>
           </provider>
@@ -140,13 +140,13 @@
         <option value="$PROJECT_DIR$/src/read_in_files.py" />
         <option value="$PROJECT_DIR$/src/NumDaysWeeksMonths.py" />
         <option value="$PROJECT_DIR$/src/RetCalculator.py" />
-        <option value="$PROJECT_DIR$/src/Volatility.py" />
         <option value="$PROJECT_DIR$/src/SEplot.py" />
         <option value="$PROJECT_DIR$/src/function_runs.py" />
         <option value="$PROJECT_DIR$/src/PastAsPresent.py" />
         <option value="$PROJECT_DIR$/src/garch_pq_model.py" />
         <option value="$PROJECT_DIR$/src/linear_regression.py" />
         <option value="$PROJECT_DIR$/src/Performance_Measure.py" />
+        <option value="$PROJECT_DIR$/src/Volatility.py" />
         <option value="$PROJECT_DIR$/src/main.py" />
       </list>
     </option>
@@ -697,7 +697,14 @@
       <option name="project" value="LOCAL" />
       <updated>1488312263813</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Made a bunch of changes">
+      <created>1488313140016</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1488313140016</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1053,8 +1060,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Volatility.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="650">
-          <caret line="85" column="23" lean-forward="true" selection-start-line="85" selection-start-column="23" selection-end-line="85" selection-end-column="60" />
+        <state relative-caret-position="480">
+          <caret line="72" column="43" lean-forward="false" selection-start-line="72" selection-start-column="43" selection-end-line="72" selection-end-column="43" />
           <folding />
         </state>
       </provider>
@@ -1062,7 +1069,7 @@
     <entry file="file://$PROJECT_DIR$/src/main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="387">
-          <caret line="35" column="0" lean-forward="true" selection-start-line="35" selection-start-column="0" selection-end-line="41" selection-end-column="35" />
+          <caret line="35" column="0" lean-forward="true" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
           <folding>
             <element signature="e#187#226#0" expanded="true" />
           </folding>
