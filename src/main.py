@@ -16,8 +16,8 @@ import numpy as np
 from function_runs import *
 import matplotlib.backends.backend_pdf
 
-# filenames = ['AUDUSD.csv', 'CADUSD.csv', 'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-filenames = ['CADUSD.csv']
+filenames = ['AUDUSD.csv', 'CADUSD.csv', 'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+# filenames = ['CADUSD.csv']
 # TODO output tables after each for loop, or store them somehow
 for name in filenames:
     # TODO: scale factor for volatility--PLEASE CHECK IF COMPLETED CORRECTLY
@@ -55,6 +55,7 @@ for name in filenames:
 
     print("yo")
 plt.show()
+print("yo")
 # """Output multiple plots into a pdf file"""
 # pdf = matplotlib.backends.backend_pdf.PdfPages("output.pdf")
 # for fig in range(1, 22): ## will open an empty extra figure :(
