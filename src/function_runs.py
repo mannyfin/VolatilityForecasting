@@ -35,7 +35,7 @@ class FunctionCalls(object):
             if len(lr)>= 1 & isinstance(lr, list):
                 for count, elem in enumerate(lr):
                     LRmethod = LinRegression.lin_reg(input_data, elem)
-                    output['LinearRegression' + str(elem)] = LRmethod[0:2]
+                    output['LinearRegression_' + str(elem)] = LRmethod[0:2]
             else:
                 pass
 

@@ -64,19 +64,19 @@ def time_vol_calc(df_single_time):
 
     # TODO reformat code to include dvol and dret as a single DataFrame
     # gives an error for df.Date.unique() when using week and month because the num vals are not the same
-    dvol = {'Date': [df_single_time[i]['Date'][df_single_time[i]['Date'].first_valid_index()] for i in range(0, len(df_single_time))], 'Volatility_Daily': time_vols}
-    dret = {'Date': [df_single_time[i]['Date'][df_single_time[i]['Date'].first_valid_index()] for i in range(0, len(df_single_time))], 'Return_Daily': time_rets}
+    dvol = {'Date': [df_single_time[i]['Date'][df_single_time[i]['Date'].first_valid_index()] for i in range(0, len(df_single_time))], 'Volatility_Time': time_vols}
+    dret = {'Date': [df_single_time[i]['Date'][df_single_time[i]['Date'].first_valid_index()] for i in range(0, len(df_single_time))], 'Return_Time': time_rets}
 
     time_vol_result = pd.DataFrame(dvol)
     time_ret_result = pd.DataFrame(dret)
 
-    inters_ret = time_ret_result.query('Return_Daily == 0').index.values
+    inters_ret = time_ret_result.query('Return_Time == 0').index.values
     # essentially you will only ever pass through this if statement if there are zero return values
     if inters_ret.size > 0:
-        inters_vol = time_vol_result.query(('Volatility_Daily == 0')).index.values
+        inters_vol = time_vol_result.query(('Volatility_Time == 0')).index.values
         """
         # this line below removes days where the vols were zero
-        # time_vol_result = time_vol_result.query('Volatility_Daily != 0')
+        # time_vol_result = time_vol_result.query('Volatility_Time != 0')
         """
         # bug point, maybe get an error if c
         comparison_array = list(set(inters_ret).intersection(inters_vol))

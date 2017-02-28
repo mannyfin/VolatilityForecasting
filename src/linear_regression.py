@@ -10,7 +10,7 @@ from Performance_Measure import *
 class LinRegression:
 
     def lin_reg(data, n):
-        data = np.asarray(data['Volatility_Daily'])
+        data = np.asarray(data['Volatility_Time'])
 
         x = [i for i in range(n)]
         for i in range(n):

@@ -23,9 +23,9 @@ class PastAsPresent(object):
         """
 
         # first vec is the prediction
-        prediction = data['Volatility_Daily'][:-1]
+        prediction = data['Volatility_Time'][:-1]
         # second vec is the true values to compare
-        observed = data['Volatility_Daily'][1:]
+        observed = data['Volatility_Time'][1:]
 
         # Instantiate the class and pass the mean_se and quasi_likelihood functions
         Performance_ = PerformanceMeasure()

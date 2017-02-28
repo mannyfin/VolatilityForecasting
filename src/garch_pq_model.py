@@ -55,11 +55,11 @@ class GarchModel(object):
         for i in range(len(ret)-initial):
             garch_pq_forecasts.append(GarchModel.garch_pq(ret[0:initial+i-1], p, q,lags))
         # observed daily vol
-            observed.append(data['Volatility_Daily'][initial + i])
+            observed.append(data['Volatility_Time'][initial + i])
 
-        #     observed.append(data['Volatility_Daily'][initial:])
+        #     observed.append(data['Volatility_Time'][initial:])
 
-        # observed = data['Volatility_Daily'][2:]
+        # observed = data['Volatility_Time'][2:]
         # garch_pq_forecasts = pd.Series(garch_pq_forecasts)
 
         garch_pq_forecasts = pd.Series(garch_pq_forecasts)
@@ -116,10 +116,10 @@ class GarchModel(object):
         observed=[]
         for i in range(len(ret)-initial):
             arch_q_forecasts.append(GarchModel.arch_q(ret[0:initial+i-1], q, lags))
-            observed.append(data['Volatility_Daily'][initial + i])
+            observed.append(data['Volatility_Time'][initial + i])
         # print("hi")
         # observed daily vol
-        # observed = data['Volatility_Daily'][2:]
+        # observed = data['Volatility_Time'][2:]
         arch_q_forecasts = pd.Series(arch_q_forecasts)
         observed = pd.Series(observed)
 
@@ -146,7 +146,7 @@ class GarchModel(object):
     #     for i in range(len(ret) - 2):
     #         arch_q_forecasts.append(GarchModel.arch_q(ret[i:(i + lags + 1)], q, lags))
     #     # observed daily vol
-    #     observed = data['Volatility_Daily'][2:]
+    #     observed = data['Volatility_Time'][2:]
     #     arch_q_forecasts = pd.Series(arch_q_forecasts)
     #
     #     # Instantiate the class and pass the mean_se and quasi_likelihood functions
@@ -170,7 +170,7 @@ class GarchModel(object):
     # for i in range(len(ret)-2):
     #     garch_pq_forecasts.append(GarchModel.garch_pq(ret[i:(i+lags+1)], p, q,lags))
     # # observed daily vol
-    # observed = data['Volatility_Daily'][2:]
+    # observed = data['Volatility_Time'][2:]
     # garch_pq_forecasts = pd.Series(garch_pq_forecasts)
     #
     # # Instantiate the class and pass the mean_se and quasi_likelihood functions
