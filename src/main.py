@@ -16,8 +16,8 @@ import numpy as np
 from function_runs import *
 import matplotlib.backends.backend_pdf
 
-# filenames = ['AUDUSD.csv', 'CADUSD.csv', 'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-filenames = ['SEKUSD.csv']
+filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+# filenames = ['SEKUSD.csv']
 
 for count, name in enumerate(filenames):
     #  reads in the files and puts them into dataframes, returns a dataframe called df
@@ -64,7 +64,7 @@ for count, name in enumerate(filenames):
 
 """Output multiple plots into a pdf file"""
 pdf = matplotlib.backends.backend_pdf.PdfPages(name+".pdf")
-for fig in range(1, 4):
+for fig in range(1, 3*count+3+1):
     pdf.savefig( fig, dpi=1200 )
 pdf.close()
 
