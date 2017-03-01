@@ -37,7 +37,7 @@ class FunctionCalls(object):
                     LRmethod = LinRegression.lin_reg(data=input_data, n=elem, filename=filename,
                                                      stringinput=stringinput, warmup_period=warmup)
                     output['LinearRegression_' + str(elem)] = LRmethod[0:2]
-                    print("Above is LR for " + str(stringinput))
+                    print("Above is LR for " +str(elem)+" "+ str(stringinput) +" Volatilities")
             else:
                 pass
 

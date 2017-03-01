@@ -1,16 +1,16 @@
 import matplotlib.pyplot as plt
 
 
-def count(func):
-    def wrapper(*args, **kwargs):
-        wrapper.counter += 1    # executed every time the wrapped function is called
-        return func(*args, **kwargs)
-    wrapper.counter = 0         # executed only once in decorator definition time
-    return wrapper
-
-
-@count
-def se_plot(y, y_fit, dates):
+# def count(func):
+#     def wrapper(*args, **kwargs):
+#         wrapper.counter += 1    # executed every time the wrapped function is called
+#         return func(*args, **kwargs)
+#     wrapper.counter = 0         # executed only once in decorator definition time
+#     return wrapper
+#
+#
+# @count
+def se_plot(y, y_fit, dates, function_method):
     """
     :param y: source data
     :param y_fit: fit from LR
@@ -31,7 +31,8 @@ def se_plot(y, y_fit, dates):
     # SE = (y_fit.values.reshape(len(y), 1) - y.values.reshape(len(y), 1)) ** 2
     # plt.figure(n)
     # TODO add DPI
-    plt.figure(se_plot.counter, figsize=(12,5))
+    # plt.figure(se_plot.counter, figsize=(12,5))
+    plt.figure(1, figsize=(12,5))
     # nplogse = pd.DataFrame._from_arrays(np.log(SE), index=dates1, columns=['SE'])
     # dates = dates.dt.to_period(freq='m')
 
@@ -46,8 +47,8 @@ def se_plot(y, y_fit, dates):
     ts2['Date'] = pd.DataFrame(dates)
 
     # ts.plot()
-    plt.plot(ts2['Date'], ts2['SE'])
-
+    ax = plt.plot(ts2['Date'], ts2['SE'], label=function_method)
+    plt.hold(True)
     # plt.plot(dates, np.log(SE))
 
 

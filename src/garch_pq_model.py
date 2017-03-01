@@ -67,7 +67,6 @@ class GarchModel(object):
         # observed = data['Volatility_Time'][2:]
         # garch_pq_forecasts = pd.Series(garch_pq_forecasts)
 
-        #  TODO:  remove NA from garchpqforcastes and corresponding element in observed
         garch_pq_forecasts = pd.Series(garch_pq_forecasts)
         observed=pd.Series(observed)
         dates = data['Date'][warmup_period-1:(len(ret) + 1)]
@@ -78,11 +77,11 @@ class GarchModel(object):
         QL = Performance_.quasi_likelihood(observed=observed, prediction=garch_pq_forecasts * TimeScaling)
 
         # output = mse(observed, garch_pq_forecasts)
+        label = str(filename)+" "+str(Timedt) + " SE: GARCH("+str(p)+","+str(q)+") "
+        SE(observed/100, garch_pq_forecasts/100, dates, function_method=label)
 
-        SE(observed/100, garch_pq_forecasts/100, dates)
+        # plt.title(str(filename)+" "+str(Timedt) + " SE: GARCH("+str(p)+","+str(q)+") ")
 
-        plt.title(str(filename)+" "+str(Timedt) + " SE: GARCH("+str(p)+","+str(q)+") ")
-        #TODO: change the name of plots
         # plt.show()
         return MSE, QL
 
@@ -109,7 +108,6 @@ class GarchModel(object):
         :param warmup_period: 3 <= warmup_period <= len(ret)-1
         :return: MSE, QL
         """
-
         # from sklearn.metrics import mean_squared_error as mse
         import matplotlib.pyplot as plt
 
@@ -145,9 +143,11 @@ class GarchModel(object):
 
         # output = mse(observed, arch_q_forecasts)
 
-        SE(observed/100, arch_q_forecasts/100, dates)
+        label = str(filename)+" "+str(Timedt) + " SE: ARCH(" + str(q) + ") "
 
-        plt.title(str(filename)+" "+str(Timedt) + " SE: ARCH(" + str(q) + ") ")
+        SE(observed/100, arch_q_forecasts/100, dates, function_method=label)
+
+        # plt.title(str(filename)+" "+str(Timedt) + " SE: ARCH(" + str(q) + ") ")
 
         # plt.show()
         return MSE, QL

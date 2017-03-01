@@ -33,9 +33,10 @@ class PastAsPresent(object):
         MSE = Performance_.mean_se(observed=observed, prediction=prediction)
         QL = Performance_.quasi_likelihood(observed=observed, prediction=prediction)
 
+        label = str(filename) + " " + str(stringinput) + " Squared Error PastAsPresent (" + str(1) + ") Volatility"
         """ return a plot of the Squared error"""
-        SE(observed, prediction, dates)
-        plt.title(str(filename)+" "+str(stringinput)+" Squared Error PastAsPresent (" + str(1) + ") Volatility")
+        SE(observed, prediction, dates,function_method=label)
+        # plt.title(str(filename)+" "+str(stringinput)+" Squared Error PastAsPresent (" + str(1) + ") Volatility")
         # plt.show()
 
         return MSE, QL
