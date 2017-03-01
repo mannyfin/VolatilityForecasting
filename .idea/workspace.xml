@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e3c6b6ca-c3c5-4504-ae2d-e78ea577aa4e" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/SEplot.py" afterPath="$PROJECT_DIR$/src/SEplot.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.py" afterPath="$PROJECT_DIR$/src/main.py" />
     </list>
     <list id="7bd11bc7-8aab-4b28-8a84-18e62a5e8521" name="Failed commit: Default" comment="fixed x axis of plots" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -1441,7 +1439,14 @@
       <option name="project" value="LOCAL" />
       <updated>1488403863765</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="fixed, but doesnt loop">
+      <created>1488407710015</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1488407710015</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1544,7 +1549,8 @@
     <MESSAGE value="plot" />
     <MESSAGE value="changed plot size and increased dpi" />
     <MESSAGE value="fixed x axis of plots" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed x axis of plots" />
+    <MESSAGE value="fixed, but doesnt loop" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed, but doesnt loop" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
