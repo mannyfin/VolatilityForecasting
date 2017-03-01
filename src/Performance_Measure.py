@@ -19,6 +19,10 @@ class PerformanceMeasure(object):
     def quasi_likelihood(self, observed, prediction):
         """Note: QL DOES NOT WORK IF THERE ARE ZEROES IN DATA SERIES"""
 
+        if len(prediction.index[prediction<0]) >0:
+            observed = observed.drop(observed.first_valid_index() + prediction.index[prediction < 0])
+            prediction = prediction[prediction>0]
+
         value = prediction.ravel() / observed.ravel()
         # value = prediction.values.reshape(len(observed), 1) / observed.values.reshape(len(observed), 1)
         ones = np.ones(len(observed))
