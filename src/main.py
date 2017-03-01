@@ -42,17 +42,17 @@ for count, name in enumerate(filenames):
     initial = 0.5 # set the first 50% of the input data as in-sample data to fit the model
 
     fc = FunctionCalls()
-    Daily = fc.function_runs(name, 'Daily', daily_vol_result, 1, [1, 3, 5, 10],
-                             [np.array(daily_ret['Return_Time']), 1, 0, int(initial*len(daily_ret))],
-                             [np.array(daily_ret['Return_Time']), 1, 1, 0,int(initial*len(daily_ret))])
+    Daily = fc.function_runs(name, 'Daily', daily_vol_result[1:], 1, [1, 3, 5, 10],
+                             [np.array(daily_ret['Return_Time'][1:]), 1, 0, int(initial*len(daily_ret))],
+                             [np.array(daily_ret['Return_Time'][1:]), 1, 1, 0,int(initial*len(daily_ret))])
 
-    Weekly = fc.function_runs(name, 'Weekly', weekly_vol_result, 1, [1, 3, 5, 10],
-                              [np.array(weekly_ret['Return_Time']), 1, 0, int(initial*len(weekly_ret))],
-                               [np.array(weekly_ret['Return_Time']), 1, 1, 0, int(initial*len(weekly_ret))])
+    Weekly = fc.function_runs(name, 'Weekly', weekly_vol_result[1:], 1, [1, 3, 5, 10],
+                              [np.array(weekly_ret['Return_Time'][1:]), 1, 0, int(initial*len(weekly_ret))],
+                               [np.array(weekly_ret['Return_Time'][1:]), 1, 1, 0, int(initial*len(weekly_ret))])
 
-    Monthly = fc.function_runs(name, 'Monthly', monthly_vol_result, 1, [1, 3, 5, 10],
-                               [np.array(monthly_ret['Return_Time']), 1, 0, int(initial*len(monthly_ret))],
-                               [np.array(monthly_ret['Return_Time']), 1, 1, 0, int(initial*len(monthly_ret))])
+    Monthly = fc.function_runs(name, 'Monthly', monthly_vol_result[1:], 1, [1, 3, 5, 10],
+                               [np.array(monthly_ret['Return_Time'][1:]), 1, 0, int(initial*len(monthly_ret))],
+                               [np.array(monthly_ret['Return_Time'][1:]), 1, 1, 0, int(initial*len(monthly_ret))])
 
 
     print("yo")
@@ -64,6 +64,6 @@ for fig in range(1, len(filenames)*21+1+count): ## will open an empty extra figu
     pdf.savefig( fig, dpi=1200 )
 pdf.close()
 
-plt.show()
+# plt.show()
 
 print("yo")
