@@ -12,7 +12,7 @@ class PerformanceMeasure(object):
 
     def mean_se(self, observed, prediction):
         self.MSE = mse(observed, prediction)
-        self.MSE = self.MSE/10000
+        self.MSE = self.MSE
         print("MSE is: " + str(self.MSE))
         return self.MSE
 

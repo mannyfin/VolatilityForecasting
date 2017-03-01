@@ -78,7 +78,8 @@ class LinRegression:
 
         Performance_ = PerformanceMeasure()
         MSE = Performance_.mean_se(observed=y, prediction=prediction)
-        QL = Performance_.quasi_likelihood(observed=y, prediction=prediction)
+        # QL = Performance_.quasi_likelihood(observed=y, prediction=prediction)
+        QL = Performance_.quasi_likelihood(observed=y*1000, prediction=prediction*1000)
 
         dates = data['Date'][n:]
         label=str(filename)+" "+str(stringinput)+" Linear Regression: "+str(n) + " Past Vol SE "

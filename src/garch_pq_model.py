@@ -50,6 +50,8 @@ class GarchModel(object):
         elif Timedt == "Monthly":
             TimeScaling = np.sqrt(12)
 
+        data = data*100
+        ret = ret *100
 
         garch_pq_forecasts = []
         observed = []
@@ -73,8 +75,8 @@ class GarchModel(object):
 
         # Instantiate the class and pass the mean_se and quasi_likelihood functions
         Performance_ = PerformanceMeasure()
-        MSE = Performance_.mean_se(observed=observed, prediction=garch_pq_forecasts * TimeScaling)
-        QL = Performance_.quasi_likelihood(observed=observed, prediction=garch_pq_forecasts * TimeScaling)
+        MSE = Performance_.mean_se(observed=observed/100, prediction=garch_pq_forecasts/100 * TimeScaling)
+        QL = Performance_.quasi_likelihood(observed=observed/100, prediction=garch_pq_forecasts/100 * TimeScaling)
 
         # output = mse(observed, garch_pq_forecasts)
         label = str(filename)+" "+str(Timedt) + " SE: GARCH("+str(p)+","+str(q)+") "
@@ -118,6 +120,9 @@ class GarchModel(object):
         elif Timedt == "Monthly":
             TimeScaling = np.sqrt(12)
 
+        data = data * 100
+        ret = ret * 100
+
         arch_q_forecasts = []
         observed = []
         # dates = []
@@ -138,8 +143,8 @@ class GarchModel(object):
 
         # Instantiate the class and pass the mean_se and quasi_likelihood functions
         Performance_ = PerformanceMeasure()
-        MSE = Performance_.mean_se(observed=observed, prediction=arch_q_forecasts * TimeScaling)
-        QL = Performance_.quasi_likelihood(observed=observed, prediction=arch_q_forecasts * TimeScaling)
+        MSE = Performance_.mean_se(observed=observed/100, prediction=arch_q_forecasts/100 * TimeScaling)
+        QL = Performance_.quasi_likelihood(observed=observed/100, prediction=arch_q_forecasts/100 * TimeScaling)
 
         # output = mse(observed, arch_q_forecasts)
 

@@ -70,10 +70,6 @@ def time_vol_calc(df_single_time):
     time_vol_result = pd.DataFrame(dvol)
     time_ret_result = pd.DataFrame(dret)
 
-    time_vol_result['Volatility_Time']*=100
-    time_ret_result['Return_Time']*=100
-
-
     inters_ret = time_ret_result.query('Return_Time == 0').index.values
     # essentially you will only ever pass through this if statement if there are zero return values
     if inters_ret.size > 0:
