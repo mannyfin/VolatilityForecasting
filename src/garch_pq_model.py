@@ -24,7 +24,7 @@ class GarchModel(object):
 
         return np.sqrt(forecasts.variance['h.1'][len(ret)-1])
 
-    def garch_pq_mse(data, Timedt, ret, p, q, lags, initial, filename):
+    def garch_pq_mse(data, Timedt, ret, p, q, lags, warmup_period, filename):
 
         """
         :param data: observed data
@@ -33,7 +33,7 @@ class GarchModel(object):
         :param p: p=1
         :param q: q=1
         :param lags: lags=0
-        :param initial: 3 <= initial <= len(ret)-1
+        :param warmup_period: 3 <= warmup_period <= len(ret)-1
         :return: MSE, QL
 
         """
@@ -54,15 +54,15 @@ class GarchModel(object):
         garch_pq_forecasts = []
         observed = []
         # dates=[]
-        for i in range(len(ret)-initial+1):
-        # for i in range(len(ret)-initial):
-            garch_pq_forecasts.append(GarchModel.garch_pq(ret[0:initial+i-1], p, q,lags))
+        for i in range(len(ret)-warmup_period+1):
+        # for i in range(len(ret)-warmup_period):
+            garch_pq_forecasts.append(GarchModel.garch_pq(ret[0:warmup_period+i-1], p, q, lags))
         # observed daily vol
-            observed.append(data['Volatility_Time'][initial + i-1])
-            # dates.append(data['Date'][initial + i-1])
-            # observed.append(data['Volatility_Time'][initial + i])
+            observed.append(data['Volatility_Time'][warmup_period + i-1])
+            # dates.append(data['Date'][warmup_period + i-1])
+            # observed.append(data['Volatility_Time'][warmup_period + i])
 
-        #     observed.append(data['Volatility_Time'][initial:])
+        #     observed.append(data['Volatility_Time'][warmup_period:])
 
         # observed = data['Volatility_Time'][2:]
         # garch_pq_forecasts = pd.Series(garch_pq_forecasts)
@@ -70,7 +70,7 @@ class GarchModel(object):
         #  TODO:  remove NA from garchpqforcastes and corresponding element in observed
         garch_pq_forecasts = pd.Series(garch_pq_forecasts)
         observed=pd.Series(observed)
-        dates = data['Date'][initial-1:(len(ret) + 1)]
+        dates = data['Date'][warmup_period-1:(len(ret) + 1)]
 
         # Instantiate the class and pass the mean_se and quasi_likelihood functions
         Performance_ = PerformanceMeasure()
@@ -98,7 +98,7 @@ class GarchModel(object):
 
             return np.sqrt(forecasts.variance['h.1'][len(ret)-1])
 
-    def arch_q_mse(data,  Timedt, ret, q, lags, initial, filename):
+    def arch_q_mse(data,  Timedt, ret, q, lags, warmup_period, filename):
         """
         :param filename: the file name
         :param data: observed data
@@ -106,7 +106,7 @@ class GarchModel(object):
         :param Timedt:"Daily","Weekly", "Monthly"
         :param q: q=1
         :param lags: lags=0
-        :param initial: 3 <= initial <= len(ret)-1
+        :param warmup_period: 3 <= warmup_period <= len(ret)-1
         :return: MSE, QL
         """
 
@@ -123,20 +123,20 @@ class GarchModel(object):
         arch_q_forecasts = []
         observed = []
         # dates = []
-        for i in range(len(ret)-initial+1):
-        # for i in range(len(ret)-initial):
-            arch_q_forecasts.append(GarchModel.arch_q(ret[0:initial+i-1], q, lags))
-            observed.append(data['Volatility_Time'][initial + i-1])
-            # dates.append(data['Date'][initial + i-1])
+        for i in range(len(ret)-warmup_period+1):
+        # for i in range(len(ret)-warmup_period):
+            arch_q_forecasts.append(GarchModel.arch_q(ret[0:warmup_period+i-1], q, lags))
+            observed.append(data['Volatility_Time'][warmup_period + i-1])
+            # dates.append(data['Date'][warmup_period + i-1])
 
 
-            # observed.append(data['Volatility_Time'][initial + i])
+            # observed.append(data['Volatility_Time'][warmup_period + i])
         # print("hi")
         # observed daily vol
         # observed = data['Volatility_Time'][2:]
         arch_q_forecasts = pd.Series(arch_q_forecasts)
         observed = pd.Series(observed)
-        dates = data['Date'][initial-1:(len(ret) + 1)]
+        dates = data['Date'][warmup_period-1:(len(ret) + 1)]
 
         # Instantiate the class and pass the mean_se and quasi_likelihood functions
         Performance_ = PerformanceMeasure()

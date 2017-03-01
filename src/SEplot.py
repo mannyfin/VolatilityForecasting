@@ -30,7 +30,8 @@ def se_plot(y, y_fit, dates):
     # reshape will be deprecated. the line below is not necessarily the correct one.
     # SE = (y_fit.values.reshape(len(y), 1) - y.values.reshape(len(y), 1)) ** 2
     # plt.figure(n)
-    plt.figure(se_plot.counter, figsize=(12,5), dpi=1200)
+    # TODO add DPI
+    plt.figure(se_plot.counter, figsize=(12,5))
     # nplogse = pd.DataFrame._from_arrays(np.log(SE), index=dates1, columns=['SE'])
     # dates = dates.dt.to_period(freq='m')
 

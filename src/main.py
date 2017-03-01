@@ -17,7 +17,7 @@ from function_runs import *
 import matplotlib.backends.backend_pdf
 
 # filenames = ['AUDUSD.csv', 'CADUSD.csv', 'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-filenames = ['CADUSD.csv']
+filenames = ['CHFUSD.csv']
 # TODO output tables after each for loop, or store them somehow
 for count, name in enumerate(filenames):
     # TODO: scale factor for volatility--PLEASE CHECK IF COMPLETED CORRECTLY
@@ -26,7 +26,6 @@ for count, name in enumerate(filenames):
     df, df_single_day, df_single_week, df_single_month = read_in_files(name)
     # THE LINE BELOW IS NOT REALLY NEEDED IF SCALING IS CONSTANT
     # days_weeks_months, num_days_per_year, num_weeks_per_year, num_months_per_year = NumDaysWeeksMonths(df=df)
-
     # We use this line below for the name of the graph
     name = name.split('.')[0]
 
@@ -39,20 +38,21 @@ for count, name in enumerate(filenames):
     plt.title('Daily Vol Result for ' + str(name))
     plt.ylabel('Ln(Volatility)')
     # plt.show()
-    initial = 0.5 # set the first 50% of the input data as in-sample data to fit the model
+    warmup_period = 10 # set the first 50% of the input data as in-sample data to fit the model
 
     fc = FunctionCalls()
-    Daily = fc.function_runs(name, 'Daily', daily_vol_result[1:], 1, [1, 3, 5, 10],
-                             [np.array(daily_ret['Return_Time'][1:]), 1, 0, int(initial*len(daily_ret))],
-                             [np.array(daily_ret['Return_Time'][1:]), 1, 1, 0,int(initial*len(daily_ret))])
+    Daily = fc.function_runs(filename=name, stringinput='Daily', warmup=warmup_period, input_data=daily_vol_result[1:],
+                             tnplus1=1, lr=[1, 3, 5, 10], arch=[np.array(daily_ret['Return_Time'][1:]), 1, 0],
+                             garchpq=[np.array(daily_ret['Return_Time'][1:]), 1, 1, 0])
 
-    Weekly = fc.function_runs(name, 'Weekly', weekly_vol_result[1:], 1, [1, 3, 5, 10],
-                              [np.array(weekly_ret['Return_Time'][1:]), 1, 0, int(initial*len(weekly_ret))],
-                               [np.array(weekly_ret['Return_Time'][1:]), 1, 1, 0, int(initial*len(weekly_ret))])
+    Weekly = fc.function_runs(filename=name, stringinput='Weekly', warmup=warmup_period,
+                              input_data=weekly_vol_result[1:], tnplus1=1, lr=[1, 3, 5, 10],
+                              arch=[np.array(weekly_ret['Return_Time'][1:-2]), 1, 0],
+                              garchpq=[np.array(weekly_ret['Return_Time'][1:-2]), 1, 1, 0])
 
-    Monthly = fc.function_runs(name, 'Monthly', monthly_vol_result[1:], 1, [1, 3, 5, 10],
-                               [np.array(monthly_ret['Return_Time'][1:]), 1, 0, int(initial*len(monthly_ret))],
-                               [np.array(monthly_ret['Return_Time'][1:]), 1, 1, 0, int(initial*len(monthly_ret))])
+    Monthly = fc.function_runs(filename=name, stringinput='Monthly', warmup=warmup_period, input_data=monthly_vol_result[1:],
+                               tnplus1=1, lr=[1, 3, 5, 10], arch=[np.array(monthly_ret['Return_Time'][1:]), 1, 0],
+                               garchpq=[np.array(monthly_ret['Return_Time'][1:]), 1, 1, 0])
 
 
     print("yo")
