@@ -50,8 +50,10 @@ class GarchModel(object):
         elif Timedt == "Monthly":
             TimeScaling = np.sqrt(12)
 
-        data.loc[:, 'Volatility_Time'] = data['Volatility_Time'] * 100
-        ret = ret *100
+        dates = data['Date']
+        # data['Volatility_Time'] = data['Volatility_Time'].multiply(100)
+        tempdata2 = data * 100
+        ret = ret * 100
 
         garch_pq_forecasts = []
         observed = []
@@ -60,7 +62,7 @@ class GarchModel(object):
         # for i in range(len(ret)-warmup_period):
             garch_pq_forecasts.append(GarchModel.garch_pq(ret[0:warmup_period+i-1], p, q, lags))
         # observed daily vol
-            observed.append(data['Volatility_Time'][warmup_period + i-1])
+            observed.append(tempdata2['Volatility_Time'][warmup_period + i-1])
             # dates.append(data['Date'][warmup_period + i-1])
             # observed.append(data['Volatility_Time'][warmup_period + i])
 
@@ -71,7 +73,7 @@ class GarchModel(object):
 
         garch_pq_forecasts = pd.Series(garch_pq_forecasts)
         observed=pd.Series(observed)
-        dates = data['Date'][warmup_period-1:(len(ret) + 1)]
+        dates = dates[warmup_period-1:(len(ret) + 1)]
 
         # Instantiate the class and pass the mean_se and quasi_likelihood functions
         Performance_ = PerformanceMeasure()
@@ -119,8 +121,9 @@ class GarchModel(object):
             TimeScaling = np.sqrt(52)
         elif Timedt == "Monthly":
             TimeScaling = np.sqrt(12)
-
-        data.loc[:, 'Volatility_Time'] = data['Volatility_Time'] * 100
+        dates = data['Date']
+        # data['Volatility_Time'] = data['Volatility_Time'].multiply(100)
+        tempdata = data*100
         ret = ret * 100
 
         arch_q_forecasts = []
@@ -129,17 +132,11 @@ class GarchModel(object):
         for i in range(len(ret)-warmup_period+1):
         # for i in range(len(ret)-warmup_period):
             arch_q_forecasts.append(GarchModel.arch_q(ret[0:warmup_period+i-1], q, lags))
-            observed.append(data['Volatility_Time'][warmup_period + i-1])
-            # dates.append(data['Date'][warmup_period + i-1])
+            observed.append(tempdata['Volatility_Time'][warmup_period + i-1])
 
-
-            # observed.append(data['Volatility_Time'][warmup_period + i])
-        # print("hi")
-        # observed daily vol
-        # observed = data['Volatility_Time'][2:]
         arch_q_forecasts = pd.Series(arch_q_forecasts)
         observed = pd.Series(observed)
-        dates = data['Date'][warmup_period-1:(len(ret) + 1)]
+        dates =dates[warmup_period-1:(len(ret) + 1)]
 
         # Instantiate the class and pass the mean_se and quasi_likelihood functions
         Performance_ = PerformanceMeasure()
@@ -156,73 +153,3 @@ class GarchModel(object):
 
         # plt.show()
         return MSE, QL
-
-    # def arch_q_mse(data, ret, q, lags):
-    #
-    #     # from sklearn.metrics import mean_squared_error as mse
-    #     import matplotlib.pyplot as plt
-    #
-    #     arch_q_forecasts = []
-    #     for i in range(len(ret) - 2):
-    #         arch_q_forecasts.append(GarchModel.arch_q(ret[i:(i + lags + 1)], q, lags))
-    #     # observed daily vol
-    #     observed = data['Volatility_Time'][2:]
-    #     arch_q_forecasts = pd.Series(arch_q_forecasts)
-    #
-    #     # Instantiate the class and pass the mean_se and quasi_likelihood functions
-    #     Performance_ = PerformanceMeasure()
-    #     MSE = Performance_.mean_se(observed=observed, prediction=arch_q_forecasts)
-    #     QL = Performance_.quasi_likelihood(observed=observed, prediction=arch_q_forecasts)
-    #
-    #     # output = mse(observed, arch_q_forecasts)
-    #
-    #     SE(observed, arch_q_forecasts)
-    #     plt.title(str(lags) + " Day Lag's SE: ARCH(" + str(q) + ") ")
-    #
-    #     # plt.show()
-    #     return MSE, QL
-
-    # def garch_pq_mse(data, ret, p, q, lags):
-    # from sklearn.metrics import mean_squared_error as mse
-    # import matplotlib.pyplot as plt
-    #
-    # garch_pq_forecasts = []
-    # for i in range(len(ret)-2):
-    #     garch_pq_forecasts.append(GarchModel.garch_pq(ret[i:(i+lags+1)], p, q,lags))
-    # # observed daily vol
-    # observed = data['Volatility_Time'][2:]
-    # garch_pq_forecasts = pd.Series(garch_pq_forecasts)
-    #
-    # # Instantiate the class and pass the mean_se and quasi_likelihood functions
-    # Performance_ = PerformanceMeasure()
-    # MSE = Performance_.mean_se(observed=observed, prediction=garch_pq_forecasts)
-    # QL = Performance_.quasi_likelihood(observed=observed, prediction=garch_pq_forecasts)
-    #
-    # # output = mse(observed, garch_pq_forecasts)
-    #
-    # SE(observed, garch_pq_forecasts)
-    #
-    # plt.title(str(lags) + " Day Lag's SE: GARCH("+str(p)+","+str(q)+") ")
-    # # plt.show()
-
-
-
-
-
-
-    # def garch_pq(ret, p, q,lags):
-    #
-    #     from arch import arch_model
-    #     # The default set of options produces a model with a constant mean, GARCH(1,1) conditional variance and normal errors.
-    #     garchpq = arch_model(ret[1:3],p=p, q=q,lags=lags)
-    #     res = garchpq.fit(update_freq=1)
-    #     forecasts = res.forecast()
-    #     print(forecasts.variance)
-    #     # print(res.summary())
-
-
-    # from arch import arch_model
-    # garch11 = arch_model(r, p=1, q=1)
-    # res = garch11.fit(update_freq=10)
-    # print(res.summary())
-

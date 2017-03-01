@@ -12,13 +12,12 @@ from PastAsPresent import *
 from garch_pq_model import GarchModel as gm
 # from arch_q_model import ArchModelQ as am
 import numpy as np
-import warnings
-warnings.filterwarnings("ignore")
+
 from function_runs import *
 import matplotlib.backends.backend_pdf
 
 # filenames = ['AUDUSD.csv', 'CADUSD.csv', 'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-filenames = ['CHFUSD.csv']
+filenames = ['EURUSD.csv']
 # TODO output tables after each for loop, or store them somehow
 for count, name in enumerate(filenames):
     # TODO: scale factor for volatility--PLEASE CHECK IF COMPLETED CORRECTLY
@@ -34,37 +33,37 @@ for count, name in enumerate(filenames):
     weekly_vol_result, weekly_ret = time_vol_calc(df_single_week)
     monthly_vol_result, monthly_ret = time_vol_calc(df_single_month)
 
-    # plt.figure(len(filenames)*21+1+count)
-    # plt.plot(daily_vol_result.Date, np.log(daily_vol_result.Volatility_Time))
-    # plt.title('Daily Vol Result for ' + str(name))
-    # plt.ylabel('Ln(Volatility)')
+    plt.figure(len(filenames)*21+1+count)
+    plt.plot(daily_vol_result.Date, np.log(daily_vol_result.Volatility_Time))
+    plt.title('Daily Vol Result for ' + str(name))
+    plt.ylabel('Ln(Volatility)')
     # plt.show()
     warmup_period = 10 # set the first 50% of the input data as in-sample data to fit the model
-    plt.figure(1, figsize=(12, 5))
+    plt.figure(1, figsize=(12, 7))
     fc = FunctionCalls()
     Daily = fc.function_runs(filename=name, stringinput='Daily', warmup=warmup_period, input_data=daily_vol_result[1:],
                              tnplus1=1, lr=[1, 3, 5, 10], arch=[np.array(daily_ret['Return_Time'][1:]), 1, 0],
                              garchpq=[np.array(daily_ret['Return_Time'][1:]), 1, 1, 0])
 
-    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), fancybox=True, shadow=True, ncol=3)
-    # plt.hold(False)
-    plt.figure(2, figsize=(12, 5))
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), fancybox=True, shadow=True, ncol=3)
+    plt.hold(False)
+    plt.figure(2, figsize=(12, 7))
     Weekly = fc.function_runs(filename=name, stringinput='Weekly', warmup=warmup_period,
                               input_data=weekly_vol_result[1:-2], tnplus1=1, lr=[1, 3, 5, 10],
                               arch=[np.array(weekly_ret['Return_Time'][1:-2]), 1, 0],
                               garchpq=[np.array(weekly_ret['Return_Time'][1:-2]), 1, 1, 0])
 
-    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), fancybox=True, shadow=True, ncol=3)
-    # plt.hold(False)
-    plt.figure(3, figsize=(12, 5))
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), fancybox=True, shadow=True, ncol=3)
+    plt.hold(False)
+    plt.figure(3, figsize=(12, 7))
     Monthly = fc.function_runs(filename=name, stringinput='Monthly', warmup=warmup_period, input_data=monthly_vol_result[1:],
                                tnplus1=1, lr=[1, 3, 5, 10], arch=[np.array(monthly_ret['Return_Time'][1:]), 1, 0],
                                garchpq=[np.array(monthly_ret['Return_Time'][1:]), 1, 1, 0])
 
-    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), fancybox=True, shadow=True, ncol=3)
-    # plt.hold(False)
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), fancybox=True, shadow=True, ncol=3)
+    plt.hold(False)
     print("yo")
-# plt.show()
+plt.show()
 print("yo")
 """Output multiple plots into a pdf file"""
 pdf = matplotlib.backends.backend_pdf.PdfPages("output.pdf")

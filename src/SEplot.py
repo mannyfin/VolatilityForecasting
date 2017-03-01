@@ -47,7 +47,7 @@ def se_plot(y, y_fit, dates, function_method):
     ts2['Date'] = pd.DataFrame(dates)
 
     # ts.plot()
-    ax = plt.plot(ts2['Date'], ts2['SE'], label=function_method)
+    plt.plot(ts2['Date'], ts2['SE'], label=function_method)
     plt.hold(True)
     # plt.plot(dates, np.log(SE))
 
