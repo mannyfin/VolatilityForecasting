@@ -50,7 +50,7 @@ class GarchModel(object):
         elif Timedt == "Monthly":
             TimeScaling = np.sqrt(12)
 
-        data = data*100
+        data.loc[:, 'Volatility_Time'] = data['Volatility_Time'] * 100
         ret = ret *100
 
         garch_pq_forecasts = []
@@ -120,7 +120,7 @@ class GarchModel(object):
         elif Timedt == "Monthly":
             TimeScaling = np.sqrt(12)
 
-        data = data * 100
+        data.loc[:, 'Volatility_Time'] = data['Volatility_Time'] * 100
         ret = ret * 100
 
         arch_q_forecasts = []
