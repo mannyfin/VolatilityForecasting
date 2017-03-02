@@ -66,6 +66,8 @@ for count, name in enumerate(filenames):
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), fancybox=True, shadow=True, ncol=3)
     # plt.hold(False)
 
+#TODO: get the sum of MSE of 7 diff. models across 9 currency pairs
+
 """Output multiple plots into a pdf file"""
 pdf = matplotlib.backends.backend_pdf.PdfPages(name+".pdf")
 for fig in range(1, 3*count+3+1):
