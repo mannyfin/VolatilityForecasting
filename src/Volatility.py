@@ -5,7 +5,6 @@ class Volatility(object):
     """
     Creates a Volatility class, which can be used to calculate daily, weekly, or monthly volatility
     """
-    # TODO FIX WEEKLY, AND MONTHLY VOLATILITY N'S
     def __init__(self, df):
         self.df = df
 
@@ -34,7 +33,7 @@ class Volatility(object):
 
     # @staticmethod
     def vol_scaling(df):
-        num_days_per_year = 313*288
+        num_days_per_year = 252*288
         # this was previously daily_vol
 
         """
@@ -42,7 +41,6 @@ class Volatility(object):
         :pnum_days_per__yearam n: n is the number of trading days in a pnum_days_per__yearticulnum_days_per__year yenum_days_per__year
         :return: annualized_vol_scaling
         """
-        # TODO  use n as sqrt(288 * numdays of year)
 
         vol = np.std(np.log(df.Close) - np.log(df.Close.shift(1)))
         
@@ -52,8 +50,6 @@ class Volatility(object):
     
 def time_vol_calc(df_single_time):
     import pandas as pd
-    # num_days_per_year = 313
-    # TODO LOOP THIS AND ALSO MAKE MORE USE OF THE VOLATILITY CLASS
 
     time_vols = []
     time_rets = []

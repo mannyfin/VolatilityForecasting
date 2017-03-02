@@ -31,7 +31,7 @@ class FunctionCalls(object):
 
         """Linear Regression"""
         try:
-            # not the best exception handling here...
+
             if len(lr)>= 1 & isinstance(lr, list):
                 for count, elem in enumerate(lr):
                     LRmethod = LinRegression.lin_reg(data=input_data, n=elem, filename=filename,

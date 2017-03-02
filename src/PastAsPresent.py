@@ -4,7 +4,6 @@ class PastAsPresent(object):
 
     def tn_pred_tn_plus_1(data, filename, stringinput):
 
-        import matplotlib.pyplot as plt
         from SEplot import se_plot as SE
         """
         starting prediction point is t1
@@ -36,8 +35,6 @@ class PastAsPresent(object):
         label = str(filename) + " " + str(stringinput) + " Squared Error PastAsPresent (" + str(1) + ") Volatility"
         """ return a plot of the Squared error"""
         SE(observed, prediction, dates,function_method=label)
-        # plt.title(str(filename)+" "+str(stringinput)+" Squared Error PastAsPresent (" + str(1) + ") Volatility")
-        # plt.show()
 
         return MSE, QL
 

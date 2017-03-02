@@ -16,9 +16,9 @@ import numpy as np
 from function_runs import *
 import matplotlib.backends.backend_pdf
 
-# filenames = ['AUDUSD.csv', 'CADUSD.csv', 'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-filenames = ['SEKUSD.csv']
-# TODO output tables after each for loop, or store them somehow
+filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+# filenames = ['SEKUSD.csv']
+
 for count, name in enumerate(filenames):
     #  reads in the files and puts them into dataframes, returns a dataframe called df
     df, df_single_day, df_single_week, df_single_month = read_in_files(name)
@@ -37,7 +37,7 @@ for count, name in enumerate(filenames):
     plt.ylabel('Ln(Volatility)')
     # plt.show()
 
-    warmup_period = 10 # set the first 50% of the input data as in-sample data to fit the model
+    warmup_period = 10
     plt.figure(3*count+1, figsize=(12, 7))
     fc = FunctionCalls()
     Daily = fc.function_runs(filename=name, stringinput='Daily', warmup=warmup_period, input_data=daily_vol_result[1:],
@@ -61,16 +61,12 @@ for count, name in enumerate(filenames):
 
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), fancybox=True, shadow=True, ncol=3)
     # plt.hold(False)
-    print("yo")
-# plt.show()
-    print("yo")
+
 """Output multiple plots into a pdf file"""
 pdf = matplotlib.backends.backend_pdf.PdfPages(name+".pdf")
-# for fig in range(1, len(filenames)*21+1+count): ## will open an empty extra figure :(
-for fig in range(1, 4): ## will open an empty extra figure :(
+for fig in range(1, 3*count+3+1):
     pdf.savefig( fig, dpi=1200 )
 pdf.close()
 
-# plt.show()
 
-print("yo")
+print("Complete")

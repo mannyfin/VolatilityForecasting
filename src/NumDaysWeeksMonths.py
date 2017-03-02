@@ -8,7 +8,6 @@ def NumDaysWeeksMonths(df):
     days_weeks_months = {}
     for i in range(len(df.Date.unique())):
         year = str(pd.to_datetime(df.Date.unique(), format='%m/%d/%Y')[i].year)
-        #  TODO FIX DAY OF THE WEEK, IT APPEARS TO BE INCORRECT
         month =str(pd.to_datetime(df.Date.unique(), format='%m/%d/%Y')[i].month)
 
         dow = pd.to_datetime(df.Date.unique(), format='%m/%d/%Y')[i].dayofweek
