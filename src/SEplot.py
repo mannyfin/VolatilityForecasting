@@ -35,11 +35,9 @@ def se_plot(y, y_fit, dates, function_method):
     # reshape will be deprecated. the line below is not necessarily the correct one.
     # SE = (y_fit.values.reshape(len(y), 1) - y.values.reshape(len(y), 1)) ** 2
     # plt.figure(n)
-    # TODO add DPI
     plt.figure(se_plot.counter, figsize=(12,7))
 
 
-    # TODO maybe make this line below a dataframe
     ts2 = pd.DataFrame({'SE': np.ravel(np.log(SE))})
     # may need to reset index..
     dates = dates.reset_index()
@@ -53,7 +51,6 @@ def se_plot(y, y_fit, dates, function_method):
 
 
 
-    # TODO make this plot vs months/years etc.
     plt.xlabel("Years")
     plt.ylabel("ln(SE)")
 

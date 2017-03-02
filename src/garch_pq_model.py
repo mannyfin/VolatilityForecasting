@@ -41,7 +41,7 @@ class GarchModel(object):
         import numpy as np
 
         if Timedt == "Daily":
-            TimeScaling = np.sqrt(313)
+            TimeScaling = np.sqrt(252)
         elif Timedt == "Weekly":
             TimeScaling = np.sqrt(52)
         elif Timedt == "Monthly":
@@ -99,7 +99,7 @@ class GarchModel(object):
         import matplotlib.pyplot as plt
 
         if Timedt == "Daily":
-            TimeScaling = np.sqrt(313)
+            TimeScaling = np.sqrt(252)
         elif Timedt == "Weekly":
             TimeScaling = np.sqrt(52)
         elif Timedt == "Monthly":
