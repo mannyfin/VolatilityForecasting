@@ -19,9 +19,9 @@ class PerformanceMeasure(object):
     def quasi_likelihood(self, observed, prediction):
         """Note: QL DOES NOT WORK IF THERE ARE ZEROES IN DATA SERIES"""
 
-        if len(prediction.index[prediction<0]) >0:
-            observed = observed.drop(observed.first_valid_index() + prediction.index[prediction < 0])
-            prediction = prediction[prediction>0]
+        # if len(prediction.index[prediction<0]) >0:
+        #     observed = observed.drop(observed.first_valid_index() + prediction.index[prediction < 0])
+        #     prediction = prediction[prediction>0]
 
         value = prediction.ravel() / observed.ravel()
         ones = np.ones(len(observed))
@@ -30,3 +30,18 @@ class PerformanceMeasure(object):
         self.QL = (1 / len(observed)) * (np.sum(value - np.log(value) - ones))
         print("QL is: " + str(self.QL))
         return self.QL
+
+    # def quasi_likelihood(self, observed, prediction):
+    #     """Note: QL DOES NOT WORK IF THERE ARE ZEROES IN DATA SERIES"""
+    #
+    #     if len(prediction.index[prediction<0]) >0:
+    #         observed = observed.drop(observed.first_valid_index() + prediction.index[prediction < 0])
+    #         prediction = prediction[prediction>0]
+    #
+    #     value = prediction.ravel() / observed.ravel()
+    #     ones = np.ones(len(observed))
+    #
+    #
+    #     self.QL = (1 / len(observed)) * (np.sum(value - np.log(value) - ones))
+    #     print("QL is: " + str(self.QL))
+    #     return self.QL
