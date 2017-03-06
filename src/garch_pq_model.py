@@ -41,7 +41,7 @@ class GarchModel(object):
         import numpy as np
 
         if Timedt == "Daily":
-            TimeScaling = np.sqrt(313)
+            TimeScaling = np.sqrt(252)
         elif Timedt == "Weekly":
             TimeScaling = np.sqrt(52)
         elif Timedt == "Monthly":
@@ -49,8 +49,8 @@ class GarchModel(object):
 
         dates = data['Date']
         # data['Volatility_Time'] = data['Volatility_Time'].multiply(100)
-        tempdata2 = data * 100
-        ret = ret * 100
+        tempdata2 = data * 1000
+        ret = ret * 1000
 
         garch_pq_forecasts = []
         observed = []
@@ -68,11 +68,11 @@ class GarchModel(object):
 
         # Instantiate the class and pass the mean_se and quasi_likelihood functions
         Performance_ = PerformanceMeasure()
-        MSE = Performance_.mean_se(observed=observed/100, prediction=garch_pq_forecasts/100 * TimeScaling)
-        QL = Performance_.quasi_likelihood(observed=observed/100, prediction=garch_pq_forecasts/100 * TimeScaling)
+        MSE = Performance_.mean_se(observed=observed/1000, prediction=garch_pq_forecasts/1000 * TimeScaling)
+        QL = Performance_.quasi_likelihood(observed=observed/1000, prediction=garch_pq_forecasts/1000 * TimeScaling)
 
         label = str(filename)+" "+str(Timedt) + " SE: GARCH("+str(p)+","+str(q)+") "
-        SE(observed/100, garch_pq_forecasts/100, dates, function_method=label)
+        SE(observed/1000, garch_pq_forecasts/1000, dates, function_method=label)
 
         return MSE, QL
 
@@ -99,15 +99,15 @@ class GarchModel(object):
         import matplotlib.pyplot as plt
 
         if Timedt == "Daily":
-            TimeScaling = np.sqrt(313)
+            TimeScaling = np.sqrt(252)
         elif Timedt == "Weekly":
             TimeScaling = np.sqrt(52)
         elif Timedt == "Monthly":
             TimeScaling = np.sqrt(12)
         dates = data['Date']
 
-        tempdata = data*100
-        ret = ret * 100
+        tempdata = data*1000
+        ret = ret * 1000
 
         arch_q_forecasts = []
         observed = []
@@ -123,11 +123,11 @@ class GarchModel(object):
 
         # Instantiate the class and pass the mean_se and quasi_likelihood functions
         Performance_ = PerformanceMeasure()
-        MSE = Performance_.mean_se(observed=observed/100, prediction=arch_q_forecasts/100 * TimeScaling)
-        QL = Performance_.quasi_likelihood(observed=observed/100, prediction=arch_q_forecasts/100 * TimeScaling)
+        MSE = Performance_.mean_se(observed=observed/1000, prediction=arch_q_forecasts/1000 * TimeScaling)
+        QL = Performance_.quasi_likelihood(observed=observed/1000, prediction=arch_q_forecasts/1000 * TimeScaling)
 
         label = str(filename)+" "+str(Timedt) + " SE: ARCH(" + str(q) + ") "
 
-        SE(observed/100, arch_q_forecasts/100, dates, function_method=label)
+        SE(observed/1000, arch_q_forecasts/1000, dates, function_method=label)
 
         return MSE, QL
