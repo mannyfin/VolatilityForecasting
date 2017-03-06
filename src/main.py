@@ -8,16 +8,14 @@ from Volatility import *
 from linear_regression import *
 import matplotlib.pyplot as plt
 from PastAsPresent import *
-
+from tablegen import tablegen
 from garch_pq_model import GarchModel as gm
-# from arch_q_model import ArchModelQ as am
 import numpy as np
-
 from function_runs import *
 import matplotlib.backends.backend_pdf
 
-filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-# filenames = ['SEKUSD.csv']
+# filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+filenames = ['SEKUSD.csv']
 
 for count, name in enumerate(filenames):
     #  reads in the files and puts them into dataframes, returns a dataframe called df
@@ -66,6 +64,9 @@ for count, name in enumerate(filenames):
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), fancybox=True, shadow=True, ncol=3)
     # plt.hold(False)
 
+    tablegen(Daily)
+    tablegen(Weekly)
+    tablegen(Monthly)
 #TODO: get the sum of MSE of 7 diff. models across 9 currency pairs
 
 """Output multiple plots into a pdf file"""
@@ -74,5 +75,5 @@ for fig in range(1, 3*count+3+1):
     pdf.savefig( fig, dpi=1200 )
 pdf.close()
 
-
+plt.show()
 print("Complete")
