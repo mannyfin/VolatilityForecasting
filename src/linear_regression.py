@@ -24,38 +24,76 @@ class LinRegression:
         """
 
         data = data.reset_index(range(len(data)))
-        prediction=[]
+        LogVol = np.log(data['Volatility_Time'])
+        PredictedLogVol=[]
         x = [i for i in range(n)]
-        for initial in range(warmup_period, len(data['Volatility_Time'])-n):
+        for initial in range(warmup_period, len(LogVol)-n):
             for i in range(n):
-                x[i] = data['Volatility_Time'][i:(initial +i)]
+                x[i] = LogVol[i:(initial +i)]
 
             xstacked = np.column_stack(x)
 
-            y = data['Volatility_Time'][n:n+initial]
+            y = LogVol[n:n+initial]
             A = lr()
             A.fit(xstacked, y)
             b = [A.coef_[i] for i in range(n)]
             c = A.intercept_
 
             # # reshape data for prediction
-            prediction.append(A.predict(data.Volatility_Time[initial:n+initial].values.reshape(1, -1))[0])
+            PredictedLogVol.append(A.predict(LogVol[initial:n+initial].values.reshape(1, -1))[0])
 
 
         y = data.Volatility_Time[warmup_period+n:]
-        prediction = pd.Series(prediction)
+        PredictedVol = pd.Series(np.exp(PredictedLogVol))
         Performance_ = PerformanceMeasure()
-        MSE = Performance_.mean_se(observed=y, prediction=prediction)
-        # QL = Performance_.quasi_likelihood(observed=y, prediction=prediction)
-        QL = Performance_.quasi_likelihood(observed=y, prediction=prediction)
+        MSE = Performance_.mean_se(observed=y, prediction=PredictedVol)
+        QL = Performance_.quasi_likelihood(observed=y, prediction=PredictedVol)
 
         dates = data['Date'][n:]
         label=str(filename)+" "+str(stringinput)+" Linear Regression: "+str(n) + " Past Vol SE "
-        SE(y, prediction, dates,function_method=label)
+        SE(y, PredictedVol, dates,function_method=label)
 
         # plt.title(str(filename)+" "+str(stringinput)+" Linear Regression: "+str(n) + " Past Vol SE ")
 
         return MSE, QL, b, c
+
+
+        # data = data.reset_index(range(len(data)))
+        # LogVol = np.log(data['Volatility_Time'])
+        # prediction=[]
+        # x = [i for i in range(n)]
+        # for initial in range(warmup_period, len(data['Volatility_Time'])-n):
+        #     for i in range(n):
+        #         x[i] = data['Volatility_Time'][i:(initial +i)]
+        #
+        #     xstacked = np.column_stack(x)
+        #
+        #     y = data['Volatility_Time'][n:n+initial]
+        #     A = lr()
+        #     A.fit(xstacked, y)
+        #     b = [A.coef_[i] for i in range(n)]
+        #     c = A.intercept_
+        #
+        #     # # reshape data for prediction
+        #     prediction.append(A.predict(data.Volatility_Time[initial:n+initial].values.reshape(1, -1))[0])
+        #
+        #
+        # y = data.Volatility_Time[warmup_period+n:]
+        # prediction = pd.Series(prediction)
+        # Performance_ = PerformanceMeasure()
+        # MSE = Performance_.mean_se(observed=y, prediction=prediction)
+        # # QL = Performance_.quasi_likelihood(observed=y, prediction=prediction)
+        # QL = Performance_.quasi_likelihood(observed=y, prediction=prediction)
+        #
+        # dates = data['Date'][n:]
+        # label=str(filename)+" "+str(stringinput)+" Linear Regression: "+str(n) + " Past Vol SE "
+        # SE(y, prediction, dates,function_method=label)
+        #
+        # # plt.title(str(filename)+" "+str(stringinput)+" Linear Regression: "+str(n) + " Past Vol SE ")
+        #
+        # return MSE, QL, b, c
+
+
 
 
 
