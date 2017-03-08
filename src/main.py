@@ -19,8 +19,16 @@ import matplotlib.backends.backend_pdf
 
 filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
 # filenames = ['SEKUSD.csv']
-dailyvolhw2 = pd.DataFrame()
-dailyvolhw2_zeroes = pd.DataFrame()
+# dailyvolhw2 = pd.DataFrame()
+dailyvol_zeroes= pd.DataFrame()
+weeklyvol_zeroes= pd.DataFrame()
+monthlyvol_zeroes= pd.DataFrame()
+dailyret_zeroes= pd.DataFrame()
+weeklyret_zeroes= pd.DataFrame()
+monthlyret_zeroes = pd.DataFrame()
+
+
+
 for count, name in enumerate(filenames):
     #  reads in the files and puts them into dataframes, returns a dataframe called df
     df, df_single_day, df_single_week, df_single_month = read_in_files(name)
@@ -33,11 +41,21 @@ for count, name in enumerate(filenames):
     weekly_vol_result, weekly_ret, weekly_vol_zeroes, weekly_ret_zeroes = time_vol_calc(df_single_week)
     monthly_vol_result, monthly_ret, monthly_vol_zeroes, monthly_ret_zeroes = time_vol_calc(df_single_month)
 
-    dailyvolhw2 = pd.concat([dailyvolhw2, daily_vol_zeroes['Volatility_Time']], axis=1)
-    dailyvolhw2.rename(columns={'Volatility_Time': name}, inplace=True)
+    # be careful of the underscore, _
+    dailyvol_zeroes = pd.concat([dailyvol_zeroes, daily_vol_zeroes['Volatility_Time']], axis=1)
+    dailyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
+    weeklyvol_zeroes = pd.concat([weeklyvol_zeroes, weekly_vol_zeroes['Volatility_Time']], axis=1)
+    weeklyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
+    monthlyvol_zeroes = pd.concat([monthlyvol_zeroes, monthly_vol_zeroes['Volatility_Time']], axis=1)
+    monthlyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
+    # be careful of the underscore, _
+    dailyret_zeroes = pd.concat([dailyret_zeroes, daily_ret_zeroes['Return_Time']], axis=1)
+    dailyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
+    weeklyret_zeroes = pd.concat([weeklyret_zeroes, weekly_ret_zeroes['Return_Time']], axis=1)
+    weeklyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
+    monthlyret_zeroes = pd.concat([monthlyret_zeroes, monthly_ret_zeroes['Return_Time']], axis=1)
+    monthlyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
 
-    dailyvolhw2_zeroes = pd.concat([dailyvolhw2_zeroes, daily_vol_zeroes['Volatility_Time']], axis=1)
-    dailyvolhw2_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
 
 #     plt.figure(len(filenames)*21+1+count)
 #     plt.plot(daily_vol_result.Date, np.log(daily_vol_result.Volatility_Time))
@@ -69,7 +87,26 @@ for count, name in enumerate(filenames):
 #
 #     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), fancybox=True, shadow=True, ncol=3)
 #     # plt.hold(False)
-#
+
+# does not have zeroes
+daily_vol_combined = dailyvol_zeroes[(dailyvol_zeroes != 0).all(1)]
+weekly_vol_combined = weeklyvol_zeroes[(weeklyvol_zeroes != 0).all(1)]
+monthly_vol_combined = monthlyvol_zeroes[(monthlyvol_zeroes != 0).all(1)]
+"""I am referencing the $Time$vol_zeroes variable in the lines below because there are (or could be) days where the ret
+  is zero"""
+daily_ret_combined = dailyret_zeroes[(dailyvol_zeroes != 0).all(1)]
+weekly_ret_combined = weeklyret_zeroes[(weeklyvol_zeroes != 0).all(1)]
+monthly_ret_combined = monthlyret_zeroes[(monthlyvol_zeroes != 0).all(1)]
+
+# We need to reset index
+daily_vol_combined.reset_index(drop=True, inplace=True)
+weekly_vol_combined.reset_index(drop=True, inplace=True)
+monthly_vol_combined.reset_index(drop=True, inplace=True)
+daily_ret_combined.reset_index(drop=True, inplace=True)
+weekly_ret_combined.reset_index(drop=True, inplace=True)
+monthly_ret_combined.reset_index(drop=True, inplace=True)
+
+
 # """Output multiple plots into a pdf file"""
 # pdf = matplotlib.backends.backend_pdf.PdfPages(name+".pdf")
 # for fig in range(1, 3*count+3+1):
@@ -77,4 +114,5 @@ for count, name in enumerate(filenames):
 # pdf.close()
 #
 #
+print("hi")
 print("Complete")
