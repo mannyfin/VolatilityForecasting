@@ -66,6 +66,9 @@ def time_vol_calc(df_single_time):
     time_vol_result = pd.DataFrame(dvol)
     time_ret_result = pd.DataFrame(dret)
 
+    time_vol_result_zeroes = time_vol_result
+    time_ret_result_zeroes = time_ret_result
+
     inters_ret = time_ret_result.query('Return_Time == 0').index.values
     # essentially you will only ever pass through this if statement if there are zero return values
     if inters_ret.size > 0:
@@ -82,4 +85,4 @@ def time_vol_calc(df_single_time):
         time_vol_result.reset_index(drop=True, inplace=True)
         time_ret_result.reset_index(drop=True, inplace=True)
 
-    return time_vol_result, time_ret_result
+    return time_vol_result, time_ret_result, time_vol_result_zeroes, time_ret_result_zeroes
