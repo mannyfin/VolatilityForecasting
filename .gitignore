@@ -89,4 +89,4 @@ ENV/
 .ropeproject
 
 #workplace.xml
-.idea/workspace.xml
+.idea/
