@@ -27,8 +27,6 @@ dailyret_zeroes= pd.DataFrame()
 weeklyret_zeroes= pd.DataFrame()
 monthlyret_zeroes = pd.DataFrame()
 
-
-
 for count, name in enumerate(filenames):
     #  reads in the files and puts them into dataframes, returns a dataframe called df
     df, df_single_day, df_single_week, df_single_month = read_in_files(name)
