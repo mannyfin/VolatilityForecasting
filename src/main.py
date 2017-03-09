@@ -8,6 +8,7 @@ from Volatility import *
 from linear_regression import *
 import matplotlib.pyplot as plt
 from PastAsPresent import *
+from VAR import *
 
 from garch_pq_model import GarchModel as gm
 # from arch_q_model import ArchModelQ as am
