@@ -157,6 +157,7 @@ MSE_optimal_p_forAll = MSE_QL_optimal_p[2] # MSE of all 9 currency pairs
 QL_optimal_p_forAll = MSE_QL_optimal_p[3]  # QL of all 9 currency pairs
 
 
+
 #     Construct y as a list of 9 lists.
 #     The k-th list inside y is a series of logRV for the k-th currency pair for k=1,2,...,9
 # '''
