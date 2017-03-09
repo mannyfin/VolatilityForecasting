@@ -90,3 +90,4 @@ ENV/
 
 #workplace.xml
 .idea/
+.idea/workspace.xml
