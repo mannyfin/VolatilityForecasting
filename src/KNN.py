@@ -12,6 +12,7 @@ def KNN(vol_data, k, warmup):
     '''
     # load in the first int(warmup) datapoints
     train_set = vol_data[:warmup]
+    # TODO: rolling window
     # we now want to predict the volatility at time, t_warmup,
     # so we subtract vol @t_warmup from every point in train set
     last_sample = train_set[warmup - 1]
