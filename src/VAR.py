@@ -1,4 +1,4 @@
-# This file implements VAR (vector auto regression) desceibed in the paper
+# This file implements VAR (vector auto regression) described  in the paper
 # Wilms, Ines, Jeroen Rombouts, and Christophe Croux. "Lasso-based forecast combinations for forecasting realized variances." (2016).
 
 # We only implements VAR on daily volatility data.
@@ -116,7 +116,7 @@ def VAR_SE(q, p, t, n, data): # can combine with MSE and QL
     # TODO: input correct data input
     PredictedlogRVforAll = predictlogRV(LogRV_df,q, p, t,n)
     y = get_y(LogRV_df,q, p, t,n)
-    label = str(filename) + " " + str(stringinput) + " VAR"
+    label = "VAR"
     # TODO: change this label
     for i in range(q):
         SE(np.sqrt(np.e(y[i])), np.sqrt(np.e(PredictedlogRVforAll[i])), dates, function_method=label)
