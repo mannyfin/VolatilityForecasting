@@ -15,24 +15,24 @@ class FunctionCalls(object):
     def __init__(self):
         pass
 
-    def function_runs(self, filename, stringinput, warmup,input_data, tnplus1, lr, arch, garchpq):
+    def function_runs(self, filename, stringinput, warmup,input_data, tnplus1=None, lr=None, arch=None, garchpq=None):
         output = {}
 
         """tnplus1"""
         try:
-            if tnplus1 == 1:
+            if tnplus1 is not None :
                 part1 = PastAsPresent.tn_pred_tn_plus_1(data=input_data, filename=filename, stringinput=stringinput)
                 output['PastAsPresent'] = part1
                 print("Above is Past as present for " + str(stringinput))
-            elif tnplus1 == 0:
-                pass
+
         except ValueError:
             print("Error: Make sure you pass in 1 or  0 for arg in tnplus1... ")
 
         """Linear Regression"""
         try:
-
-            if len(lr)>= 1 & isinstance(lr, list):
+            if lr is None:
+                print("None linear regressor")
+            elif len(lr)>= 1 & isinstance(lr, list):
                 for count, elem in enumerate(lr):
                     LRmethod = LinRegression.lin_reg(data=input_data, n=elem, filename=filename,
                                                      stringinput=stringinput, warmup_period=warmup)
@@ -45,7 +45,9 @@ class FunctionCalls(object):
             print("Error: Please pass an array of ints...")
         try:
             #
-            if len(arch) == 3:
+            if arch is None:
+                print("None for arch")
+            elif len(arch) == 3:
                 ARCH = gm.arch_q_mse(data=input_data, Timedt=stringinput, ret=arch[0], q=arch[1], lags=arch[2],
                                      warmup_period=warmup, filename=filename)
                 output['ARCH'] = ARCH
@@ -55,7 +57,9 @@ class FunctionCalls(object):
 
         try:
             # 4 is the num of args to pass into the fcn
-            if len(garchpq) == 4:
+            if garch is None:
+                print("None for garch")
+            elif len(garchpq) == 4:
                 GARCH = gm.garch_pq_mse(data=input_data, Timedt=stringinput, ret=garchpq[0], p=garchpq[1], q=garchpq[2],
                                         lags=garchpq[3], warmup_period=warmup, filename=filename)
                 output['GARCH'] = GARCH

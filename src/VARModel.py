@@ -27,11 +27,18 @@ p=[1,2,3] # p is lag, picking 1,2 and 3 according to Amin's suggesting
 # n3 = len(Daily_Vol_df)-daily_warmup # n3 is the sample size for monthly VAR regression
 
 
+=======
+Daily_Vol_df = pd.DataFrame(np.random.randn(1000, 9)+10) # experiment df
+>>>>>>> d8b15c278758a3fbc902e913de423aa0818f8923
 LogRV_df = np.log(Daily_Vol_df**2)
 
 p = 6 # p is lag, according to BIC value produced in R
 q= 9 # q is the number of currency pairs
+<<<<<<< HEAD
 daily_warmup = 400 # warm-up period is 400 for daily
+=======
+daily_warmup = 40 # warm-up period is 400 for daily
+>>>>>>> d8b15c278758a3fbc902e913de423aa0818f8923
 # t = daily_warmup
 n = len(Daily_Vol_df)-daily_warmup # n is the sample size for linear regression
 
@@ -39,12 +46,19 @@ n = len(Daily_Vol_df)-daily_warmup # n is the sample size for linear regression
     Construct y as a list of 9 lists.
     The k-th list inside y is a series of logRV for the k-th currency pair for k=1,2,...,9
 '''
+<<<<<<< HEAD
 def get_y(q, p, t,n):
+=======
+def get_y(q, p, t):
+>>>>>>> d8b15c278758a3fbc902e913de423aa0818f8923
     '''
     :param q: q=9 in this project since we have 9 currency pairs
     :param p: p is lag
     :param t: t = warm-up period
+<<<<<<< HEAD
     :param n: n = len(Vol_df)-warmup
+=======
+>>>>>>> d8b15c278758a3fbc902e913de423aa0818f8923
     :return: y as inputs into LR for all currency pairs
     '''
     y = []
@@ -55,12 +69,16 @@ def get_y(q, p, t,n):
         y.append(y_i)
     return y
 
+
 def x_mat_t_n_qp(q, p, t,n):
+=======
+def x_mat_t_n_qp(q, p, t):
     '''
     :param q: q=9 in this project since we have 9 currency pairs
     :param p: p is lag
     :param t: t = warm-up period
     :param n: n = len(Vol_df)-warmup
+=======
     :return: the x matrix as a input for regression, where the dimension of x is n*(qp)
     '''
     x =  pd.DataFrame()
@@ -77,6 +95,8 @@ def x_mat_t_n_qp(q, p, t,n):
 
 '''
 def predictlogRV(q,p,t,n):
+=======
+def predictlogRV(q,p,t):
     '''
     :param q: q=9 in this project since we have 9 currency pairs
     :param p: p is lag
@@ -86,6 +106,9 @@ def predictlogRV(q,p,t,n):
     '''
     n = len(Daily_Vol_df)-daily_warmup
     x = x_mat_t_n_qp(q=9, p=p, t=t,n=n)
+    :return: the predicted logRV for all 9 currency pairs
+    '''
+    x = x_mat_t_n_qp(q=9, p=p, t=t)
     PredictedlogRVforAll = []
     for i in range(9):
         A = lr()
@@ -102,7 +125,10 @@ def predictlogRV(q,p,t,n):
 '''
     Obtaining MSE and QL
 '''
+
 def VAR_MSE_QL(q,p,t,n):
+=======
+def VAR_Performance(q,p,t,data):
     '''
 
     :param y: realized logRV for all currency pairs
@@ -115,6 +141,10 @@ def VAR_MSE_QL(q,p,t,n):
     n = len(Daily_Vol_df)-daily_warmup
     y = get_y(q, p, t,n)
     PredictedlogRVforAll = predictlogRV(q=q, p=p, t=t,n=n)
+    :return: MSE, QL and SE plot
+    '''
+    y = get_y(q, p, t)
+    PredictedlogRVforAll = predictlogRV(q=q, p=p, t=t)
     Performance_ = PerformanceMeasure()
     MSEforAll = []
     QLforAll = []
@@ -271,3 +301,9 @@ def VAR_MSE_QL(q, p, t, n, data): # can combine with MSE and QL
 # MSE_daily,QL_daliy = VAR_MSE_QL(q=9, p=6, t=daily_warmup, n=len(LogRV_df[0])-daily_warmup,indicator="Daily")
 # MSE_weekly,QL_weekly = VAR_MSE_QL(q=9, p=6, t=weekly_warmup, n=len(LogRV_df[1])-weekly_warmup,indicator="Weekly")
 # MSE_monthly,QL_monthly = VAR_MSE_QL(q=9, p=6, t=monthly_warmup, n=len(LogRV_df[2])-monthly_warmup,indicator="Monthly")
+
+        # label = str(filename) + " " + str(stringinput) + " VAR"
+        # TODO: change this label and SE below
+        # SE(np.sqrt(np.e(y[i])), np.sqrt(np.e(PredictedlogRVforAll[i])), dates, function_method=label)
+
+    return MSEforAll, QLforAll
