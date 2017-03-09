@@ -8,12 +8,13 @@ from Volatility import *
 from linear_regression import *
 import matplotlib.pyplot as plt
 from PastAsPresent import *
+# from VAR import *
 
 from garch_pq_model import GarchModel as gm
 # from arch_q_model import ArchModelQ as am
 import numpy as np
 import pandas as pd
-
+from KNN import KNN
 from function_runs import *
 import matplotlib.backends.backend_pdf
 
@@ -27,8 +28,6 @@ dailyret_zeroes= pd.DataFrame()
 weeklyret_zeroes= pd.DataFrame()
 monthlyret_zeroes = pd.DataFrame()
 
-
-
 for count, name in enumerate(filenames):
     #  reads in the files and puts them into dataframes, returns a dataframe called df
     df, df_single_day, df_single_week, df_single_month = read_in_files(name)
@@ -36,7 +35,7 @@ for count, name in enumerate(filenames):
     # days_weeks_months, num_days_per_year, num_weeks_per_year, num_months_per_year = NumDaysWeeksMonths(df=df)
     # We use this line below for the name of the graph
     name = name.split('.')[0]
-
+    warmup_period = 400
     daily_vol_result, daily_ret, daily_vol_zeroes, daily_ret_zeroes = time_vol_calc(df_single_day)
     weekly_vol_result, weekly_ret, weekly_vol_zeroes, weekly_ret_zeroes = time_vol_calc(df_single_week)
     monthly_vol_result, monthly_ret, monthly_vol_zeroes, monthly_ret_zeroes = time_vol_calc(df_single_month)
@@ -55,6 +54,11 @@ for count, name in enumerate(filenames):
     weeklyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
     monthlyret_zeroes = pd.concat([monthlyret_zeroes, monthly_ret_zeroes['Return_Time']], axis=1)
     monthlyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
+    """
+    testing KNN
+    """
+    KNN(daily_vol_result, 1, warmup_period, name)
+
 
 
 #     plt.figure(len(filenames)*21+1+count)
