@@ -23,6 +23,8 @@ def se_plot(y, y_fit, dates, function_method):
     :param n: the num of trailing days. This is an [int]
     :return:
     """
+    # TODO: what is n? Add description to dates and function_method
+
 
     # def se_plot(x, y, y_fit1):
     import numpy as np
