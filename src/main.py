@@ -19,8 +19,8 @@ from function_runs import *
 import matplotlib.backends.backend_pdf
 
 filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-# filenames = ['SEKUSD.csv']
-# dailyvolhw2 = pd.DataFrame()
+# filenames = ['SEKUSD.csv','CADUSD.csv',  'CHFUSD.csv',]
+
 dailyvol_zeroes= pd.DataFrame()
 weeklyvol_zeroes= pd.DataFrame()
 monthlyvol_zeroes= pd.DataFrame()
@@ -28,7 +28,7 @@ dailyret_zeroes= pd.DataFrame()
 weeklyret_zeroes= pd.DataFrame()
 monthlyret_zeroes = pd.DataFrame()
 Daily_list = list()
-
+namelist = list()
 for count, name in enumerate(filenames):
     #  reads in the files and puts them into dataframes, returns a dataframe called df
     df, df_single_day, df_single_week, df_single_month = read_in_files(name)
@@ -36,7 +36,8 @@ for count, name in enumerate(filenames):
     # days_weeks_months, num_days_per_year, num_weeks_per_year, num_months_per_year = NumDaysWeeksMonths(df=df)
     # We use this line below for the name of the graph
     name = name.split('.')[0]
-    print("running file: " + str(name))
+    namelist.append(name)
+    print("Running file: " + str(name))
     warmup_period = 400
     daily_vol_result, daily_ret, daily_vol_zeroes, daily_ret_zeroes = time_vol_calc(df_single_day)
     # weekly_vol_result, weekly_ret, weekly_vol_zeroes, weekly_ret_zeroes = time_vol_calc(df_single_week)
@@ -101,8 +102,26 @@ for count, name in enumerate(filenames):
     # tablegen(Monthly)
 #     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), fancybox=True, shadow=True, ncol=3)
 #     # plt.hold(False)
-# Daily_df = pd.DataFrame()
-Daily_df = pd.concat(Daily_list, axis=1)
+Daily_df = pd.DataFrame()
+Daily_df = pd.concat(Daily_list, axis=1, keys=namelist)
+
+# to make index slices:::
+"""
+These will slice all the MSE and QL columns respectively
+"""
+idx = pd.IndexSlice
+Daily_df.loc[idx[:], idx[:, 'MSE']].plot(figsize=[13, 7], logy=True)
+plt.legend()   #  I add this line becuase the legend shows (None,None) as the first entry. Regenerating the legend fixes this
+
+Daily_df.loc[idx[:], idx[:, 'QL']].plot(figsize=[13, 7], logy=True)
+plt.legend()
+
+"This sums up all the rows. And so it is the sum of the MSE or QL for all currencies for a particular model"
+MSE_sumdaily= pd.DataFrame(Daily_df.loc[idx[:], idx[:, 'MSE']].sum(axis=1), columns=['Sum of MSE [Daily]']).plot(figsize=[13, 7], table=True)
+MSE_sumdaily.get_xaxis().set_visible(False)
+QL_sumdaily= pd.DataFrame(Daily_df.loc[idx[:], idx[:, 'QL']].sum(axis=1), columns=['Sum of QL [Daily]']).plot(figsize=[13, 7], table=True)
+QL_sumdaily.get_xaxis().set_visible(False)
+
 
 print("hi")
 # does not have zeroes
