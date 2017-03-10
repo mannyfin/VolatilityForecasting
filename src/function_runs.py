@@ -3,6 +3,8 @@ from linear_regression import *
 from garch_pq_model import GarchModel as gm
 from KNN import KNN
 import numpy as np
+import pandas as pd
+from res2df_list import *
 
 
 class FunctionCalls(object):
@@ -17,13 +19,19 @@ class FunctionCalls(object):
         pass
 
     def function_runs(self, filename, stringinput, warmup,input_data, tnplus1=None, lr=None, arch=None, garchpq=None, k_nn=None):
-        output = {}
+        output = list()
 
         """tnplus1"""
         try:
             if tnplus1 is not None :
-                part1 = PastAsPresent.tn_pred_tn_plus_1(data=input_data, filename=filename, stringinput=stringinput)
-                output['PastAsPresent'] = part1
+                tnplus1_method = PastAsPresent.tn_pred_tn_plus_1(data=input_data, filename=filename, stringinput=stringinput)
+                # output['PastAsPresent'] = part1
+
+
+                output = result_to_df_list(list_name=output, method_result=tnplus1_method,
+                                           index_value=['PastAsPresent'], column_value=['MSE', 'QL'])
+
+                # output['PastAsPresent'] = tnplus1_method
                 print("Above is Past as present for " + str(stringinput))
 
         except ValueError:
@@ -37,7 +45,12 @@ class FunctionCalls(object):
                 for count, elem in enumerate(lr):
                     LRmethod = LinRegression.lin_reg(data=input_data, n=elem, filename=filename,
                                                      stringinput=stringinput, warmup_period=warmup)
-                    output['LinearRegression_' + str(elem)] = LRmethod[0:2]
+                    # output['LinearRegression_' + str(elem)] = LRmethod[0:2]
+
+                    output = result_to_df_list(list_name=output, method_result=LRmethod[0:2],
+                                               index_value=['LinearRegression_' + str(elem)], column_value=['MSE', 'QL'])
+
+                    # output['LinearRegression_' + str(elem)] = LRmethod[0:2]
                     print("Above is LR for " +str(elem)+" "+ str(stringinput) +" Volatilities")
             else:
                 pass
@@ -51,7 +64,12 @@ class FunctionCalls(object):
             elif len(arch) == 3:
                 ARCH = gm.arch_q_mse(data=input_data, Timedt=stringinput, ret=arch[0], q=arch[1], lags=arch[2],
                                      warmup_period=warmup, filename=filename)
-                output['ARCH'] = ARCH
+                # output['ARCH'] = ARCH
+
+                output = result_to_df_list(list_name=output, method_result=ARCH,
+                                           index_value=['ARCH'], column_value=['MSE', 'QL'])
+
+
                 print("Above is ARCH for " + str(stringinput))
         except TypeError:
             print("Error: ARCH, make sure all the params are filled")
@@ -63,7 +81,12 @@ class FunctionCalls(object):
             elif len(garchpq) == 4:
                 GARCH = gm.garch_pq_mse(data=input_data, Timedt=stringinput, ret=garchpq[0], p=garchpq[1], q=garchpq[2],
                                         lags=garchpq[3], warmup_period=warmup, filename=filename)
-                output['GARCH'] = GARCH
+
+                # output['GARCH'] = GARCH
+
+                output = result_to_df_list(list_name=output, method_result=GARCH,
+                                           index_value=['GARCH'], column_value=['MSE', 'QL'])
+
                 print("Above is GARCH for " + str(stringinput))
         except TypeError:
             print("Error: GARCH, make sure all the params are filled")
@@ -74,9 +97,17 @@ class FunctionCalls(object):
                 print("None for KNN")
             elif type(k_nn) is int:
                 KNNmethod = KNN(vol_data=input_data, k=k_nn, warmup=warmup, filename=filename, Timedt=stringinput)
-                output['KNN'] = KNNmethod
+
+                # output['KNN_'+str(k_nn)] = KNNmethod
+
+                output = result_to_df_list(list_name=output, method_result=KNNmethod,
+                                           index_value=['KNN_'+str(k_nn)], column_value=['MSE', 'QL'])
+
                 print("Above is KNN for " + str(stringinput))
         except TypeError:
             print("Error: KNN, make sure all the params are filled")
+
+        # concatenates the list of df's
+        output = list_to_df(list_name=output)
 
         return output

@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 def count(func):
     def wrapper(*args, **kwargs):
         # Change the number here based on the number of files
+        # may also need to change for function specific plots
         if wrapper.temp%10 == 0:    # executed every time the wrapped function is called
             wrapper.counter += 1
         wrapper.temp+=1
