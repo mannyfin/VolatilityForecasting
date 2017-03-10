@@ -26,7 +26,7 @@ def get_y(LogRV_df,q, p, t,n):
     :param q: q=9 in this project since we have 9 currency pairs
     :param p: p is lag
     :param t: t = warm-up period
-    :param n: n = len(Vol_df)-warmup
+    :param n: n = len(LogRV_df)-warmup
     :return: y as inputs into LR for all currency pairs
     '''
     y = []
@@ -42,7 +42,7 @@ def x_mat_t_n_qp(LogRV_df,q, p, t,n):
     :param q: q=9 in this project since we have 9 currency pairs
     :param p: p is lag
     :param t: t = warm-up period
-    :param n: n = len(Vol_df)-warmup
+    :param n: n = len(LogRV_df)-warmup
     :return: the x matrix as a input for regression, where the dimension of x is n*(qp)
     '''
     x =  pd.DataFrame()
@@ -63,7 +63,7 @@ def predictlogRV(LogRV_df,q,p,t,n):
     :param q: q=9 in this project since we have 9 currency pairs
     :param p: p is lag
     :param t: t = warm-up period
-    :param n: n = len(Vol_df)-warmup
+    :param n: n = len(LogRV_df)-warmup
     :return: the predicted logRV for all 9 currency pairs
     '''
     x = x_mat_t_n_qp(LogRV_df,q, p, t,n)
@@ -90,7 +90,7 @@ def VAR_MSE_QL(LogRV_df,q,p,t,n):
     :param q: q=9 in this project since we have 9 currency pairs
     :param p: p is lag
     :param t: t = warm-up period
-    :param n: n = len(Vol_df)-warmup
+    :param n: n = len(LogRV_df)-warmup
     :return: MSE, QL and SE plot
     '''
     y = get_y(LogRV_df,q, p, t,n)
@@ -109,13 +109,57 @@ def VAR_MSE_QL(LogRV_df,q,p,t,n):
     return mean_MSE,mean_QL, MSEforAll, QLforAll
 
 '''
+    Obtaining optimal p
+'''
+
+def optimal_p(LogRV_df,q,p_series,daily_warmup_series,len_training):
+    '''
+
+    :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
+    :param q: q = 9  # q is the number of currency pairs
+    :param p_series: p_series = [1, 2, 3]  # p is lag, picking 1,2 and 3 according to Amin's suggesting
+    :param daily_warmup_series: daily_warmup_series = [100*p[i] for i in range(len(p))] # warm-up period is 100,200 and 300 respectively for daily data when p=1,2 and 3
+    :param len_training: len_training is the length of the training set
+    :return: optimal_p out of 1,2,3
+    '''
+    n = [] # n collects the sample size for daily VAR regression when p=1, p=2 and p=3
+    for i in range(len(p_series)):
+        n.append(len_training - daily_warmup_series[i])
+    VAR_p1= VAR_MSE_QL(LogRV_df,q,p=p_series[0],t=daily_warmup_series[0],n=n[0])
+    VAR_p2= VAR_MSE_QL(LogRV_df,q,p=p_series[1],t=daily_warmup_series[1],n=n[1])
+    VAR_p3= VAR_MSE_QL(LogRV_df,q,p=p_series[2],t=daily_warmup_series[2],n=n[2])
+
+    MSEs = [VAR_p1[0],VAR_p2[0],VAR_p3[0]]
+    QLs = [VAR_p1[1],VAR_p2[1],VAR_p3[1]]
+
+    optimal_p_MLE = MSEs.index(min(MSEs))+1 # the optimal p according to MLE criterion is 3
+    optimal_p_QL = QLs.index(min(QLs))+1 # the optimal p according to QL criterion is 3 as well
+    optimal_p = optimal_p_MLE # we use the optimal p according to MLE criterion as the optimal p
+    return optimal_p
+
+
+'''
     Obtaining squared errors
 '''
 
-def VAR_SE(q, p, t, n, data): # can combine with MSE and QL
+
+def VAR_SE(LogRV_df, q, p_series, daily_warmup_series, data):
+    '''
+
+    :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
+    :param q: q=9
+    :param p_series: p_series=[1,2,3]
+    :param daily_warmup_series: daily_warmup_series=[100,200,300]
+    :param data: used in plotting SE
+    :return: SE plot
+    '''
     # TODO: input correct data input
-    PredictedlogRVforAll = predictlogRV(LogRV_df,q, p, t,n)
-    y = get_y(LogRV_df,q, p, t,n)
+    len_training = int(2 / 3 * len(LogRV_df))
+    p = optimal_p(LogRV_df,q,p_series,daily_warmup_series,len_training)
+    t= daily_warmup_series[p-1]
+    n=len(LogRV_df) - t
+    PredictedlogRVforAll = predictlogRV(LogRV_df, q, p, t, n)
+    y = get_y(LogRV_df, q, p, t, n)
     label = "VAR"
     # TODO: change this label
     for i in range(q):
@@ -123,40 +167,22 @@ def VAR_SE(q, p, t, n, data): # can combine with MSE and QL
         # TODO: get dates
         # TODO: add return
 
-'''
-    Obtaining optimal p
-'''
 
-Daily_Vol_df = daily_vol_combined
-LogRV_df = np.log(Daily_Vol_df)
-p = [1, 2, 3]  # p is lag, picking 1,2 and 3 according to Amin's suggesting
-q = 9  # q is the number of currency pairs
-daily_warmup = [100*p[i] for i in range(len(p))] # warm-up period is 100,200 and 300 respectively for daily data when p=1,2 and 3
-len_training = int(2 / 3 * len(Daily_Vol_df))
-n = [] # n collects the sample size for daily VAR regression when p=1, p=2 and p=3
-for i in range(len(p)):
-    n.append(len_training - daily_warmup[i])
-VAR_p1= VAR_MSE_QL(LogRV_df,q=q,p=p[0],t=daily_warmup[0],n=n[0])
-VAR_p2= VAR_MSE_QL(LogRV_df,q=q,p=p[1],t=daily_warmup[1],n=n[1])
-VAR_p3= VAR_MSE_QL(LogRV_df,q=q,p=p[2],t=daily_warmup[2],n=n[2])
-
-MSEs = [VAR_p1[0],VAR_p2[0],VAR_p3[0]]
-QLs = [VAR_p1[1],VAR_p2[1],VAR_p3[1]]
-
-optimal_p_MLE = MSEs.index(min(MSEs))+1 # the optimal p according to MLE criterion is 3
-optimal_p_QL = QLs.index(min(QLs))+1 # the optimal p according to QL criterion is 3 as well
-optimal_p = optimal_p_MLE # we use the optimal p according to MLE criterion as the optimal p
 
 '''
     Using the optimal p on the test sample
 '''
-MSE_QL_optimal_p = VAR_MSE_QL(LogRV_df,q=q,p=p[2],t=len_training,n=len(Daily_Vol_df)-len_training)
-MSE_optimal_p_avg = MSE_QL_optimal_p[0] # average MSE of 9 currency pairs
-QL_optimal_p_avg = MSE_QL_optimal_p[1]  # average QL of 9 currency pairs
-MSE_optimal_p_forAll = MSE_QL_optimal_p[2] # MSE of all 9 currency pairs
-QL_optimal_p_forAll = MSE_QL_optimal_p[3]  # QL of all 9 currency pairs
+def Test_Sample_MSE_QL(LogRV_df,q,p_series,daily_warmup_series):
+    len_training = int(2 / 3 * len(LogRV_df))
+    p = optimal_p(LogRV_df,q,p_series,daily_warmup_series,len_training)
+    MSE_QL_optimal_p = VAR_MSE_QL(LogRV_df,q,p,t=len_training,n=len(LogRV_df)-len_training)
+    MSE_optimal_p_avg = MSE_QL_optimal_p[0] # average MSE of 9 currency pairs
+    QL_optimal_p_avg = MSE_QL_optimal_p[1]  # average QL of 9 currency pairs
+    MSE_optimal_p_forAll = MSE_QL_optimal_p[2] # MSE of all 9 currency pairs
+    QL_optimal_p_forAll = MSE_QL_optimal_p[3]  # QL of all 9 currency pairs
+    return MSE_QL_optimal_p,MSE_optimal_p_avg,QL_optimal_p_avg,MSE_optimal_p_forAll,QL_optimal_p_forAll
 
-
+Test_Sample_MSE_QL(LogRV_df = np.log(daily_vol_combined), q=9, p_series=[1,2,3],daily_warmup_series=[100,200,300])
 
 #     Construct y as a list of 9 lists.
 #     The k-th list inside y is a series of logRV for the k-th currency pair for k=1,2,...,9
@@ -166,7 +192,7 @@ QL_optimal_p_forAll = MSE_QL_optimal_p[3]  # QL of all 9 currency pairs
 #     :param q: q=9 in this project since we have 9 currency pairs
 #     :param p: p is lag
 #     :param t: t = warm-up period
-#     :param n: n = len(Vol_df)-warmup
+#     :param n: n = len(LogRV_df)-warmup
 #     :param indicator: indicator is a string input, which can be "Daily", "Weekly" and "Monthly"
 #     :return: y as inputs into LR for all currency pairs
 #     '''
@@ -190,7 +216,7 @@ QL_optimal_p_forAll = MSE_QL_optimal_p[3]  # QL of all 9 currency pairs
 #     :param q: q=9 in this project since we have 9 currency pairs
 #     :param p: p is lag
 #     :param t: t = warm-up period
-#     :param n: n = len(Vol_df)-warmup
+#     :param n: n = len(LogRV_df)-warmup
 #     :param indicator: indicator is a string input, which can be "Daily", "Weekly" and "Monthly"
 #     :return: the x matrix as a input for regression, where the dimension of x is n*(qp)
 #     '''
@@ -219,11 +245,11 @@ QL_optimal_p_forAll = MSE_QL_optimal_p[3]  # QL of all 9 currency pairs
 #     :param q: q=9 in this project since we have 9 currency pairs
 #     :param p: p is lag
 #     :param t: t = warm-up period
-#     :param n: n = len(Vol_df)-warmup
+#     :param n: n = len(LogRV_df)-warmup
 #     :param indicator: indicator is a string input, which can be "Daily", "Weekly" and "Monthly"
 #     :return: the predicted logRV for all 9 currency pairs
 #     '''
-#     # n = len(Daily_Vol_df)-daily_warmup
+#     # n = len(LogRV_df)-daily_warmup
 #     x = x_mat_t_n_qp(q=9, p=p, t=t,n=n, indicator=indicator)
 #     PredictedlogRVforAll = []
 #     for i in range(9):
@@ -248,11 +274,11 @@ QL_optimal_p_forAll = MSE_QL_optimal_p[3]  # QL of all 9 currency pairs
 #     :param q: q=9 in this project since we have 9 currency pairs
 #     :param p: p is lag
 #     :param t: t = warm-up period
-#     :param n: n = len(Vol_df)-warmup
+#     :param n: n = len(LogRV_df)-warmup
 #     :param indicator: indicator is a string input, which can be "Daily", "Weekly" and "Monthly"
 #     :return: MSE, QL and SE plot
 #     '''
-#     # n = len(Daily_Vol_df)-daily_warmup
+#     # n = len(LogRV_df)-daily_warmup
 #     y = get_y(q, p, t,n, indicator)
 #     PredictedlogRVforAll = predictlogRV(q=q, p=p, t=t,n=n, indicator=indicator)
 #     Performance_ = PerformanceMeasure()
@@ -271,7 +297,7 @@ QL_optimal_p_forAll = MSE_QL_optimal_p[3]  # QL of all 9 currency pairs
 # '''
 #
 # def VAR_SE(q, p, t, n, indicator, data): # can combine with MSE and QL
-#     # n = len(Daily_Vol_df) - daily_warmup
+#     # n = len(LogRV_df) - daily_warmup
 #     # dates = data['Date'][n:]
 #     PredictedlogRVforAll = predictlogRV(q=q, p=p, t=t,n=n)
 #     label = str(filename) + " " + str(stringinput) + " VAR"
