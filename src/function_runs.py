@@ -1,6 +1,7 @@
 from PastAsPresent import *
 from linear_regression import *
 from garch_pq_model import GarchModel as gm
+from KNN import KNN
 import numpy as np
 
 
@@ -15,7 +16,7 @@ class FunctionCalls(object):
     def __init__(self):
         pass
 
-    def function_runs(self, filename, stringinput, warmup,input_data, tnplus1=None, lr=None, arch=None, garchpq=None):
+    def function_runs(self, filename, stringinput, warmup,input_data, tnplus1=None, lr=None, arch=None, garchpq=None, k_nn=None):
         output = {}
 
         """tnplus1"""
@@ -57,7 +58,7 @@ class FunctionCalls(object):
 
         try:
             # 4 is the num of args to pass into the fcn
-            if garch is None:
+            if garchpq is None:
                 print("None for garch")
             elif len(garchpq) == 4:
                 GARCH = gm.garch_pq_mse(data=input_data, Timedt=stringinput, ret=garchpq[0], p=garchpq[1], q=garchpq[2],
@@ -66,5 +67,16 @@ class FunctionCalls(object):
                 print("Above is GARCH for " + str(stringinput))
         except TypeError:
             print("Error: GARCH, make sure all the params are filled")
+
+        try:
+            # 4 is the num of args to pass into the fcn
+            if k_nn is None:
+                print("None for KNN")
+            elif type(k_nn) is int:
+                KNNmethod = KNN(vol_data=input_data, k=k_nn, warmup=warmup, filename=filename, Timedt=stringinput)
+                output['KNN'] = KNNmethod
+                print("Above is KNN for " + str(stringinput))
+        except TypeError:
+            print("Error: KNN, make sure all the params are filled")
 
         return output

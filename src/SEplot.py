@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 
 def count(func):
     def wrapper(*args, **kwargs):
-
-        if wrapper.temp%8 == 0:    # executed every time the wrapped function is called
+        # Change the number here based on the number of files
+        if wrapper.temp%10 == 0:    # executed every time the wrapped function is called
             wrapper.counter += 1
         wrapper.temp+=1
 
@@ -16,7 +16,7 @@ def count(func):
 
 
 @count
-def se_plot(y, y_fit, dates, function_method):
+def se_plot(y, y_fit, dates, function_method=None):
     """
     :param y: source data
     :param y_fit: fit from LR
