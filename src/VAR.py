@@ -23,6 +23,7 @@ from Performance_Measure import *
 '''
 def get_y(LogRV_df,q, p, t,n):
     '''
+    :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
     :param q: q=9 in this project since we have 9 currency pairs
     :param p: p is lag
     :param t: t = warm-up period
@@ -39,6 +40,7 @@ def get_y(LogRV_df,q, p, t,n):
 
 def x_mat_t_n_qp(LogRV_df,q, p, t,n):
     '''
+    :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
     :param q: q=9 in this project since we have 9 currency pairs
     :param p: p is lag
     :param t: t = warm-up period
@@ -60,11 +62,12 @@ def x_mat_t_n_qp(LogRV_df,q, p, t,n):
 '''
 def predictlogRV(LogRV_df,q,p,t,n):
     '''
+    :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
     :param q: q=9 in this project since we have 9 currency pairs
     :param p: p is lag
     :param t: t = warm-up period
     :param n: n = len(LogRV_df)-warmup
-    :return: the predicted logRV for all 9 currency pairs
+    :return: the predicted logRV for all 9 currency pairs and the fitted parameters
     '''
     x = x_mat_t_n_qp(LogRV_df,q, p, t,n)
     y = get_y(LogRV_df,q, p, t,n)
@@ -72,20 +75,21 @@ def predictlogRV(LogRV_df,q,p,t,n):
     for i in range(q):
         A = lr()
         A.fit( x, y[i] )
-        b = A.coef_
-        c = A.intercept_
+        Betas = A.coef_
+        Intercept = A.intercept_
         PredictedlogRV = []
-        for k in range(n):
+        for k in range(n-1):
             PredictedlogRV.append( A.predict( x.iloc[k].values.reshape(1, -1) )[0] )
+            # PredictedlogRV.append( A.predict( x.iloc[k].values.reshape(1, -1) )[0] )
         PredictedlogRVforAll.append(PredictedlogRV)
-    return PredictedlogRVforAll
+    return PredictedlogRVforAll, Betas, Intercept
 
 '''
     Obtaining MSE and QL
 '''
 def VAR_MSE_QL(LogRV_df,q,p,t,n):
     '''
-
+    :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
     :param y: realized logRV for all currency pairs
     :param q: q=9 in this project since we have 9 currency pairs
     :param p: p is lag
@@ -93,8 +97,11 @@ def VAR_MSE_QL(LogRV_df,q,p,t,n):
     :param n: n = len(LogRV_df)-warmup
     :return: MSE, QL and SE plot
     '''
-    y = get_y(LogRV_df,q, p, t,n)
-    PredictedlogRVforAll = predictlogRV(LogRV_df,q, p, t,n)
+    obs = get_y(LogRV_df,q, p, t,n)
+    y = []
+    for k in range(len(obs)):
+        y.append(obs[k][1:])
+    PredictedlogRVforAll = predictlogRV(LogRV_df,q, p, t,n)[0]
     Performance_ = PerformanceMeasure()
     MSEforAll = []
     QLforAll = []
@@ -103,10 +110,10 @@ def VAR_MSE_QL(LogRV_df,q,p,t,n):
         QL = Performance_.quasi_likelihood(observed=np.exp(y[i]), prediction=np.exp(PredictedlogRVforAll[i]))
         MSEforAll.append(MSE)
         QLforAll.append(QL)
-        mean_MSE = np.mean(MSEforAll)
-        mean_QL = np.mean(QLforAll)
+    mean_MSE = np.mean(MSEforAll)
+    mean_QL = np.mean(QLforAll)
 
-    return mean_MSE,mean_QL, MSEforAll, QLforAll
+    return mean_MSE, mean_QL, MSEforAll, QLforAll
 
 '''
     Obtaining optimal p
@@ -158,7 +165,7 @@ def VAR_SE(LogRV_df, q, p_series, daily_warmup_series, data):
     p = optimal_p(LogRV_df,q,p_series,daily_warmup_series,len_training)
     t= daily_warmup_series[p-1]
     n=len(LogRV_df) - t
-    PredictedlogRVforAll = predictlogRV(LogRV_df, q, p, t, n)
+    PredictedlogRVforAll = predictlogRV(LogRV_df, q, p, t, n)[0]
     y = get_y(LogRV_df, q, p, t, n)
     label = "VAR"
     # TODO: change this label
