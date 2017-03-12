@@ -4,9 +4,9 @@
 # We only implements VAR on daily volatility data.
 # We take log of annualized volatility to get logRV.
 # We divide the data into training sample (2/3) and test sample (1/3).
-# For lag p = 1, warm-up period/look-back window is 100.
-# For lag p = 2, warm-up period/look-back window is 200.
-# For lag p = 3, warm-up period/look-back window is 300.
+# For lag p = 1, look-back rolling window is 100.
+# For lag p = 2, look-back rolling window is 200.
+# For lag p = 3, look-back rolling window is 300.
 # From the training sample, we get the best p giving the smallest MSE;
 # Using the optimal p, we fit the model and make predictions on the test sample.
 # We used a rolling window method rather than a growing window method.
@@ -21,13 +21,15 @@ from Performance_Measure import *
     Construct y as a list of 9 lists.
     The k-th list inside y is a series of logRV for the k-th currency pair for k=1,2,...,9
 '''
-def get_y(LogRV_df,q, p, t,n):
+def get_y(LogRV_df,q, t,n):
+# def get_y(LogRV_df, q, p, t, n):
+
     '''
     :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
     :param q: q=9 in this project since we have 9 currency pairs
     :param p: p is lag
-    :param t: t = warm-up period
-    :param n: n = len(LogRV_df)-warmup
+    :param t: t = indicator
+    :param n: n = length of the look-back rolling window
     :return: y as inputs into LR for all currency pairs
     '''
     y = []
@@ -43,8 +45,8 @@ def x_mat_t_n_qp(LogRV_df,q, p, t,n):
     :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
     :param q: q=9 in this project since we have 9 currency pairs
     :param p: p is lag
-    :param t: t = warm-up period
-    :param n: n = len(LogRV_df)-warmup
+    :param t: t = time indicator
+    :param n: n = length of the look-back rolling window
     :return: the x matrix as a input for regression, where the dimension of x is n*(qp)
     '''
     x =  pd.DataFrame()
@@ -55,49 +57,96 @@ def x_mat_t_n_qp(LogRV_df,q, p, t,n):
                 x_t_vec.append(LogRV_df.iloc[t+m-i][k])
         x = x.append([x_t_vec])
     return x
+
+
 '''
      Fitting parameters and making prediction based on fitted models
      PredictedlogRV collects the predicted logRV for all 9 currency pairs
 
 '''
-def predictlogRV(LogRV_df,q,p,t,n):
+# def predictlogRV(LogRV_df,q,p,t,n):
+def predictlogRV_trainingSample(LogRV_df, q, p,n):
+
     '''
     :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
     :param q: q=9 in this project since we have 9 currency pairs
     :param p: p is lag
-    :param t: t = warm-up period
-    :param n: n = len(LogRV_df)-warmup
-    :return: the predicted logRV for all 9 currency pairs
+    :param n: n = length of the look-back rolling window
+    :return: the predicted logRV for all 9 currency pairs in the training sample
     '''
-    x = x_mat_t_n_qp(LogRV_df,q, p, t,n)
-    y = get_y(LogRV_df,q, p, t,n)
     PredictedlogRVforAll = []
-    for i in range(q):
-        A = lr()
-        A.fit( x, y[i] )
-        b = A.coef_
-        c = A.intercept_
-        PredictedlogRV = []
-        for k in range(n):
-            PredictedlogRV.append( A.predict( x.iloc[k].values.reshape(1, -1) )[0] )
+    obs_yforAll = []
+    for t in range(p,int(2/3*len(LogRV_df))-n):
+        x = x_mat_t_n_qp(LogRV_df,q, p, t,n)
+        y = get_y(LogRV_df,q, t,n)
+        for i in range(q):
+            A = lr()
+            A.fit( x, y[i] )
+            b = A.coef_
+            c = A.intercept_
+            PredictedlogRV = []
+            obs_y = []
+            x_used_in_pred = x_mat_t_n_qp(LogRV_df,q, p, t+1,n)
+            PredictedlogRV.append( A.predict( x_used_in_pred.tail(1).values.reshape(1, -1) )[0] )
+            obs_y.append(get_y(LogRV_df, q, t, n))
+            obs_y.append(get_y(LogRV_df, q, t + 1, n)[-1])
         PredictedlogRVforAll.append(PredictedlogRV)
-    return PredictedlogRVforAll, b, c
+        obs_yforAll.append(obs_y)
+    return PredictedlogRVforAll, obs_yforAll, b, c
+
+
+
+def predictlogRV_testSample(LogRV_df, q, p,n):
+
+    '''
+    :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
+    :param q: q=9 in this project since we have 9 currency pairs
+    :param p: p is lag
+    :param n: n = length of the look-back rolling window
+    :return: the predicted logRV for all 9 currency pairs in the training sample
+    '''
+    PredictedlogRVforAll = []
+    obs_yforAll = []
+    for t in range(int(2/3*len(LogRV_df))-n+1,len(LogRV_df)-n):
+        x = x_mat_t_n_qp(LogRV_df,q, p, t,n)
+        y = get_y(LogRV_df,q, t,n)
+        for i in range(q):
+            A = lr()
+            A.fit( x, y[i] )
+            b = A.coef_
+            c = A.intercept_
+            PredictedlogRV = []
+            obs_y = []
+            x_used_in_pred = x_mat_t_n_qp(LogRV_df,q, p, t+1,n)
+            PredictedlogRV.append( A.predict( x_used_in_pred.tail(1).values.reshape(1, -1) )[0] )
+            obs_y.append(get_y(LogRV_df, q, t + 1, n)[-1])
+        PredictedlogRVforAll.append(PredictedlogRV)
+        obs_yforAll.append(obs_y)
+    return PredictedlogRVforAll, obs_yforAll, b, c
 
 '''
     Obtaining MSE and QL
 '''
-def VAR_MSE_QL(LogRV_df,q,p,t,n):
+def VAR_MSE_QL(LogRV_df,q,p,n,TrainOrTest):
+# def VAR_MSE_QL(LogRV_df,q,p,t,n):
     '''
     :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
     :param y: realized logRV for all currency pairs
     :param q: q=9 in this project since we have 9 currency pairs
     :param p: p is lag
-    :param t: t = warm-up period
-    :param n: n = len(LogRV_df)-warmup
+    :param n: n = length of the look-back rolling window
+    :param TrainOrTest: TrainOrTest = "Train" or "Test"
     :return: MSE, QL and SE plot
     '''
-    y = get_y(LogRV_df,q, p, t,n)
-    PredictedlogRVforAll = predictlogRV(LogRV_df,q, p, t,n)[0]
+    if TrainOrTest == "Train":
+        PredictedlogRVforAll = predictlogRV_trainingSample(LogRV_df,q, p, n)[0]
+        # PredictedlogRVforAll = predictlogRV(LogRV_df,q, p, t,n)[0]
+        y = predictlogRV_trainingSample(LogRV_df, q, p, n)[1]
+        # y = get_y(LogRV_df,q, p, t,n)
+    elif TrainOrTest == "Test":
+        PredictedlogRVforAll = predictlogRV_testSample(LogRV_df, q, p, n)[0]
+        y = predictlogRV_testSample(LogRV_df, q, p, n)[1]
+
     Performance_ = PerformanceMeasure()
     MSEforAll = []
     QLforAll = []
@@ -115,22 +164,17 @@ def VAR_MSE_QL(LogRV_df,q,p,t,n):
     Obtaining optimal p
 '''
 
-def optimal_p(LogRV_df,q,p_series,daily_warmup_series,len_training):
+def optimal_p(LogRV_df,q,p_series):
     '''
 
     :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
     :param q: q = 9  # q is the number of currency pairs
     :param p_series: p_series = [1, 2, 3]  # p is lag, picking 1,2 and 3 according to Amin's suggesting
-    :param daily_warmup_series: daily_warmup_series = [100*p[i] for i in range(len(p))] # warm-up period is 100,200 and 300 respectively for daily data when p=1,2 and 3
-    :param len_training: len_training is the length of the training set
     :return: optimal_p out of 1,2,3
     '''
-    n = [] # n collects the sample size for daily VAR regression when p=1, p=2 and p=3
-    for i in range(len(p_series)):
-        n.append(len_training - daily_warmup_series[i])
-    VAR_p1= VAR_MSE_QL(LogRV_df,q,p=p_series[0],t=daily_warmup_series[0],n=n[0])
-    VAR_p2= VAR_MSE_QL(LogRV_df,q,p=p_series[1],t=daily_warmup_series[1],n=n[1])
-    VAR_p3= VAR_MSE_QL(LogRV_df,q,p=p_series[2],t=daily_warmup_series[2],n=n[2])
+    VAR_p1= VAR_MSE_QL(LogRV_df,q,p=p_series[0],n=p_series[0]*100,TrainOrTest="Train")
+    VAR_p2= VAR_MSE_QL(LogRV_df,q,p=p_series[1],n=p_series[1]*100,TrainOrTest="Train")
+    VAR_p3= VAR_MSE_QL(LogRV_df,q,p=p_series[2],n=p_series[2]*100,TrainOrTest="Train")
 
     MSEs = [VAR_p1[0],VAR_p2[0],VAR_p3[0]]
     QLs = [VAR_p1[1],VAR_p2[1],VAR_p3[1]]
@@ -146,23 +190,27 @@ def optimal_p(LogRV_df,q,p_series,daily_warmup_series,len_training):
 '''
 
 
-def VAR_SE(LogRV_df, q, p_series, daily_warmup_series, data):
+def VAR_SE(LogRV_df, q, p_series, data):
+# def VAR_SE(LogRV_df, q, p_series, daily_lookback_series, data):
     '''
 
     :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
     :param q: q=9
     :param p_series: p_series=[1,2,3]
-    :param daily_warmup_series: daily_warmup_series=[100,200,300]
     :param data: used in plotting SE
     :return: SE plot
     '''
     # TODO: input correct data input
-    len_training = int(2 / 3 * len(LogRV_df))
-    p = optimal_p(LogRV_df,q,p_series,daily_warmup_series,len_training)
-    t= daily_warmup_series[p-1]
-    n=len(LogRV_df) - t
-    PredictedlogRVforAll = predictlogRV(LogRV_df, q, p, t, n)[0]
-    y = get_y(LogRV_df, q, p, t, n)
+    # len_training = int(2 / 3 * len(LogRV_df))
+    p = optimal_p(LogRV_df,q,p_series)
+    # p = optimal_p(LogRV_df,q,p_series,daily_lookback_series,len_training)
+    t= daily_lookback_series[p-1]
+    n= p*100
+    PredictedlogRVforAll = predictlogRV(LogRV_df, q, p, n)[0]
+    # PredictedlogRVforAll = predictlogRV(LogRV_df, q, p, t, n)[0]
+    y = predictlogRV_trainingSample(LogRV_df, q, p, n)[1]
+    # y = get_y(LogRV_df, q, t, n)
+    # y = get_y(LogRV_df, q, p, t, n)
     label = "VAR"
     # TODO: change this label
     for i in range(q):
@@ -175,17 +223,22 @@ def VAR_SE(LogRV_df, q, p_series, daily_warmup_series, data):
 '''
     Using the optimal p on the test sample
 '''
-def Test_Sample_MSE_QL(LogRV_df,q,p_series,daily_warmup_series):
-    len_training = int(2 / 3 * len(LogRV_df))
-    p = optimal_p(LogRV_df,q,p_series,daily_warmup_series,len_training)
-    MSE_QL_optimal_p = VAR_MSE_QL(LogRV_df,q,p,t=len_training,n=len(LogRV_df)-len_training)
+def Test_Sample_MSE_QL(LogRV_df,q,p_series):
+# def Test_Sample_MSE_QL(LogRV_df,q,p_series,daily_warmup_series):
+#     len_training = int(2 / 3 * len(LogRV_df))
+    p = optimal_p(LogRV_df,q,p_series)
+    # p = optimal_p(LogRV_df,q,p_series,daily_warmup_series,len_training)
+    MSE_QL_optimal_p = VAR_MSE_QL(LogRV_df,q,p,n=p*100, TrainOrTest="Test")
+    # MSE_QL_optimal_p = VAR_MSE_QL(LogRV_df,q,p,t=len_training,n=len(LogRV_df)-len_training)
     MSE_optimal_p_avg = MSE_QL_optimal_p[0] # average MSE of 9 currency pairs
     QL_optimal_p_avg = MSE_QL_optimal_p[1]  # average QL of 9 currency pairs
     MSE_optimal_p_forAll = MSE_QL_optimal_p[2] # MSE of all 9 currency pairs
     QL_optimal_p_forAll = MSE_QL_optimal_p[3]  # QL of all 9 currency pairs
+
+
     return MSE_QL_optimal_p,MSE_optimal_p_avg,QL_optimal_p_avg,MSE_optimal_p_forAll,QL_optimal_p_forAll
 
-Test_Sample_MSE_QL(LogRV_df = np.log(daily_vol_combined), q=9, p_series=[1,2,3],daily_warmup_series=[100,200,300])
+Test_Sample_MSE_QL(LogRV_df = np.log(daily_vol_combined), q=9, p_series=[1,2,3])
 
 #     Construct y as a list of 9 lists.
 #     The k-th list inside y is a series of logRV for the k-th currency pair for k=1,2,...,9
