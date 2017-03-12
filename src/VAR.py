@@ -67,7 +67,7 @@ def predictlogRV(LogRV_df,q,p,t,n):
     :param p: p is lag
     :param t: t = warm-up period
     :param n: n = len(LogRV_df)-warmup
-    :return: the predicted logRV for all 9 currency pairs and the fitted parameters
+    :return: the predicted logRV for all 9 currency pairs
     '''
     x = x_mat_t_n_qp(LogRV_df,q, p, t,n)
     y = get_y(LogRV_df,q, p, t,n)
@@ -75,14 +75,13 @@ def predictlogRV(LogRV_df,q,p,t,n):
     for i in range(q):
         A = lr()
         A.fit( x, y[i] )
-        Betas = A.coef_
-        Intercept = A.intercept_
+        b = A.coef_
+        c = A.intercept_
         PredictedlogRV = []
-        for k in range(n-1):
+        for k in range(n):
             PredictedlogRV.append( A.predict( x.iloc[k].values.reshape(1, -1) )[0] )
-            # PredictedlogRV.append( A.predict( x.iloc[k].values.reshape(1, -1) )[0] )
         PredictedlogRVforAll.append(PredictedlogRV)
-    return PredictedlogRVforAll, Betas, Intercept
+    return PredictedlogRVforAll, b, c
 
 '''
     Obtaining MSE and QL
@@ -97,10 +96,7 @@ def VAR_MSE_QL(LogRV_df,q,p,t,n):
     :param n: n = len(LogRV_df)-warmup
     :return: MSE, QL and SE plot
     '''
-    obs = get_y(LogRV_df,q, p, t,n)
-    y = []
-    for k in range(len(obs)):
-        y.append(obs[k][1:])
+    y = get_y(LogRV_df,q, p, t,n)
     PredictedlogRVforAll = predictlogRV(LogRV_df,q, p, t,n)[0]
     Performance_ = PerformanceMeasure()
     MSEforAll = []
@@ -113,7 +109,7 @@ def VAR_MSE_QL(LogRV_df,q,p,t,n):
     mean_MSE = np.mean(MSEforAll)
     mean_QL = np.mean(QLforAll)
 
-    return mean_MSE, mean_QL, MSEforAll, QLforAll
+    return mean_MSE,mean_QL, MSEforAll, QLforAll
 
 '''
     Obtaining optimal p
@@ -315,4 +311,3 @@ Test_Sample_MSE_QL(LogRV_df = np.log(daily_vol_combined), q=9, p_series=[1,2,3],
 # MSE_daily,QL_daliy = VAR_MSE_QL(q=9, p=6, t=daily_warmup, n=len(LogRV_df[0])-daily_warmup,indicator="Daily")
 # MSE_weekly,QL_weekly = VAR_MSE_QL(q=9, p=6, t=weekly_warmup, n=len(LogRV_df[1])-weekly_warmup,indicator="Weekly")
 # MSE_monthly,QL_monthly = VAR_MSE_QL(q=9, p=6, t=monthly_warmup, n=len(LogRV_df[2])-monthly_warmup,indicator="Monthly")
-
