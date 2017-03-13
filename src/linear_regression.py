@@ -39,8 +39,9 @@ class LinRegression:
             b = [A.coef_[i] for i in range(n)]
             c = A.intercept_
 
+            # TODO check that LR is correct
             # # reshape data for prediction
-            PredictedLogVol.append(A.predict(LogVol[initial:n+initial].values.reshape(1, -1))[0])
+            PredictedLogVol.append(A.predict(LogVol[initial+1:n+initial+1].values.reshape(1, -1))[0])
 
 
         y = data.Volatility_Time[warmup_period+n:]
