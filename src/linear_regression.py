@@ -27,7 +27,7 @@ class LinRegression:
         LogVol = np.log(data['Volatility_Time'])
         PredictedLogVol=[]
         x = [i for i in range(n)]
-        for initial in range(warmup_period, len(LogVol)-n+2):
+        for initial in range(warmup_period, len(LogVol)-1):
         # for initial in range(warmup_period, len(LogVol)-n):
             for i in range(n):
                 x[i] = LogVol[i:(initial +i-n+1)]
