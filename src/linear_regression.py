@@ -27,13 +27,16 @@ class LinRegression:
         LogVol = np.log(data['Volatility_Time'])
         PredictedLogVol=[]
         x = [i for i in range(n)]
-        for initial in range(warmup_period, len(LogVol)-n):
+        for initial in range(warmup_period, len(LogVol)-n+2):
+        # for initial in range(warmup_period, len(LogVol)-n):
             for i in range(n):
-                x[i] = LogVol[i:(initial +i)]
+                x[i] = LogVol[i:(initial +i-n+1)]
+                # x[i] = LogVol[i:(initial +i)]
 
             xstacked = np.column_stack(x)
 
-            y = LogVol[n:n+initial]
+            y = LogVol[n:initial+1]
+            # y = LogVol[n:n+initial]
             A = lr()
             A.fit(xstacked, y)
             b = [A.coef_[i] for i in range(n)]
@@ -41,10 +44,12 @@ class LinRegression:
 
             # TODO check that LR is correct
             # # reshape data for prediction
-            PredictedLogVol.append(A.predict(LogVol[initial+1:n+initial+1].values.reshape(1, -1))[0])
+            PredictedLogVol.append(A.predict(LogVol[initial-n+1 : initial+1].values.reshape(1, -1))[0])
+            # PredictedLogVol.append(A.predict(LogVol[initial+1:n+initial+1].values.reshape(1, -1))[0])
 
 
-        y = data.Volatility_Time[warmup_period+n:]
+        y = data.Volatility_Time[warmup_period+1:]
+        # y = data.Volatility_Time[warmup_period+n:]
         PredictedVol = pd.Series(np.exp(PredictedLogVol))
         Performance_ = PerformanceMeasure()
         MSE = Performance_.mean_se(observed=y, prediction=PredictedVol)
