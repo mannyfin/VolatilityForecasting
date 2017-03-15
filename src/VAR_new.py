@@ -40,7 +40,7 @@ def get_y(LogRV_df,q, t,n):
             # "t here is bound to predictLogRV...."
         # y_i.append( LogRV_df.iloc[t+k][i] )
         # y.append(y_i)
-        y.append(LogRV_df.iloc[t:n, i])
+        y.append(LogRV_df.iloc[t:t+n, i])
 
     return y
 
@@ -188,6 +188,7 @@ def VAR_SE(LogRV_df, q, p_series, data):
     # p = optimal_p(LogRV_df,q,p_series,daily_lookback_series,len_training)
     t= daily_lookback_series[p-1]
     n= p*100
+    # should be test data passed as string
     PredictedlogRVforAll,y = predictlogRV(LogRV_df, q, p, n)[0:2]
     # PredictedlogRVforAll = predictlogRV(LogRV_df, q, p, t, n)[0]
     # y = predictlogRV_trainingSample(LogRV_df, q, p, n)[1]
