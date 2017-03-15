@@ -76,9 +76,12 @@ for count, name in enumerate(filenames):
     warmup_period = 400
     plt.figure(3*count+1, figsize=(12, 7))
     fc = FunctionCalls()
+    # Daily = fc.function_runs(filename=name, stringinput='Daily', warmup=warmup_period, input_data=daily_vol_result[1:],
+    #                          tnplus1=1, lr=[1, 3, 5, 10], arch=[np.array(daily_ret['Return_Time'][1:]), 1, 0],
+    #                          garchpq=[np.array(daily_ret['Return_Time'][1:]), 1, 1, 0], k_nn=10)
     Daily = fc.function_runs(filename=name, stringinput='Daily', warmup=warmup_period, input_data=daily_vol_result[1:],
-                             tnplus1=1, lr=[1, 3, 5, 10], arch=[np.array(daily_ret['Return_Time'][1:]), 1, 0],
-                             garchpq=[np.array(daily_ret['Return_Time'][1:]), 1, 1, 0], k_nn=10)
+                             tnplus1=None, lr=None, arch=None,
+                             garchpq=None, k_nn=[1, 3, 5, 10, 20, 50])
 
     Daily_list.append(Daily)
 
