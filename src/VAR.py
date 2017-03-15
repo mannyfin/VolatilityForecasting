@@ -16,6 +16,7 @@ import numpy as np
 from sklearn.linear_model import LinearRegression as lr
 import pandas as pd
 from Performance_Measure import *
+from SEplot import se_plot as SE
 
 '''
     Construct y as a list of 9 lists.
@@ -196,7 +197,7 @@ def VAR_MSE_QL(LogRV_df,q,p,n,TrainOrTest):
     mean_MSE = np.mean(MSEforAll)
     mean_QL = np.mean(QLforAll)
 
-    return mean_MSE, mean_QL, MSEforAll, QLforAll
+    return mean_MSE, mean_QL, MSEforAll, QLforAll,PredictedlogRVforAll, y
 
 '''
     Obtaining optimal p
@@ -215,12 +216,13 @@ def optimal_p(LogRV_df,q,p_series):
     VAR_p3= VAR_MSE_QL(LogRV_df,q,p=p_series[2],n=p_series[2]*100,TrainOrTest="Train")
 
     MSEs = [VAR_p1[0],VAR_p2[0],VAR_p3[0]]
-    QLs = [VAR_p1[1],VAR_p2[1],VAR_p3[1]]
+    # QLs = [VAR_p1[1],VAR_p2[1],VAR_p3[1]]
 
     optimal_p_MLE = MSEs.index(min(MSEs))+1 # the optimal p according to MLE criterion is 3
-    optimal_p_QL = QLs.index(min(QLs))+1 # the optimal p according to QL criterion is 3 as well
-    optimal_p = optimal_p_MLE # we use the optimal p according to MLE criterion as the optimal p
-    return optimal_p
+    # optimal_p_QL = QLs.index(min(QLs))+1 # the optimal p according to QL criterion is 3 as well
+    # optimal_p = optimal_p_MLE # we use the optimal p according to MLE criterion as the optimal p
+    return optimal_p_MLE  # we use the optimal p according to MLE criterion as the optimal p
+    # return optimal_p
 
 
 '''
@@ -228,51 +230,46 @@ def optimal_p(LogRV_df,q,p_series):
 '''
 
 
-def VAR_SE(LogRV_df, q, p_series, data):
-# def VAR_SE(LogRV_df, q, p_series, daily_lookback_series, data):
-    '''
-
-    :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
-    :param q: q=9
-    :param p_series: p_series=[1,2,3]
-    :param data: used in plotting SE
-    :return: SE plot
-    '''
-    # TODO: input correct data input
-    # len_training = int(2 / 3 * len(LogRV_df))
-    p = optimal_p(LogRV_df,q,p_series)
-    # p = optimal_p(LogRV_df,q,p_series,daily_lookback_series,len_training)
-    t= daily_lookback_series[p-1]
-    n= p*100
-    PredictedlogRVforAll,y = predictlogRV(LogRV_df, q, p, n)[0:2]
-    # PredictedlogRVforAll = predictlogRV(LogRV_df, q, p, t, n)[0]
-    # y = predictlogRV_trainingSample(LogRV_df, q, p, n)[1]
-    # y = get_y(LogRV_df, q, t, n)
-    # y = get_y(LogRV_df, q, p, t, n)
-    label = "VAR"
-    # TODO: change this label
-    for i in range(q):
-        SE(np.sqrt(np.e(y[i])), np.sqrt(np.e(PredictedlogRVforAll[i])), dates, function_method=label)
-        # TODO: get dates
-        # TODO: add return
+# def VAR_SE(LogRV_df, q, p_series, data):
+# # def VAR_SE(LogRV_df, q, p_series, daily_lookback_series, data):
+#     '''
+#
+#     :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
+#     :param q: q=9
+#     :param p_series: p_series=[1,2,3]
+#     :param data: used in plotting SE
+#     :return: SE plot
+#     '''
+#     # len_training = int(2 / 3 * len(LogRV_df))
+#     p = optimal_p(LogRV_df,q,p_series)
+#     # p = optimal_p(LogRV_df,q,p_series,daily_lookback_series,len_training)
+#     t= daily_lookback_series[p-1]
+#     n= p*100
+#     PredictedlogRVforAll,y = predictlogRV(LogRV_df, q, p, n)[0:2]
+#     # PredictedlogRVforAll = predictlogRV(LogRV_df, q, p, t, n)[0]
+#     # y = predictlogRV_trainingSample(LogRV_df, q, p, n)[1]
+#     # y = get_y(LogRV_df, q, t, n)
+#     # y = get_y(LogRV_df, q, p, t, n)
+#     label = "VAR"
+#     for i in range(q):
+#         SE(np.sqrt(np.e(y[i])), np.sqrt(np.e(PredictedlogRVforAll[i])), dates, function_method=label)
 
 '''
     Using the optimal p on the test sample
 '''
-def Test_Sample_MSE_QL(LogRV_df,q,p_series):
-# def Test_Sample_MSE_QL(LogRV_df,q,p_series,daily_warmup_series):
-#     len_training = int(2 / 3 * len(LogRV_df))
+def Test_Sample_MSE_QL_SE(LogRV_df,q,p_series,dates):
     p = optimal_p(LogRV_df,q,p_series)
-    # p = optimal_p(LogRV_df,q,p_series,daily_warmup_series,len_training)
     MSE_QL_optimal_p = VAR_MSE_QL(LogRV_df,q,p,n=p*100, TrainOrTest="Test")
-    # MSE_QL_optimal_p = VAR_MSE_QL(LogRV_df,q,p,t=len_training,n=len(LogRV_df)-len_training)
     optimal_p = p
     MSE_optimal_p_avg = MSE_QL_optimal_p[0] # average MSE of 9 currency pairs
     QL_optimal_p_avg = MSE_QL_optimal_p[1]  # average QL of 9 currency pairs
     MSE_optimal_p_forAll = MSE_QL_optimal_p[2] # MSE of all 9 currency pairs
     QL_optimal_p_forAll = MSE_QL_optimal_p[3]  # QL of all 9 currency pairs
-
+    PredictedlogRVforAll = MSE_QL_optimal_p[5] # Predicted values in the test sample
+    y = MSE_QL_optimal_p[6] # observed values in the test sample
+    for i in range(q):
+        SE(np.sqrt(np.e(y[i])), np.sqrt(np.e(PredictedlogRVforAll[i])), dates)
 
     return optimal_p,MSE_optimal_p_avg,QL_optimal_p_avg,MSE_optimal_p_forAll,QL_optimal_p_forAll
 
-optimal_p,MSE_optimal_p_avg,QL_optimal_p_avg,MSE_optimal_p_forAll,QL_optimal_p_forAll = Test_Sample_MSE_QL(LogRV_df = np.log(daily_vol_combined), q=9, p_series=[1,2,3])
+optimal_p,MSE_optimal_p_avg,QL_optimal_p_avg,MSE_optimal_p_forAll,QL_optimal_p_forAll = Test_Sample_MSE_QL(LogRV_df = np.log(daily_vol_combined), q=9, p_series=[1,2,3],dates)
