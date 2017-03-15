@@ -17,7 +17,7 @@ import pandas as pd
 from KNN import KNN
 from function_runs import *
 import matplotlib.backends.backend_pdf
-
+print("hi")
 filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
 # filenames = ['SEKUSD.csv','CADUSD.csv',  'CHFUSD.csv',]
 
