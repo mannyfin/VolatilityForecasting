@@ -35,7 +35,7 @@ def get_y(LogRV_df,q, t,n):
     y = []
     for i in range(q):
         y_i= []
-        for k in range(n): # n is the sample size
+        for k in range(n):
             y_i.append( LogRV_df.iloc[t+k][i] )
         y.append(y_i)
     return y
