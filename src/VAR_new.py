@@ -13,9 +13,9 @@
 
 
 import numpy as np
-from sklearn.linear_model import LinearRegression as lr
 import pandas as pd
 from Performance_Measure import *
+from sklearn.linear_model import LinearRegression as lr
 
 '''
     Construct y as a list of 9 lists.
@@ -33,11 +33,15 @@ def get_y(LogRV_df,q, t,n):
     :return: y as inputs into LR for all currency pairs
     '''
     y = []
+    # len(LogRV_df.keys()) is q is 9
     for i in range(q):
-        y_i= []
-        for k in range(n):
-            y_i.append( LogRV_df.iloc[t+k][i] )
-        y.append(y_i)
+        # y_i= []
+        # for k in range(n):
+            # "t here is bound to predictLogRV...."
+        # y_i.append( LogRV_df.iloc[t+k][i] )
+        # y.append(y_i)
+        y.append(LogRV_df.iloc[t:n, i])
+
     return y
 
 
@@ -53,45 +57,15 @@ def x_mat_t_n_qp(LogRV_df,q, p, t,n):
     x =  pd.DataFrame()
     for m in range(n):
         x_t_vec = []
+        # this is different from the k in the y creation
         for k in range(q):
             for i in range(1, p+1):
+                "t here is bound to predictLogRV...."
+                # Why not just call these in the right order and then reverse them?
+                # Right now they are called as: element [t+m-i] = 3, 2, 1 for iteration i = 1
                 x_t_vec.append(LogRV_df.iloc[t+m-i][k])
         x = x.append([x_t_vec])
     return x
-
-
-# def get_stacked_y(LogRV_df,q, t,n):
-#     y = get_y(LogRV_df,q, t,n)
-#     y_all_in_one = np.array(y).T
-#     return y_all_in_one
-#
-# def get_stacked_x(LogRV_df,q, t,n):
-#     x = x_mat_t_n_qp(LogRV_df,q, p, t,n)
-#     A = np.vstack([x, np.ones(len(x))]).T
-#     x_all_in_one = np.concatenate([x,x,x,x,x,x,x,x,x], axis=0)
-#     return x_all_in_one
-#
-# def predictlogRV_trainingSample_fast(LogRV_df, q, p,n):
-#     PredictedlogRVforAll = []
-#     obs_yforAll = []
-#     y = get_y(LogRV_df, q, t, n)
-#     y = np.array(y).T
-#     x = x_mat_t_n_qp(LogRV_df, q, p, t, n)
-#     x = np.array(x)
-#     A = np.vstack([x, np.ones(len(x))]).T
-#     for t in range(p,int(2/3*len(LogRV_df))-n):
-#         PredictedlogRV = []
-#         obs_y = []
-#         for i in range(q):
-#             params =  np.linalg.lstsq(x, y[i])[0]
-#             x_used_in_pred = x_mat_t_n_qp(LogRV_df, q, p, t + 1, n)
-#             PredictedlogRV.append(np.dot(x_used_in_pred.tail(1), params))
-#             obs_y.append(get_y(LogRV_df, q, t + 1, n)[i][-1])
-#         PredictedlogRVforAll.append(PredictedlogRV)
-#         obs_yforAll.append(obs_y)
-#         print("train_p_" + str(p) + "_t_" + str(t))
-#     return PredictedlogRVforAll, obs_yforAll, b, c
-
 
 '''
      Fitting parameters and making prediction based on fitted models
@@ -99,7 +73,9 @@ def x_mat_t_n_qp(LogRV_df,q, p, t,n):
 
 '''
 # def predictlogRV(LogRV_df,q,p,t,n):
-def predictlogRV_trainingSample(LogRV_df, q, p,n):
+
+
+def predictlogRV(LogRV_df, q, p, n,stringin=None):
 
     '''
     :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
@@ -121,49 +97,20 @@ def predictlogRV_trainingSample(LogRV_df, q, p,n):
             b = A.coef_
             c = A.intercept_
             x_used_in_pred = x_mat_t_n_qp(LogRV_df,q, p, t+1,n)
-            PredictedlogRV.append( A.predict( x_used_in_pred.tail(1).values.reshape(1, -1) )[0] )
+            PredictedlogRV.append( A.predict(x_used_in_pred.tail(1).values.reshape(1, -1))[0])
             obs_y.append(get_y(LogRV_df, q, t + 1, n)[i][-1])
         PredictedlogRVforAll.append(PredictedlogRV)
         obs_yforAll.append(obs_y)
-        print("train_p_" + str(p) + "_t_" + str(t))
-    return PredictedlogRVforAll, obs_yforAll, b, c
+        print(str(stringin) + str(p) + "_t_" + str(t))
 
+        mean_MSE, mean_QL, MSEforAll, QLforAll = VAR_MSE_QL(PredictedlogRVforAll, obs_yforAll, q)
 
-
-def predictlogRV_testSample(LogRV_df, q, p,n):
-
-    '''
-    :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
-    :param q: q=9 in this project since we have 9 currency pairs
-    :param p: p is lag
-    :param n: n = length of the look-back rolling window
-    :return: the predicted logRV for all 9 currency pairs in the training sample
-    '''
-    PredictedlogRVforAll = []
-    obs_yforAll = []
-    for t in range(int(2/3*len(LogRV_df))-n,len(LogRV_df)-n):
-        x = x_mat_t_n_qp(LogRV_df, q, p, t, n)
-        y = get_y(LogRV_df, q, t, n)
-        PredictedlogRV = []
-        obs_y = []
-        for i in range(q):
-            A = lr()
-            A.fit(x, y[i])
-            b = A.coef_
-            c = A.intercept_
-            x_used_in_pred = x_mat_t_n_qp(LogRV_df, q, p, t + 1, n)
-            PredictedlogRV.append(A.predict(x_used_in_pred.tail(1).values.reshape(1, -1))[0])
-            obs_y.append(get_y(LogRV_df, q, t + 1, n)[i][-1])
-        PredictedlogRVforAll.append(PredictedlogRV)
-        obs_yforAll.append(obs_y)
-        print("test_" + str(p) +"_t_" + str(t))
-    return PredictedlogRVforAll, obs_yforAll, b, c
+    return mean_MSE, mean_QL, MSEforAll, QLforAll
 
 '''
     Obtaining MSE and QL
 '''
-def VAR_MSE_QL(LogRV_df,q,p,n,TrainOrTest):
-# def VAR_MSE_QL(LogRV_df,q,p,t,n):
+def VAR_MSE_QL(PredictedlogRVforAll, y, q):
     '''
     :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
     :param y: realized logRV for all currency pairs
@@ -173,14 +120,11 @@ def VAR_MSE_QL(LogRV_df,q,p,n,TrainOrTest):
     :param TrainOrTest: TrainOrTest = "Train" or "Test"
     :return: MSE, QL and SE plot
     '''
-    if TrainOrTest == "Train":
-        PredictedlogRVforAll, y = predictlogRV_trainingSample(LogRV_df,q, p, n)[0:2]
-        # PredictedlogRVforAll = predictlogRV(LogRV_df,q, p, t,n)[0]
-        # y = predictlogRV_trainingSample(LogRV_df, q, p, n)[1]
-        # y = get_y(LogRV_df,q, p, t,n)
-    elif TrainOrTest == "Test":
-        PredictedlogRVforAll, y = predictlogRV_testSample(LogRV_df, q, p, n)[0:2]
-        # y = predictlogRV_testSample(LogRV_df, q, p, n)[1]
+    # if TrainOrTest == "Train":
+    #     PredictedlogRVforAll, y = predictlogRV(LogRV_df,q, p, n, 'train_p_')[0:2]
+    #
+    # elif TrainOrTest == "Test":
+    #     PredictedlogRVforAll, y = predictlogRV(LogRV_df, q, p, n, 'test_')[0:2]
 
     y = np.array(y).T
     PredictedlogRVforAll = np.array(PredictedlogRVforAll).T
@@ -210,9 +154,9 @@ def optimal_p(LogRV_df,q,p_series):
     :param p_series: p_series = [1, 2, 3]  # p is lag, picking 1,2 and 3 according to Amin's suggesting
     :return: optimal_p out of 1,2,3
     '''
-    VAR_p1= VAR_MSE_QL(LogRV_df,q,p=p_series[0],n=p_series[0]*100,TrainOrTest="Train")
-    VAR_p2= VAR_MSE_QL(LogRV_df,q,p=p_series[1],n=p_series[1]*100,TrainOrTest="Train")
-    VAR_p3= VAR_MSE_QL(LogRV_df,q,p=p_series[2],n=p_series[2]*100,TrainOrTest="Train")
+    VAR_p1= predictlogRV(LogRV_df, q, p=p_series[0], n=p_series[0]*100, stringin="Train")
+    VAR_p2= predictlogRV(LogRV_df, q, p=p_series[1], n=p_series[1]*100, stringin="Train")
+    VAR_p3= predictlogRV(LogRV_df, q, p=p_series[2], n=p_series[2]*100, stringin="Train")
 
     MSEs = [VAR_p1[0],VAR_p2[0],VAR_p3[0]]
     QLs = [VAR_p1[1],VAR_p2[1],VAR_p3[1]]
@@ -264,8 +208,7 @@ def Test_Sample_MSE_QL(LogRV_df,q,p_series):
 #     len_training = int(2 / 3 * len(LogRV_df))
     p = optimal_p(LogRV_df,q,p_series)
     # p = optimal_p(LogRV_df,q,p_series,daily_warmup_series,len_training)
-    MSE_QL_optimal_p = VAR_MSE_QL(LogRV_df,q,p, n=p*100, TrainOrTest="Test")
-    # MSE_QL_optimal_p = VAR_MSE_QL(LogRV_df,q,p,t=len_training,n=len(LogRV_df)-len_training)
+    MSE_QL_optimal_p = predictlogRV(LogRV_df,q,p, n=p*100, stringin="Test")
     MSE_optimal_p_avg = MSE_QL_optimal_p[0] # average MSE of 9 currency pairs
     QL_optimal_p_avg = MSE_QL_optimal_p[1]  # average QL of 9 currency pairs
     MSE_optimal_p_forAll = MSE_QL_optimal_p[2] # MSE of all 9 currency pairs
