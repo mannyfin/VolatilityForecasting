@@ -79,7 +79,11 @@ for count, name in enumerate(filenames):
     # Daily = fc.function_runs(filename=name, stringinput='Daily', warmup=warmup_period, input_data=daily_vol_result[1:],
     #                          tnplus1=1, lr=[1, 3, 5, 10], arch=[np.array(daily_ret['Return_Time'][1:]), 1, 0],
     #                          garchpq=[np.array(daily_ret['Return_Time'][1:]), 1, 1, 0], k_nn=10)
-    Daily = fc.function_runs(filename=name, stringinput='Daily', warmup=warmup_period, input_data=daily_vol_result[1:],
+
+    #  Daily = fc.function_runs(filename=name, stringinput='Daily', warmup=warmup_period, input_data=daily_vol_result[1:],
+    #                          tnplus1=1, lr=[1, 3, 5, 10], arch=[np.array(daily_ret['Return_Time']), 1, 0],
+    #                          garchpq=[np.array(daily_ret['Return_Time']), 1, 1, 0], k_nn=10)
+    Daily = fc.function_runs(filename=name, stringinput='Daily', warmup=warmup_period, input_data=daily_vol_result,
                              tnplus1=None, lr=None, arch=None,
                              garchpq=None, k_nn=[1, 3, 5, 10, 20, 50])
 
@@ -89,13 +93,19 @@ for count, name in enumerate(filenames):
 #
 #     plt.figure(3*count+2, figsize=(12, 7))
 #     Weekly = fc.function_runs(filename=name, stringinput='Weekly', warmup=warmup_period,
-#                               input_data=weekly_vol_result[1:-2], tnplus1=1, lr=[1, 3, 5, 10],
+#                               input_data=weekly_vol_result, tnplus1=1, lr=[1, 3, 5, 10],
+#                               arch=[np.array(weekly_ret['Return_Time']), 1, 0],
+#                               garchpq=[np.array(weekly_ret['Return_Time']), 1, 1, 0])
+
+#     Weekly = fc.function_runs(filename=name, stringinput='Weekly', warmup=warmup_period,
+#                               input_data=weekly_vol_result[:-2], tnplus1=1, lr=[1, 3, 5, 10],
 #                               arch=[np.array(weekly_ret['Return_Time'][1:-2]), 1, 0],
 #                               garchpq=[np.array(weekly_ret['Return_Time'][1:-2]), 1, 1, 0])
 #
 #     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), fancybox=True, shadow=True, ncol=3)
 #
 #     plt.figure(3*count+3, figsize=(12, 7))
+"remove the first month because it is incomplete"
 #     Monthly = fc.function_runs(filename=name, stringinput='Monthly', warmup=warmup_period, input_data=monthly_vol_result[1:],
 #                                tnplus1=1, lr=[1, 3, 5, 10], arch=[np.array(monthly_ret['Return_Time'][1:]), 1, 0],
 #                                garchpq=[np.array(monthly_ret['Return_Time'][1:]), 1, 1, 0])
