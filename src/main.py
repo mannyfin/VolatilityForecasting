@@ -163,7 +163,7 @@ daily_ret_combined.reset_index(drop=True, inplace=True)
 # weekly_ret_combined.reset_index(drop=True, inplace=True)
 # monthly_ret_combined.reset_index(drop=True, inplace=True)
 
-MSE_QL_optimal_p,MSE_optimal_p_avg,QL_optimal_p_avg,MSE_optimal_p_forAll,QL_optimal_p_forAll = Test_Sample_MSE_QL(LogRV_df = np.log(daily_vol_combined), q=9, p_series=[1,2,3])
+optimal_p,MSE_optimal_p_avg,QL_optimal_p_avg,MSE_optimal_p_forAll,QL_optimal_p_forAll = Test_Sample_MSE_QL(LogRV_df = np.log(daily_vol_combined), q=9, p_series=[1,2,3])
 
 # """Output multiple plots into a pdf file"""
 # pdf = matplotlib.backends.backend_pdf.PdfPages(name+".pdf")
