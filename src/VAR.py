@@ -264,14 +264,15 @@ def Test_Sample_MSE_QL(LogRV_df,q,p_series):
 #     len_training = int(2 / 3 * len(LogRV_df))
     p = optimal_p(LogRV_df,q,p_series)
     # p = optimal_p(LogRV_df,q,p_series,daily_warmup_series,len_training)
-    MSE_QL_optimal_p = VAR_MSE_QL(LogRV_df,q,p, n=p*100, TrainOrTest="Test")
+    MSE_QL_optimal_p = VAR_MSE_QL(LogRV_df,q,p,n=p*100, TrainOrTest="Test")
     # MSE_QL_optimal_p = VAR_MSE_QL(LogRV_df,q,p,t=len_training,n=len(LogRV_df)-len_training)
+    optimal_p = p
     MSE_optimal_p_avg = MSE_QL_optimal_p[0] # average MSE of 9 currency pairs
     QL_optimal_p_avg = MSE_QL_optimal_p[1]  # average QL of 9 currency pairs
     MSE_optimal_p_forAll = MSE_QL_optimal_p[2] # MSE of all 9 currency pairs
     QL_optimal_p_forAll = MSE_QL_optimal_p[3]  # QL of all 9 currency pairs
 
 
-    return MSE_QL_optimal_p,MSE_optimal_p_avg,QL_optimal_p_avg,MSE_optimal_p_forAll,QL_optimal_p_forAll
+    return optimal_p,MSE_optimal_p_avg,QL_optimal_p_avg,MSE_optimal_p_forAll,QL_optimal_p_forAll
 
-# Test_Sample_MSE_QL(LogRV_df = np.log(daily_vol_combined), q=9, p_series=[1,2,3])
+optimal_p,MSE_optimal_p_avg,QL_optimal_p_avg,MSE_optimal_p_forAll,QL_optimal_p_forAll = Test_Sample_MSE_QL(LogRV_df = np.log(daily_vol_combined), q=9, p_series=[1,2,3])
