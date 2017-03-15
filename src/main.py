@@ -50,17 +50,17 @@ for count, name in enumerate(filenames):
     # be careful of the underscore, _
     dailyvol_zeroes = pd.concat([dailyvol_zeroes, daily_vol_zeroes['Volatility_Time']], axis=1)
     dailyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
-    weeklyvol_zeroes = pd.concat([weeklyvol_zeroes, weekly_vol_zeroes['Volatility_Time']], axis=1)
-    weeklyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
-    monthlyvol_zeroes = pd.concat([monthlyvol_zeroes, monthly_vol_zeroes['Volatility_Time']], axis=1)
-    monthlyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
+    # weeklyvol_zeroes = pd.concat([weeklyvol_zeroes, weekly_vol_zeroes['Volatility_Time']], axis=1)
+    # weeklyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
+    # monthlyvol_zeroes = pd.concat([monthlyvol_zeroes, monthly_vol_zeroes['Volatility_Time']], axis=1)
+    # monthlyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
     # be careful of the underscore, _
     dailyret_zeroes = pd.concat([dailyret_zeroes, daily_ret_zeroes['Return_Time']], axis=1)
     dailyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
-    weeklyret_zeroes = pd.concat([weeklyret_zeroes, weekly_ret_zeroes['Return_Time']], axis=1)
-    weeklyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
-    monthlyret_zeroes = pd.concat([monthlyret_zeroes, monthly_ret_zeroes['Return_Time']], axis=1)
-    monthlyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
+    # weeklyret_zeroes = pd.concat([weeklyret_zeroes, weekly_ret_zeroes['Return_Time']], axis=1)
+    # weeklyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
+    # monthlyret_zeroes = pd.concat([monthlyret_zeroes, monthly_ret_zeroes['Return_Time']], axis=1)
+    # monthlyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
     # """
     # testing KNN
     # """
@@ -89,8 +89,8 @@ for count, name in enumerate(filenames):
     # #                          garchpq=[np.array(daily_ret['Return_Time']), 1, 1, 0], k_nn=10)
     # Daily = fc.function_runs(filename=name, stringinput='Daily', warmup=warmup_period, input_data=daily_vol_result,
     #                          tnplus1=None, lr=None, arch=None,
-    #                          garchpq=None, k_nn=[1, 3, 5, 10, 20, 50])
-
+    #                          garchpq=None, k_nn=None)
+    #
     # Daily_list.append(Daily)
 
     # plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), fancybox=True, shadow=True, ncol=3)
@@ -119,45 +119,45 @@ for count, name in enumerate(filenames):
     # tablegen(Monthly)
 #     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), fancybox=True, shadow=True, ncol=3)
 #     # plt.hold(False)
-Daily_df = pd.DataFrame()
-Daily_df = pd.concat(Daily_list, axis=1, keys=namelist)
-
-# to make index slices:::
-"""
-These will slice all the MSE and QL columns respectively
-"""
-idx = pd.IndexSlice
-Daily_df.loc[idx[:], idx[:, 'MSE']].plot(figsize=[13, 7], logy=True)
-plt.legend()   #  I add this line becuase the legend shows (None,None) as the first entry. Regenerating the legend fixes this
-
-Daily_df.loc[idx[:], idx[:, 'QL']].plot(figsize=[13, 7], logy=True)
-plt.legend()
-
-"This sums up all the rows. And so it is the sum of the MSE or QL for all currencies for a particular model"
-MSE_sumdaily= pd.DataFrame(Daily_df.loc[idx[:], idx[:, 'MSE']].sum(axis=1), columns=['Sum of MSE [Daily]']).plot(figsize=[13, 7], table=True)
-MSE_sumdaily.get_xaxis().set_visible(False)
-QL_sumdaily= pd.DataFrame(Daily_df.loc[idx[:], idx[:, 'QL']].sum(axis=1), columns=['Sum of QL [Daily]']).plot(figsize=[13, 7], table=True)
-QL_sumdaily.get_xaxis().set_visible(False)
-
+# Daily_df = pd.DataFrame()
+# Daily_df = pd.concat(Daily_list, axis=1, keys=namelist)
+#
+# # to make index slices:::
+# """
+# These will slice all the MSE and QL columns respectively
+# """
+# idx = pd.IndexSlice
+# Daily_df.loc[idx[:], idx[:, 'MSE']].plot(figsize=[13, 7], logy=True)
+# plt.legend()   #  I add this line becuase the legend shows (None,None) as the first entry. Regenerating the legend fixes this
+#
+# Daily_df.loc[idx[:], idx[:, 'QL']].plot(figsize=[13, 7], logy=True)
+# plt.legend()
+#
+# "This sums up all the rows. And so it is the sum of the MSE or QL for all currencies for a particular model"
+# MSE_sumdaily= pd.DataFrame(Daily_df.loc[idx[:], idx[:, 'MSE']].sum(axis=1), columns=['Sum of MSE [Daily]']).plot(figsize=[13, 7], table=True)
+# MSE_sumdaily.get_xaxis().set_visible(False)
+# QL_sumdaily= pd.DataFrame(Daily_df.loc[idx[:], idx[:, 'QL']].sum(axis=1), columns=['Sum of QL [Daily]']).plot(figsize=[13, 7], table=True)
+# QL_sumdaily.get_xaxis().set_visible(False)
+#
 
 print("hi")
 # does not have zeroes
 daily_vol_combined = dailyvol_zeroes[(dailyvol_zeroes != 0).all(1)]
-weekly_vol_combined = weeklyvol_zeroes[(weeklyvol_zeroes != 0).all(1)]
-monthly_vol_combined = monthlyvol_zeroes[(monthlyvol_zeroes != 0).all(1)]
+# weekly_vol_combined = weeklyvol_zeroes[(weeklyvol_zeroes != 0).all(1)]
+# monthly_vol_combined = monthlyvol_zeroes[(monthlyvol_zeroes != 0).all(1)]
 """I am referencing the $Time$vol_zeroes variable in the lines below because there are (or could be) days where the ret
   is zero"""
 daily_ret_combined = dailyret_zeroes[(dailyvol_zeroes != 0).all(1)]
-weekly_ret_combined = weeklyret_zeroes[(weeklyvol_zeroes != 0).all(1)]
-monthly_ret_combined = monthlyret_zeroes[(monthlyvol_zeroes != 0).all(1)]
+# weekly_ret_combined = weeklyret_zeroes[(weeklyvol_zeroes != 0).all(1)]
+# monthly_ret_combined = monthlyret_zeroes[(monthlyvol_zeroes != 0).all(1)]
 
 # We need to reset index
 daily_vol_combined.reset_index(drop=True, inplace=True)
-weekly_vol_combined.reset_index(drop=True, inplace=True)
-monthly_vol_combined.reset_index(drop=True, inplace=True)
+# weekly_vol_combined.reset_index(drop=True, inplace=True)
+# monthly_vol_combined.reset_index(drop=True, inplace=True)
 daily_ret_combined.reset_index(drop=True, inplace=True)
-weekly_ret_combined.reset_index(drop=True, inplace=True)
-monthly_ret_combined.reset_index(drop=True, inplace=True)
+# weekly_ret_combined.reset_index(drop=True, inplace=True)
+# monthly_ret_combined.reset_index(drop=True, inplace=True)
 
 MSE_QL_optimal_p,MSE_optimal_p_avg,QL_optimal_p_avg,MSE_optimal_p_forAll,QL_optimal_p_forAll = Test_Sample_MSE_QL(LogRV_df = np.log(daily_vol_combined), q=9, p_series=[1,2,3])
 
