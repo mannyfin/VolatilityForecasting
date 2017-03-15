@@ -16,6 +16,10 @@ import numpy as np
 import pandas as pd
 from KNN import KNN
 from function_runs import *
+
+from VAR import *
+
+
 import matplotlib.backends.backend_pdf
 print("hi")
 filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
@@ -44,19 +48,19 @@ for count, name in enumerate(filenames):
     # monthly_vol_result, monthly_ret, monthly_vol_zeroes, monthly_ret_zeroes = time_vol_calc(df_single_month)
 
     # be careful of the underscore, _
-    # dailyvol_zeroes = pd.concat([dailyvol_zeroes, daily_vol_zeroes['Volatility_Time']], axis=1)
-    # dailyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
-    # weeklyvol_zeroes = pd.concat([weeklyvol_zeroes, weekly_vol_zeroes['Volatility_Time']], axis=1)
-    # weeklyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
-    # monthlyvol_zeroes = pd.concat([monthlyvol_zeroes, monthly_vol_zeroes['Volatility_Time']], axis=1)
-    # monthlyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
-    # # be careful of the underscore, _
-    # dailyret_zeroes = pd.concat([dailyret_zeroes, daily_ret_zeroes['Return_Time']], axis=1)
-    # dailyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
-    # weeklyret_zeroes = pd.concat([weeklyret_zeroes, weekly_ret_zeroes['Return_Time']], axis=1)
-    # weeklyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
-    # monthlyret_zeroes = pd.concat([monthlyret_zeroes, monthly_ret_zeroes['Return_Time']], axis=1)
-    # monthlyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
+    dailyvol_zeroes = pd.concat([dailyvol_zeroes, daily_vol_zeroes['Volatility_Time']], axis=1)
+    dailyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
+    weeklyvol_zeroes = pd.concat([weeklyvol_zeroes, weekly_vol_zeroes['Volatility_Time']], axis=1)
+    weeklyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
+    monthlyvol_zeroes = pd.concat([monthlyvol_zeroes, monthly_vol_zeroes['Volatility_Time']], axis=1)
+    monthlyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
+    # be careful of the underscore, _
+    dailyret_zeroes = pd.concat([dailyret_zeroes, daily_ret_zeroes['Return_Time']], axis=1)
+    dailyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
+    weeklyret_zeroes = pd.concat([weeklyret_zeroes, weekly_ret_zeroes['Return_Time']], axis=1)
+    weeklyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
+    monthlyret_zeroes = pd.concat([monthlyret_zeroes, monthly_ret_zeroes['Return_Time']], axis=1)
+    monthlyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
     # """
     # testing KNN
     # """
@@ -74,22 +78,22 @@ for count, name in enumerate(filenames):
 #     # plt.show()
 #
     warmup_period = 400
-    plt.figure(3*count+1, figsize=(12, 7))
-    fc = FunctionCalls()
+    # plt.figure(3*count+1, figsize=(12, 7))
+    # fc = FunctionCalls()
     # Daily = fc.function_runs(filename=name, stringinput='Daily', warmup=warmup_period, input_data=daily_vol_result[1:],
     #                          tnplus1=1, lr=[1, 3, 5, 10], arch=[np.array(daily_ret['Return_Time'][1:]), 1, 0],
     #                          garchpq=[np.array(daily_ret['Return_Time'][1:]), 1, 1, 0], k_nn=10)
 
     #  Daily = fc.function_runs(filename=name, stringinput='Daily', warmup=warmup_period, input_data=daily_vol_result[1:],
     #                          tnplus1=1, lr=[1, 3, 5, 10], arch=[np.array(daily_ret['Return_Time']), 1, 0],
-    #                          garchpq=[np.array(daily_ret['Return_Time']), 1, 1, 0], k_nn=10)
-    Daily = fc.function_runs(filename=name, stringinput='Daily', warmup=warmup_period, input_data=daily_vol_result,
-                             tnplus1=None, lr=None, arch=None,
-                             garchpq=None, k_nn=[1, 3, 5, 10, 20, 50])
+    # #                          garchpq=[np.array(daily_ret['Return_Time']), 1, 1, 0], k_nn=10)
+    # Daily = fc.function_runs(filename=name, stringinput='Daily', warmup=warmup_period, input_data=daily_vol_result,
+    #                          tnplus1=None, lr=None, arch=None,
+    #                          garchpq=None, k_nn=[1, 3, 5, 10, 20, 50])
 
-    Daily_list.append(Daily)
+    # Daily_list.append(Daily)
 
-    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), fancybox=True, shadow=True, ncol=3)
+    # plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), fancybox=True, shadow=True, ncol=3)
 #
 #     plt.figure(3*count+2, figsize=(12, 7))
 #     Weekly = fc.function_runs(filename=name, stringinput='Weekly', warmup=warmup_period,
@@ -155,6 +159,7 @@ daily_ret_combined.reset_index(drop=True, inplace=True)
 weekly_ret_combined.reset_index(drop=True, inplace=True)
 monthly_ret_combined.reset_index(drop=True, inplace=True)
 
+MSE_QL_optimal_p,MSE_optimal_p_avg,QL_optimal_p_avg,MSE_optimal_p_forAll,QL_optimal_p_forAll = Test_Sample_MSE_QL(LogRV_df = np.log(daily_vol_combined), q=9, p_series=[1,2,3])
 
 # """Output multiple plots into a pdf file"""
 # pdf = matplotlib.backends.backend_pdf.PdfPages(name+".pdf")

@@ -54,7 +54,7 @@ def x_mat_t_n_qp(LogRV_df,q, p, t,n):
     for m in range(n):
         x_t_vec = []
         for k in range(q):
-            for i in range(1,p+1):
+            for i in range(1, p+1):
                 x_t_vec.append(LogRV_df.iloc[t+m-i][k])
         x = x.append([x_t_vec])
     return x
