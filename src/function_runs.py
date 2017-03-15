@@ -95,15 +95,16 @@ class FunctionCalls(object):
             # 4 is the num of args to pass into the fcn
             if k_nn is None:
                 print("None for KNN")
-            elif type(k_nn) is int:
-                KNNmethod = KNN(vol_data=input_data, k=k_nn, warmup=warmup, filename=filename, Timedt=stringinput)
+            elif len(k_nn) >= 1 & isinstance(k_nn, list):
+                for count, elem in enumerate(k_nn):
+                    " elif type(k_nn) is int:"
+                    KNNmethod = KNN(vol_data=input_data, k=elem, warmup=warmup, filename=filename, Timedt=stringinput)
 
-                # output['KNN_'+str(k_nn)] = KNNmethod
+                    # output['KNN_'+str(k_nn)] = KNNmethod
 
-                output = result_to_df_list(list_name=output, method_result=KNNmethod,
-                                           index_value=['KNN_'+str(k_nn)], column_value=['MSE', 'QL'])
-
-                print("Above is KNN for " + str(stringinput))
+                    output = result_to_df_list(list_name=output, method_result=KNNmethod,
+                                               index_value=['KNN_'+str(k_nn)], column_value=['MSE', 'QL'])
+                    print("Above is KNN for " + str(elem) + " " + str(stringinput)+ " Volatilities")
         except TypeError:
             print("Error: KNN, make sure all the params are filled")
 
