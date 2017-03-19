@@ -61,6 +61,7 @@ def read_in_files(file_names):
 
     # these are the chunks of the daily, weekly, and monthly data
     return df, df_single_day, df_single_week, df_single_month
+
 """
 this code may be useful
 kw = lambda x: x.isocalendar()[1];

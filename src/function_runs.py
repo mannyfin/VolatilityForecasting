@@ -5,6 +5,7 @@ from KNN import KNN
 import numpy as np
 import pandas as pd
 from res2df_list import *
+from VAR2 import *
 
 
 class FunctionCalls(object):
@@ -18,12 +19,14 @@ class FunctionCalls(object):
     def __init__(self):
         pass
 
-    def function_runs(self, filename, stringinput, warmup,input_data, tnplus1=None, lr=None, arch=None, garchpq=None, k_nn=None):
+    def function_runs(self, filename=None, stringinput=None, warmup=None,input_data=None, tnplus1=None, lr=None, arch=None, garchpq=None, k_nn=None, var_q=None):
         output = list()
 
         """tnplus1"""
         try:
-            if tnplus1 is not None :
+            if tnplus1 is None:
+                print("Not running tnplus1")
+            elif tnplus1 is not None :
                 tnplus1_method = PastAsPresent.tn_pred_tn_plus_1(data=input_data, filename=filename, stringinput=stringinput)
                 # output['PastAsPresent'] = part1
 
@@ -40,7 +43,7 @@ class FunctionCalls(object):
         """Linear Regression"""
         try:
             if lr is None:
-                print("None linear regressor")
+                print("Not running linear regression")
             elif len(lr)>= 1 & isinstance(lr, list):
                 for count, elem in enumerate(lr):
                     LRmethod = LinRegression.lin_reg(data=input_data, n=elem, filename=filename,
@@ -57,10 +60,12 @@ class FunctionCalls(object):
 
         except TypeError:
             print("Error: Please pass an array of ints...")
+
+        """ARCH """
         try:
             #
             if arch is None:
-                print("None for arch")
+                print("Not running arch")
             elif len(arch) == 3:
                 ARCH = gm.arch_q_mse(data=input_data, Timedt=stringinput, ret=arch[0], q=arch[1], lags=arch[2],
                                      warmup_period=warmup, filename=filename)
@@ -74,10 +79,11 @@ class FunctionCalls(object):
         except TypeError:
             print("Error: ARCH, make sure all the params are filled")
 
+        """GARCH """
         try:
             # 4 is the num of args to pass into the fcn
             if garchpq is None:
-                print("None for garch")
+                print("Not running garch")
             elif len(garchpq) == 4:
                 GARCH = gm.garch_pq_mse(data=input_data, Timedt=stringinput, ret=garchpq[0], p=garchpq[1], q=garchpq[2],
                                         lags=garchpq[3], warmup_period=warmup, filename=filename)
@@ -91,10 +97,11 @@ class FunctionCalls(object):
         except TypeError:
             print("Error: GARCH, make sure all the params are filled")
 
+        """KNN """
         try:
             # 4 is the num of args to pass into the fcn
             if k_nn is None:
-                print("None for KNN")
+                print("Not running KNN")
             elif len(k_nn) >= 1 & isinstance(k_nn, list):
                 for count, elem in enumerate(k_nn):
                     KNNmethod = KNN(vol_data=input_data, k=elem, warmup=warmup, filename=filename, Timedt=stringinput)
@@ -104,10 +111,29 @@ class FunctionCalls(object):
                     output = result_to_df_list(list_name=output, method_result=KNNmethod,
                                                index_value=['KNN_'+str(k_nn)], column_value=['MSE', 'QL'])
 
-                print("Above is KNN for " +str(elem)+ " " + str(stringinput))
+                    print("Above is KNN for " +str(elem)+ " " + str(stringinput))
         except TypeError:
             print("Error: KNN, make sure all the params are filled")
 
+        """VAR """
+        try:
+            # 4 is the num of args to pass into the fcn
+            if var_q is None:
+                print("Not running VAR")
+            elif len(var_q) >= 1 & isinstance(var_q, list):
+                for count, elem in enumerate(var_q):
+                    # KNNmethod = KNN(vol_data=input_data, k=elem, warmup=warmup, filename=filename, Timedt=stringinput)
+                    VAR_q = VAR(p=elem, combined_vol=input_data, warmup_period=warmup).VAR_calc()
+
+
+                    # the line below doesnt work at the moment...
+                    # output = result_to_df_list(list_name=output, method_result=VAR_q,
+                    #                            index_value=['VAR_p='+str(elem)], column_value=['MSE', 'QL'])
+
+                    print("Above is VAR for p=" +str(elem)+ " " + str(stringinput))
+
+        except TypeError:
+            print("Error: VAR, make sure all the params are filled")
         # concatenates the list of df's
         output = list_to_df(list_name=output)
 

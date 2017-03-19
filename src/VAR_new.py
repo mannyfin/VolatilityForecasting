@@ -84,6 +84,7 @@ def predictlogRV(LogRV_df, q, p, n,stringin=None):
     :param n: n = length of the look-back rolling window
     :return: the predicted logRV for all 9 currency pairs in the training sample
     '''
+    # diff range of t
     PredictedlogRVforAll = []
     obs_yforAll = []
     for t in range(p,int(2/3*len(LogRV_df))-n):

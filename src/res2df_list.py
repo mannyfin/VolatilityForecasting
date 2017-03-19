@@ -11,6 +11,8 @@ def result_to_df_list(list_name=list, method_result=tuple, index_value=list, col
     :param column_value: This is the column values. the len of column values should be the same as the tuple
     :return:
     """
+
+    # has issues if it is passed a dataframe. May need to create a Multi-level dataframe
     # reshape this
     method_result = np.reshape(method_result, [len(index_value), len(column_value)])
     df = pd.DataFrame()

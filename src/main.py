@@ -22,8 +22,8 @@ from VAR_new import *
 
 import matplotlib.backends.backend_pdf
 print("hi")
-filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-# filenames = ['SEKUSD.csv','CADUSD.csv',  'CHFUSD.csv',]
+# filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+filenames = ['SEKUSD.csv','CADUSD.csv',  'CHFUSD.csv',]
 
 dailyvol_zeroes= pd.DataFrame()
 weeklyvol_zeroes= pd.DataFrame()
@@ -163,7 +163,17 @@ daily_ret_combined.reset_index(drop=True, inplace=True)
 # weekly_ret_combined.reset_index(drop=True, inplace=True)
 # monthly_ret_combined.reset_index(drop=True, inplace=True)
 
-optimal_p,MSE_optimal_p_avg,QL_optimal_p_avg,MSE_optimal_p_forAll,QL_optimal_p_forAll = Test_Sample_MSE_QL(LogRV_df = np.log(daily_vol_combined), q=9, p_series=[1,2,3])
+# optimal_p,MSE_optimal_p_avg,QL_optimal_p_avg,MSE_optimal_p_forAll,QL_optimal_p_forAll =
+#       Test_Sample_MSE_QL(LogRV_df = np.log(daily_vol_combined), q=9, p_series=[1,2,3])
+p=3
+# xmat = [sum([daily_vol_combined[currency][i+p-1:i:-1].as_matrix().tolist()
+        #       for currency in daily_vol_combined.keys()],[]) for i in range(len(daily_vol_combined)-p)]
+# use this below
+fc = FunctionCalls()
+# xmat = pd.DataFrame([sum([daily_vol_combined[currency].loc[i+p-1:i:-1].as_matrix().tolist() for currency in daily_vol_combined.keys()],[]) for i in range(len(daily_vol_combined)-p)])
+VAR_test = fc.function_runs(filename='Combined Curr.', stringinput='Daily', warmup=100,
+                            input_data=np.log(daily_vol_combined), var_q=[1, 2, 3])
+
 
 # """Output multiple plots into a pdf file"""
 # pdf = matplotlib.backends.backend_pdf.PdfPages(name+".pdf")
