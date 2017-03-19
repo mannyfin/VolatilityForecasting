@@ -17,7 +17,7 @@ def count(func):
 
 
 @count
-def se_plot(y, y_fit, dates, function_method=None):
+def se_plot(y, y_fit, dates=None, function_method=None):
     """
     :param y: source data
     :param y_fit: fit from LR
@@ -32,21 +32,31 @@ def se_plot(y, y_fit, dates, function_method=None):
     import pandas as pd
 
     # Squared error
-    SE = (y_fit.ravel() - y.ravel()) ** 2
 
+    if isinstance(y, pd.core.frame.DataFrame) & isinstance(y_fit, pd.core.frame.DataFrame):
+        SE = np.square(np.subtract(y, y_fit))
 
+        # this line converts to df and transposes from cols to rows
+        SE = pd.DataFrame(SE)
+
+    else:
+        SE = (y_fit.ravel() - y.ravel()) ** 2
+        ts2 = pd.DataFrame({'SE': np.ravel(np.log(SE))})
+        ts2['Date'] = pd.DataFrame(dates)
     # reshape will be deprecated. the line below is not necessarily the correct one.
     # SE = (y_fit.values.reshape(len(y), 1) - y.values.reshape(len(y), 1)) ** 2
     # plt.figure(n)
     plt.figure(se_plot.counter, figsize=(12,7))
 
 
-    ts2 = pd.DataFrame({'SE': np.ravel(np.log(SE))})
+    # ts2 = pd.DataFrame({'SE': np.ravel(np.log(SE))})
+
     # may need to reset index..
+
     dates = dates.reset_index()
     dates = dates.Date
 
-    ts2['Date'] = pd.DataFrame(dates)
+    # ts2['Date'] = pd.DataFrame(dates)
 
 
     plt.gcf()

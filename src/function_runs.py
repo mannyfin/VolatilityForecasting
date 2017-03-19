@@ -19,7 +19,7 @@ class FunctionCalls(object):
     def __init__(self):
         pass
 
-    def function_runs(self, filename=None, stringinput=None, warmup=None,input_data=None, tnplus1=None, lr=None, arch=None, garchpq=None, k_nn=None, var_q=None):
+    def function_runs(self,dates=None, filename=None, stringinput=None, warmup=None,input_data=None, tnplus1=None, lr=None, arch=None, garchpq=None, k_nn=None, var_q=None):
         output = list()
 
         """tnplus1"""
@@ -123,7 +123,8 @@ class FunctionCalls(object):
             elif len(var_q) >= 1 & isinstance(var_q, list):
                 for count, elem in enumerate(var_q):
                     # KNNmethod = KNN(vol_data=input_data, k=elem, warmup=warmup, filename=filename, Timedt=stringinput)
-                    VAR_q = VAR(p=elem, combined_vol=input_data, warmup_period=warmup).VAR_calc()
+                    VAR_q = VAR(p=elem, combined_vol=input_data, warmup_period=warmup)\
+                                .VAR_calc(Timedt=stringinput, dates=dates, filename=filename)
 
 
                     # the line below doesnt work at the moment...

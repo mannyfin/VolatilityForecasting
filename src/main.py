@@ -1,4 +1,4 @@
-# This main file is a sketch of the overall program
+
 #  if you dont have this installed then here's how to install the module:
 #  conda install -c https://conda.binstar.org/bashtage arch
 
@@ -48,15 +48,22 @@ for count, name in enumerate(filenames):
     # monthly_vol_result, monthly_ret, monthly_vol_zeroes, monthly_ret_zeroes = time_vol_calc(df_single_month)
 
     # be careful of the underscore, _
-    dailyvol_zeroes = pd.concat([dailyvol_zeroes, daily_vol_zeroes['Volatility_Time']], axis=1)
+    dailyvol_zeroes = pd.concat([dailyvol_zeroes, daily_vol_zeroes], axis=1)
+
+    # dailyvol_zeroes = pd.concat([dailyvol_zeroes, daily_vol_zeroes['Volatility_Time']], axis=1)
+
     dailyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
     # weeklyvol_zeroes = pd.concat([weeklyvol_zeroes, weekly_vol_zeroes['Volatility_Time']], axis=1)
     # weeklyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
     # monthlyvol_zeroes = pd.concat([monthlyvol_zeroes, monthly_vol_zeroes['Volatility_Time']], axis=1)
     # monthlyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
+
     # be careful of the underscore, _
-    dailyret_zeroes = pd.concat([dailyret_zeroes, daily_ret_zeroes['Return_Time']], axis=1)
+    dailyret_zeroes = pd.concat([dailyret_zeroes, daily_ret_zeroes], axis=1)
+
+    # dailyret_zeroes = pd.concat([dailyret_zeroes, daily_ret_zeroes['Return_Time']], axis=1)
     dailyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
+
     # weeklyret_zeroes = pd.concat([weeklyret_zeroes, weekly_ret_zeroes['Return_Time']], axis=1)
     # weeklyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
     # monthlyret_zeroes = pd.concat([monthlyret_zeroes, monthly_ret_zeroes['Return_Time']], axis=1)
@@ -147,6 +154,12 @@ for count, name in enumerate(filenames):
 print("hi")
 # does not have zeroes
 daily_vol_combined = dailyvol_zeroes[(dailyvol_zeroes != 0).all(1)]
+#  TODO fix dates, because there's an inconsistency.
+dates = daily_vol_combined.Date.loc[:, ~daily_vol_combined.Date.columns.duplicated()]
+# drop duplicate columns
+daily_vol_combined.drop('Date', axis=1, inplace=True)
+daily_vol_combined=daily_vol_combined.apply(pd.to_numeric)
+
 # weekly_vol_combined = weeklyvol_zeroes[(weeklyvol_zeroes != 0).all(1)]
 # monthly_vol_combined = monthlyvol_zeroes[(monthlyvol_zeroes != 0).all(1)]
 """I am referencing the $Time$vol_zeroes variable in the lines below because there are (or could be) days where the ret
@@ -171,8 +184,7 @@ p=3
 # use this below
 fc = FunctionCalls()
 # xmat = pd.DataFrame([sum([daily_vol_combined[currency].loc[i+p-1:i:-1].as_matrix().tolist() for currency in daily_vol_combined.keys()],[]) for i in range(len(daily_vol_combined)-p)])
-VAR_test = fc.function_runs(filename='Combined Curr.', stringinput='Daily', warmup=100,
-                            input_data=np.log(daily_vol_combined), var_q=[1, 2, 3])
+VAR_test = fc.function_runs(dates=dates, filename='Combined Curr.', stringinput='Daily', warmup=100, input_data=np.log(daily_vol_combined), var_q=[1, 2, 3])
 
 
 # """Output multiple plots into a pdf file"""
