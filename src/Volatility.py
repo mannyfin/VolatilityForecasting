@@ -63,8 +63,16 @@ def time_vol_calc(df_single_time):
     dvol = {'Date': [df_single_time[i]['Date'][df_single_time[i]['Date'].first_valid_index()] for i in range(0, len(df_single_time))], 'Volatility_Time': time_vols}
     dret = {'Date': [df_single_time[i]['Date'][df_single_time[i]['Date'].first_valid_index()] for i in range(0, len(df_single_time))], 'Return_Time': time_rets}
 
-    time_vol_result = pd.DataFrame(dvol)
-    time_ret_result = pd.DataFrame(dret)
+    # time_vol_result = pd.DataFrame(dvol)
+    time_vol_result = pd.DataFrame([dvol['Date'],dvol['Volatility_Time']]).T
+    time_vol_result.columns = ['Date', 'Volatility_Time']
+
+    # time_ret_result = pd.DataFrame(dret)
+    time_ret_result = pd.DataFrame([dret['Date'],dret['Return_Time']]).T
+    time_ret_result.columns = ['Date', 'Return_Time']
+
+    time_vol_result_zeroes = time_vol_result
+    time_ret_result_zeroes = time_ret_result
 
     inters_ret = time_ret_result.query('Return_Time == 0').index.values
     # essentially you will only ever pass through this if statement if there are zero return values
@@ -81,5 +89,5 @@ def time_vol_calc(df_single_time):
         time_ret_result = time_ret_result.drop(time_ret_result.index[comparison_array])
         time_vol_result.reset_index(drop=True, inplace=True)
         time_ret_result.reset_index(drop=True, inplace=True)
-
-    return time_vol_result, time_ret_result
+    # time_vol_result_zeroes and ret include the zero values...
+    return time_vol_result, time_ret_result, time_vol_result_zeroes, time_ret_result_zeroes

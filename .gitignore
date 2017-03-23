@@ -88,4 +88,10 @@ ENV/
 # Rope project settings
 .ropeproject
 
+<<<<<<< HEAD
 .idea/
+=======
+#workplace.xml
+.idea/
+.idea/workspace.xml
+>>>>>>> 932701b6da663c295b918db7f3bd016e8c698f0c
