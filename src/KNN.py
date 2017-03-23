@@ -4,13 +4,15 @@ from Performance_Measure import *
 from SEplot import se_plot as SE
 
 
-def KNN(vol_data, k=1, warmup=400, filename=None, Timedt=None):
+def KNN(vol_data, k=1, warmup=400, filename=None, Timedt=None, method=[1,2]):
     vol_data_input = vol_data['Volatility_Time']
     dates = vol_data['Date']
-    return KNNcalc(vol_data=vol_data_input, dates =dates, k=k, warmup=warmup,filename=filename, Timedt=Timedt)
+    knns = [KNNcalc(vol_data=vol_data_input, dates =dates, k=k, warmup=warmup,filename=filename, Timedt=Timedt, method=m)
+    for m in method]
+    return knns
 
 
-def KNNcalc(vol_data, dates=None, k=1, warmup=400, filename=None, Timedt=None):
+def KNNcalc(vol_data, dates=None, k=1, warmup=400, filename=None, Timedt=None, method=1):
     """
     # we now want to predict the volatility at time, t_warmup,
     # so we subtract vol @t_warmup from every point in train set
@@ -53,18 +55,35 @@ def KNNcalc(vol_data, dates=None, k=1, warmup=400, filename=None, Timedt=None):
             # load in the datapoints
             # moving window
             train_set = vol_data[iterator:(warmup+iterator)]
-
             last_sample = train_set.iloc[- 1]
-            diff = last_sample - train_set
-            absdiff = diff.abs().sort_values()
-            kn_index = diff.reindex(absdiff.index)[1:k + 1].index + 1
 
-            squared = absdiff[1:k + 1] ** 2
+            if method == 1:
+                diff = last_sample - train_set
+                absdiff = diff.abs().sort_values()
+                kn_index = diff.reindex(absdiff.index)[1:k + 1].index + 1
+                squared = absdiff[1:k + 1] ** 2
 
-            c = 1 / sum(1/squared)
-            alpha_j = c/squared
-            sigma = vol_data[kn_index]
-            prediction = prediction.append(pd.Series([np.dot(alpha_j, sigma)], index=[iterator]))
+                c = 1 / sum(1/squared)
+                alpha_j = c/squared
+                sigma = vol_data[kn_index]
+                prediction = prediction.append(pd.Series([np.dot(alpha_j, sigma)], index=[iterator]))
+
+            elif method == 2:
+                diff = (last_sample - train_set)**2 + (train_set.index-train_set.index[-1])**2
+                absdiff = diff.sort_values()
+                kn_index = diff.reindex(absdiff.index)[1:k + 1].index + 1
+                squared = absdiff[1:k + 1] 
+
+                c = 1 / sum(1/squared)
+                alpha_j = c/squared
+                ds = np.sqrt(vol_data[kn_index]**2 + kn_index**2)
+                prediction = prediction.append(pd.Series([np.dot(alpha_j, ds)], index=[iterator]))
+
+            else:
+                print ("Unexpected method")
+                return
+
+
             iterator += 1
             # print(prediction)
         # print(prediction)
