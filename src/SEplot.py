@@ -38,6 +38,9 @@ def se_plot(y, y_fit, dates=None, function_method=None):
 
         # this line converts to df and transposes from cols to rows
         SE = pd.DataFrame(SE)
+        plt.figure(se_plot.counter, figsize=(12,7))
+        # fix this line below to plot dates properly
+        SE.plot(kind='line')
 
     else:
         SE = (y_fit.ravel() - y.ravel()) ** 2
@@ -46,21 +49,21 @@ def se_plot(y, y_fit, dates=None, function_method=None):
     # reshape will be deprecated. the line below is not necessarily the correct one.
     # SE = (y_fit.values.reshape(len(y), 1) - y.values.reshape(len(y), 1)) ** 2
     # plt.figure(n)
-    plt.figure(se_plot.counter, figsize=(12,7))
+        plt.figure(se_plot.counter, figsize=(12,7))
 
 
-    # ts2 = pd.DataFrame({'SE': np.ravel(np.log(SE))})
+        # ts2 = pd.DataFrame({'SE': np.ravel(np.log(SE))})
 
-    # may need to reset index..
+        # may need to reset index..
 
-    dates = dates.reset_index()
-    dates = dates.Date
+        dates = dates.reset_index()
+        dates = dates.Date
 
-    # ts2['Date'] = pd.DataFrame(dates)
+        # ts2['Date'] = pd.DataFrame(dates)
 
 
-    plt.gcf()
-    plt.plot(ts2['Date'], ts2['SE'], label=function_method)
+        plt.gcf()
+        plt.plot(ts2['Date'], ts2['SE'], label=function_method)
 
 
 

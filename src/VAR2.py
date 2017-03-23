@@ -129,5 +129,5 @@ len(self.xmat)-self.warmup_period)
 
         """ return a plot of the Squared error"""
         label = str(filename) + " " + str(Timedt) + " SE (" + str(self.p) + ") VAR Volatility"
-        SE(observed, prediction, dates.iloc[self.warmup_period:], function_method=label)
+        SE(observed, prediction, dates.iloc[(self.warmup_period+self.p):], function_method=label)
         return MSE, QL
