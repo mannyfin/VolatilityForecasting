@@ -1,21 +1,12 @@
 # FIN580 Ordered LASSO
 
-
-# n = 50
-# b = c(7,3,1,0)
-# p = length(b)
-# x = matrix(rnorm(n*p),nrow = n)
-# sigma = 4
-# y = x %*% b + sigma * rnorm(n, 0, 1)
-# # method = "Solve.QP" by default
-# result2 = orderedLasso(x,y, lambda = 1, intercept = TRUE, standardize =TRUE,
-# method = "Solve.QP", strongly.ordered = TRUE)
-# #http://finzi.psych.upenn.edu/library/orderedLasso/html/predict.orderedLasso.html
+#http://finzi.psych.upenn.edu/library/orderedLasso/html/predict.orderedLasso.html
 # https://www.researchgate.net/figure/281273999_fig2_Figure-2-Lambda-vs-MSE-for-Lasso-fit-Figure-3-Lambda-vs-MSE-for-Elastic-Net-fit
+# http://www.wbnicholson.com/BigVAR.html
 
 library(Metrics)
 library(orderedLasso)
-library(penalized)
+# library(BigVAR)
 
 setwd("C:/Users/YYJ/Desktop/FIN580/Homework1/VolatilityForecasting/src")
 xmat_p_1 <- read.csv("xmat_p_1.csv", header = TRUE, sep = ",")
@@ -65,7 +56,7 @@ prediction_y_training<-function(lambda,p){
   return(predicted_y)
 }
 
-# LASSO_training sample
+# ordered LASSO_training sample
 
 MSE <- function(observed, prediction){
   MSE <- mse(observed, prediction)
@@ -89,12 +80,12 @@ lambda_MSE_df <-function(fileNames,fileIndex,last_observed_y_in_training,p,lambd
   }
   colnames(lambda_MSE) <- c("lambda", "MSE")
   
-  lambda_output <- lambda_MSE[,1]
+  lambda_output <- log(lambda_MSE[,1]) # scale lambda values in the plot below
   MSE_output <- lambda_MSE[,2]
   
   jpeg(paste("lambda_MSE_p_",p,"_",fileNames[fileIndex],".jpg", sep=""))
   plot(lambda_output,MSE_output,pch=16,xlim=range(lambda_output), ylim=range(MSE_output),
-       xlab = "Lambda",ylab = "MSE",main = paste("Relationship between Lambda and MSE_p_",p,"_",fileNames[fileIndex]))
+       xlab = "log(Lambda)",ylab = "MSE",main = paste("Ordered LASSO_MSE against Lambda_p_",p,"_",fileNames[fileIndex],sep = ""))
   lines(lambda_output[order(lambda_output)], MSE_output[order(lambda_output)], 
         xlim=range(lambda_output), ylim=range(MSE_output), pch=16,col="blue")
   dev.off()
@@ -125,26 +116,43 @@ Optimal_lambda_df<-function(p,lambdaSeq,fileNames){
     index_min_MSE <- which.min(lambda_MSE_df_output$"MSE") 
     optimal_lambda <- lambda_MSE_df_output$"lambda"[index_min_MSE]
     optimal_lambdas <- c(optimal_lambdas,optimal_lambda)
-    write.csv(lambda_MSE_df_output, file = paste("lambda_MSE_df_output_p_",p,"_",fileNames[fileIndex],".csv",sep = ""))
+    write.csv(lambda_MSE_df_output, file = paste("Ordered LASSO lambda_MSE_df_output_p_",p,"_",fileNames[fileIndex],".csv",sep = ""))
   }
   return (optimal_lambdas)
 }  
 
+Optimal_lambdas_p_1_ext = Optimal_lambda_df(p=1,lambdaSeq=c(exp(seq(-10,0,0.05)),seq(1.01,2,0.01),seq(3,400,1)),fileNames)
+Optimal_lambdas_p_2_ext = Optimal_lambda_df(p=2,lambdaSeq=c(exp(seq(-10,0,0.05)),seq(1.01,2,0.01),seq(3,400,1)),fileNames)
+Optimal_lambdas_p_3_ext = Optimal_lambda_df(p=3,lambdaSeq=c(exp(seq(-10,0,0.05)),seq(1.01,2,0.01),seq(3,400,1)),fileNames)
 
-Optimal_lambdas_p_1 = Optimal_lambda_df(p=1,lambdaSeq=c(seq(0.01,2,0.01),seq(3,400,1)),fileNames)
+# lambdaSeq=c(exp(seq(-10,0,0.05)),seq(1.01,2,0.01),seq(3,400,1))
+options("scipen"=999, "digits"=4)
+Optimal_lambdas_p_1_ext
+# Optimal_lambdas_p_1: 0.0000454   1.1100000   0.0672055   0.0000454 132.0000000 400.0000000  20.0000000   0.0000454  23.0000000
+Optimal_lambdas_p_2_ext
+# Optimal_lambdas_p_2: 0.0000454 0.0223708 0.0000454 0.9512294 0.0287246 0.0780817 0.0301974 0.0000454 0.0000454
+Optimal_lambdas_p_3_ext
+# Optimal_lambdas_p_3: 0.006097 0.023518 0.022371 0.035084 0.014996 0.070651 0.074274 0.006097 0.005517
+
+# lambdaSeq = c(seq(0.01,2,0.01),c(3,400,1))
 # Optimal_lambdas_p_1:  0.01   1.11   0.07   1.38 132.00 400.00  20.00   0.01  23.00
-Optimal_lambdas_p_2 = Optimal_lambda_df(p=2,lambdaSeq=c(seq(0.01,2,0.01),seq(3,400,1)),fileNames)
 # Optimal_lambdas_p_2: 0.01 206.00   0.48   0.92   0.03   0.08   0.03   0.01   0.01
-Optimal_lambdas_p_3 = Optimal_lambda_df(p=3,lambdaSeq=c(seq(0.01,2,0.01),seq(3,400,1)),fileNames)
 # Optimal_lambdas_p_3: 0.01   0.03   0.03   0.04 178.00   0.43   0.08   0.01   0.01
+
+# Optimal_lambdas_p_1_zoomin = Optimal_lambda_df(p=1,lambdaSeq=exp(values),fileNames)
+# # Optimal_lambdas_p_1_zoomin: 4.539993e-05 1.000000e+00 6.720551e-02 4.539993e-05 1.000000e+00 1.000000e+00 1.737739e-01 4.539993e-05 3.011942e-01
+# Optimal_lambdas_p_2_zoomin = Optimal_lambda_df(p=1,lambdaSeq=exp(values),fileNames)
+# # Optimal_lambdas_p_2_zoomin: 4.539993e-05 1.000000e+00 6.720551e-02 4.539993e-05 1.000000e+00 1.000000e+00 1.737739e-01 4.539993e-05 3.011942e-01
+# Optimal_lambdas_p_3_zoomin = Optimal_lambda_df(p=1,lambdaSeq=exp(values),fileNames)
+# # Optimal_lambdas_p_3_zoomin:  4.539993e-05 1.000000e+00 6.720551e-02 4.539993e-05 1.000000e+00 1.000000e+00 1.737739e-01 4.539993e-05 3.011942e-01
+
+
 
 
 # According to the plots, for some combinations of lag and currenccy pair, 
 # increasing the value of lambda when lambda is large will decrease MSE for a very small amount, such as 10e-5.
 # Thus, we decided to round the values of MSE to 6 digits (i.e., 6 digits after the decimal point).
 
-
-# fileNames  = c('AUDUSD','CADUSD','CHFUSD', 'EURUSD', 'GBPUSD', 'JPYUSD', 'NOKUSD', 'NZDUSD', 'SEKUSD')
 
 Optimal_lambdas_p_1_new = vector()
 for(i in c(1:9)){
@@ -170,9 +178,47 @@ for(i in c(1:9)){
   Optimal_lambdas_p_3_new <- c(Optimal_lambdas_p_3_new,Optimal_lambda)
 }
 
+
+# for the extended series of lambda values
+Optimal_lambdas_p_1_ext_new = vector()
+for(i in c(1:9)){
+  lambda_MSE_df_output_p_1_ext <- read.csv( paste("Ordered LASSO lambda_MSE_df_output_p_1_",fileNames[i],".csv",sep = ""), header = TRUE, sep = ",")
+  lambda_MSE_df_output_p_1_ext$MSE <- round( lambda_MSE_df_output_p_1_ext$MSE,6) # set digits of MSE's to 6 digits
+  Optimal_lambda <- lambda_MSE_df_output_p_1_ext$lambda [which.min(lambda_MSE_df_output_p_1_ext$MSE)]
+  Optimal_lambdas_p_1_ext_new <- c(Optimal_lambdas_p_1_ext_new,Optimal_lambda)
+}
+
+Optimal_lambdas_p_2_ext_new = vector()
+for(i in c(1:9)){
+  lambda_MSE_df_output_p_2_ext <- read.csv( paste("Ordered LASSO lambda_MSE_df_output_p_2_",fileNames[i],".csv",sep = ""), header = TRUE, sep = ",")
+  lambda_MSE_df_output_p_2_ext$MSE <- round( lambda_MSE_df_output_p_2_ext$MSE,6)
+  Optimal_lambda <- lambda_MSE_df_output_p_2_ext$lambda [which.min(lambda_MSE_df_output_p_2_ext$MSE)]
+  Optimal_lambdas_p_2_ext_new <- c(Optimal_lambdas_p_2_ext_new,Optimal_lambda)
+}
+
+Optimal_lambdas_p_3_ext_new = vector()
+for(i in c(1:9)){
+  lambda_MSE_df_output_p_3_ext <- read.csv( paste("Ordered LASSO lambda_MSE_df_output_p_3_",fileNames[i],".csv",sep = ""), header = TRUE, sep = ",")
+  lambda_MSE_df_output_p_3_ext$MSE <- round( lambda_MSE_df_output_p_3_ext$MSE,6)
+  Optimal_lambda <- lambda_MSE_df_output_p_3_ext$lambda [which.min(lambda_MSE_df_output_p_3_ext$MSE)]
+  Optimal_lambdas_p_3_ext_new <- c(Optimal_lambdas_p_3_ext_new,Optimal_lambda)
+}
+
+# previous results
+# Optimal_lambdas_p_1:f  0.01   1.11   0.07   1.38 132.00 400.00  20.00   0.01  23.00
+# Optimal_lambdas_p_2: 0.01 206.00   0.48   0.92   0.03   0.08   0.03   0.01   0.01
+# Optimal_lambdas_p_3: 0.01   0.03   0.03   0.04 178.00   0.43   0.08   0.01   0.01
+
+# lambdaSeq = c(seq(0.01,2,0.01),c(3,400,1))
 # Optimal_lambdas_p_1_new: 0.01   1.11   0.01   1.38 127.00 279.00  17.00   0.01  21.00
 # Optimal_lambdas_p_2_new: 0.01 206.00   0.48   0.92   0.03   0.08   0.03   0.01   0.01
 # Optimal_lambdas_p_3_new:  0.01   0.03   0.03   0.04 178.00   0.43   0.08   0.01   0.01
+
+# lambdaSeq=c(exp(seq(-10,0,0.05)),seq(1.01,2,0.01),seq(3,400,1))
+# Optimal_lambdas_p_1_ext_new: 0.0000454   1.1100000   0.0000454   0.0000454 127.0000000 279.0000000  17.0000000   0.0000454  21.0000000
+# Optimal_lambdas_p_2_ext_new: 0.0000454 0.0223708 0.0000454 0.9512294 0.0287246 0.0780817 0.0301974 0.0000454 0.0000454
+# Optimal_lambdas_p_3_ext_new: 0.006097 0.023518 0.022371 0.035084 0.012277 0.070651 0.074274 0.006097 0.005517
+
 
 
 prediction_y_test<-function(lambda,p){
@@ -214,6 +260,7 @@ quasi_likelihood <- function(observed, prediction){
   return (QL)
 }
 
+# using the optiaml lambdas of Optimal_lambdas_p_1_new, Optimal_lambdas_p_2_new and Optimal_lambdas_p_3_new
 Test_Performance <- function(p,observed_y, dates,fileNames){
   if(p==1){
     Optimal_lambda = Optimal_lambdas_p_1_new
@@ -233,13 +280,13 @@ Test_Performance <- function(p,observed_y, dates,fileNames){
     SE <- (observed_y[,k] - predicted_y_test[,k])^2
     jpeg(paste("QL_p_",p,"_",fileNames[k],".jpg", sep=""))
     plot(dates,SE,type="l",xlim=range(dates), ylim=range(SE),
-         xlab = "Time",ylab = "Squared Error",main = paste("Squared Errors_Test Sample_p_",p,"_",fileNames[k]))
+         xlab = "Time",ylab = "Squared Error",main = paste("Ordered LASSO_Squared Errors_Test Sample_p_",p,"_",fileNames[k]))
     dev.off()
   }
   
   MSE_QL_df = data.frame("MSE" = MSEs, "QL"=QLs)
   row.names(MSE_QL_df) = fileNames
-  write.csv(MSE_QL_df, file = paste("MSE_QL_p_",p,".csv",sep = ""))
+  write.csv(MSE_QL_df, file = paste("OrderedLASSO_MSE_QL_p_",p,".csv",sep = ""))
   return(MSE_QL_df)
 }
 
@@ -248,4 +295,38 @@ Test_Performance_p_2 <- Test_Performance(p=2,observed_y[-1,], Dates_test,fileNam
 Test_Performance_p_3 <- Test_Performance(p=3,observed_y[-1,], Dates_test,fileNames)
 
 
+# using the optiaml lambdas of Optimal_lambdas_p_1_ext_new, Optimal_lambdas_p_2_ext_new and Optimal_lambdas_p_3_ext_new
+
+Test_Performance_ext <- function(p,observed_y, dates,fileNames){
+  if(p==1){
+    Optimal_lambda = Optimal_lambdas_p_1_ext_new
+  }  else if(p==2){
+    Optimal_lambda = Optimal_lambdas_p_2_ext_new
+  }  else if(p==3){
+    Optimal_lambda = Optimal_lambdas_p_3_ext_new
+  }
+  predicted_y_test<-prediction_y_test(Optimal_lambda,p)
+  
+  
+  MSEs = vector()
+  QLs = vector()
+  for (k in c(1:9)){
+    MSEs <- c(MSEs, MSE(observed_y[,k],predicted_y_test[,k]))
+    QLs <- c(QLs, quasi_likelihood(observed_y[,k],predicted_y_test[,k]))
+    SE <- (observed_y[,k] - predicted_y_test[,k])^2
+    jpeg(paste("QL_p_",p,"_",fileNames[k],".jpg", sep=""))
+    plot(dates,SE,type="l",xlim=range(dates), ylim=range(SE),
+         xlab = "Time",ylab = "Squared Error",main = paste("Ordered LASSO (ext)_Squared Errors_Test Sample_p_",p,"_",fileNames[k]))
+    dev.off()
+  }
+  
+  MSE_QL_df = data.frame("MSE" = MSEs, "QL"=QLs)
+  row.names(MSE_QL_df) = fileNames
+  write.csv(MSE_QL_df, file = paste("OrderedLASSO_MSE_QL_p_",p,".csv",sep = ""))
+  return(MSE_QL_df)
+}
+
+Test_Performance_p_1_ext <- Test_Performance_ext(p=1,observed_y[-1,], Dates_test,fileNames)
+Test_Performance_p_2_ext <- Test_Performance_ext(p=2,observed_y[-1,], Dates_test,fileNames)
+Test_Performance_p_3_ext <- Test_Performance_ext(p=3,observed_y[-1,], Dates_test,fileNames)
 
