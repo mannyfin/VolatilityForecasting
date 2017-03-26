@@ -29,18 +29,11 @@ last_in_triaing_p_1 = which(xmat_p_1[,"Dates"]=="10/31/2011")
 last_in_triaing_p_2 = which(xmat_p_2[,"Dates"]=="10/31/2011")
 last_in_triaing_p_3 = which(xmat_p_3[,"Dates"]=="10/31/2011")
 
-# predicted_y_p_1 <- data.frame()
-# predicted_y_p_2 <- data.frame()
-# predicted_y_p_3 <- data.frame()
+
 observed_y <- ymat_p_1[(last_in_triaing_p_1:nrow(ymat_p_1)),][,c(-1,-2)]
-# observed_y_p_2 <- ymat_p_2[(last_in_triaing_p_2:nrow(ymat_p_2)),][,c(-1,-2)]
-# observed_y_p_3 <- ymat_p_3[(last_in_triaing_p_3:nrow(ymat_p_3)),][,c(-1,-2)]
 rownames(observed_y) <- 1:nrow(observed_y)
-# rownames(observed_y_p_2) <- 1:nrow(observed_y_p_2)
-# rownames(observed_y_p_3) <- 1:nrow(observed_y_p_3)
 observed_y <- exp(observed_y[complete.cases(observed_y),])
-# observed_y_p_2 <- observed_y_p_2[complete.cases(observed_y_p_2),]
-# observed_y_p_3 <- observed_y_p_3[complete.cases(observed_y_p_3),]
+
 fileNames  = c('AUDUSD','CADUSD','CHFUSD', 'EURUSD', 'GBPUSD', 'JPYUSD', 'NOKUSD', 'NZDUSD', 'SEKUSD')
 Dates <- as.Date(xmat_p_1[,2], format = "%m/%d/%Y")
 Dates_test <- Dates[which(Dates =="2011-11-01"):length(Dates)]
@@ -62,10 +55,10 @@ prediction_y_training<-function(lambda,p){
   }
   predicted_y = vector()
   for (k in c(1:9)){
-    i = last_in_triaing-1
-    x = xmat[(1:i),][,c(-1,-2)]
-    y = ymat[(1:i),][,c(-1,-2)]
-    x_for_predict = as.numeric(xmat[i+1,][,c(-1,-2)])
+    i = last_in_triaing-1 # i = T1-1
+    x = xmat[(1:i),][,c(-1,-2)] # from t=1 to t = T1-1, used to fit the model in the training sample
+    y = ymat[(1:i),][,c(-1,-2)] # from t=1 to t = T1-1, used to fit the model in the training sample
+    x_for_predict = as.numeric(xmat[i+1,][,c(-1,-2)]) # X used to make prediction at T1
     result = orderedLasso(as.matrix(x),as.numeric(y[,k]), lambda, intercept = TRUE, standardize =TRUE,method = "Solve.QP", strongly.ordered = TRUE)
     predicted_y <- c(predicted_y,exp(predict(result, x_for_predict)$yhat.ordered))
   }
@@ -82,6 +75,10 @@ MSE <- function(observed, prediction){
 
 lambda_MSE_df <-function(fileNames,fileIndex,last_observed_y_in_training,p,lambdaSeq){
 
+  # try different values of lambda from lambdaSeq
+  # produce and output a csv file to record the relationship between lambda and MSE 
+  # plot MSE against lambda and save the output
+  
   lambda_MSE = data.frame()
   true_y = last_observed_y_in_training[fileIndex]
   
@@ -105,7 +102,9 @@ lambda_MSE_df <-function(fileNames,fileIndex,last_observed_y_in_training,p,lambd
   return(lambda_MSE)
 }
 
+
 Optimal_lambda_df<-function(p,lambdaSeq,fileNames){
+  # pick the optimal value for lambda
 
   if(p==1){
     last_in_triaing = last_in_triaing_p_1
@@ -120,10 +119,10 @@ Optimal_lambda_df<-function(p,lambdaSeq,fileNames){
     ymat = ymat_p_3
   }
   last_observed_y_in_training = as.numeric(observed_y[1,])
-  optimal_lambdas = vector()
+  optimal_lambdas = vector() # this vector saves all optimal lambda's of the 9 files
   for (fileIndex in c(1:9)){
     lambda_MSE_df_output <- lambda_MSE_df(fileNames,fileIndex,last_observed_y_in_training,p,lambdaSeq)
-    index_min_MSE <- which.min(lambda_MSE_df_output$"MSE")
+    index_min_MSE <- which.min(lambda_MSE_df_output$"MSE") 
     optimal_lambda <- lambda_MSE_df_output$"lambda"[index_min_MSE]
     optimal_lambdas <- c(optimal_lambdas,optimal_lambda)
     write.csv(lambda_MSE_df_output, file = paste("lambda_MSE_df_output_p_",p,"_",fileNames[fileIndex],".csv",sep = ""))
@@ -137,21 +136,20 @@ Optimal_lambdas_p_1 = Optimal_lambda_df(p=1,lambdaSeq=c(seq(0.01,2,0.01),seq(3,4
 Optimal_lambdas_p_2 = Optimal_lambda_df(p=2,lambdaSeq=c(seq(0.01,2,0.01),seq(3,400,1)),fileNames)
 # Optimal_lambdas_p_2: 0.01 206.00   0.48   0.92   0.03   0.08   0.03   0.01   0.01
 Optimal_lambdas_p_3 = Optimal_lambda_df(p=3,lambdaSeq=c(seq(0.01,2,0.01),seq(3,400,1)),fileNames)
-# Optimal_lambdas_p_3
+# Optimal_lambdas_p_3: 0.01   0.03   0.03   0.04 178.00   0.43   0.08   0.01   0.01
 
 
-"""
-According to the plots, for some combinations of lag and currenccy pair, 
-increasing the value of lambda when lambda is large will decrease MSE for a very small amount, such as 10e-5.
-Thus, we decided to round the values of MSE to 6 digits (i.e., 6 digits after the decimal point).
+# According to the plots, for some combinations of lag and currenccy pair, 
+# increasing the value of lambda when lambda is large will decrease MSE for a very small amount, such as 10e-5.
+# Thus, we decided to round the values of MSE to 6 digits (i.e., 6 digits after the decimal point).
 
-"""
+
 # fileNames  = c('AUDUSD','CADUSD','CHFUSD', 'EURUSD', 'GBPUSD', 'JPYUSD', 'NOKUSD', 'NZDUSD', 'SEKUSD')
 
 Optimal_lambdas_p_1_new = vector()
 for(i in c(1:9)){
   lambda_MSE_df_output_p_1 <- read.csv( paste("lambda_MSE_df_output_p_1_",fileNames[i],".csv",sep = ""), header = TRUE, sep = ",")
-  lambda_MSE_df_output_p_1$MSE <- round( lambda_MSE_df_output_p_1$MSE,6)
+  lambda_MSE_df_output_p_1$MSE <- round( lambda_MSE_df_output_p_1$MSE,6) # set digits of MSE's to 6 digits
   Optimal_lambda <- lambda_MSE_df_output_p_1$lambda [which.min(lambda_MSE_df_output_p_1$MSE)]
   Optimal_lambdas_p_1_new <- c(Optimal_lambdas_p_1_new,Optimal_lambda)
 }
@@ -173,11 +171,14 @@ for(i in c(1:9)){
 }
 
 # Optimal_lambdas_p_1_new: 0.01   1.11   0.01   1.38 127.00 279.00  17.00   0.01  21.00
-# Optimal_lambdas_p_2_new: 
-# Optimal_lambdas_p_3_new: 
+# Optimal_lambdas_p_2_new: 0.01 206.00   0.48   0.92   0.03   0.08   0.03   0.01   0.01
+# Optimal_lambdas_p_3_new:  0.01   0.03   0.03   0.04 178.00   0.43   0.08   0.01   0.01
 
 
 prediction_y_test<-function(lambda,p){
+  # make predictions in the test sample
+  # lambda in the argument is the optimal lambda's for 9 files
+  
   if(p==1){
     last_in_triaing = last_in_triaing_p_1
     xmat = xmat_p_1
