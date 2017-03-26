@@ -139,11 +139,11 @@ Optimal_lambdas_p_3_ext
 # Optimal_lambdas_p_2: 0.01 206.00   0.48   0.92   0.03   0.08   0.03   0.01   0.01
 # Optimal_lambdas_p_3: 0.01   0.03   0.03   0.04 178.00   0.43   0.08   0.01   0.01
 
-# Optimal_lambdas_p_1_zoomin = Optimal_lambda_df(p=1,lambdaSeq=exp(values),fileNames)
+# Optimal_lambdas_p_1_zoomin = Optimal_lambda_df(p=1,lambdaSeq=exp(seq(-10,0,0.05)),fileNames)
 # # Optimal_lambdas_p_1_zoomin: 4.539993e-05 1.000000e+00 6.720551e-02 4.539993e-05 1.000000e+00 1.000000e+00 1.737739e-01 4.539993e-05 3.011942e-01
-# Optimal_lambdas_p_2_zoomin = Optimal_lambda_df(p=1,lambdaSeq=exp(values),fileNames)
+# Optimal_lambdas_p_2_zoomin = Optimal_lambda_df(p=1,lambdaSeq=exp(seq(-10,0,0.05)),fileNames)
 # # Optimal_lambdas_p_2_zoomin: 4.539993e-05 1.000000e+00 6.720551e-02 4.539993e-05 1.000000e+00 1.000000e+00 1.737739e-01 4.539993e-05 3.011942e-01
-# Optimal_lambdas_p_3_zoomin = Optimal_lambda_df(p=1,lambdaSeq=exp(values),fileNames)
+# Optimal_lambdas_p_3_zoomin = Optimal_lambda_df(p=1,lambdaSeq=exp(seq(-10,0,0.05)),fileNames)
 # # Optimal_lambdas_p_3_zoomin:  4.539993e-05 1.000000e+00 6.720551e-02 4.539993e-05 1.000000e+00 1.000000e+00 1.737739e-01 4.539993e-05 3.011942e-01
 
 
