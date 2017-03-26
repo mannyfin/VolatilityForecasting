@@ -4,15 +4,18 @@ from Performance_Measure import *
 from SEplot import se_plot as SE
 
 
-def KNN(vol_data, k=1, warmup=400, filename=None, Timedt=None, method=[1,2]):
+def KNN(vol_data, k=[np.range(1,21)], warmup=400, filename=None, Timedt=None, method=[1,2]):
     vol_data_input = vol_data['Volatility_Time']
     dates = vol_data['Date']
-    knns = [KNNcalc(vol_data=vol_data_input, dates =dates, k=k, warmup=warmup,filename=filename, Timedt=Timedt, method=m)
-    for m in method]
+
+    # This can be done more efficiently by moving k list directly into k
+
+    knns = [[ks, m, KNNcalc(vol_data=vol_data_input, dates =dates, k=ks, warmup=warmup,filename=filename, Timedt=Timedt, method=m)]
+    for m in method for ks in k]
     return knns
 
 
-def KNNcalc(vol_data, dates=None, k=1, warmup=400, filename=None, Timedt=None, method=1):
+def KNNcalc(vol_data, dates=None, k=1, warmup=400, filename=None, Timedt=None, method=1, m=0):
     """
     # we now want to predict the volatility at time, t_warmup,
     # so we subtract vol @t_warmup from every point in train set
@@ -45,6 +48,10 @@ def KNNcalc(vol_data, dates=None, k=1, warmup=400, filename=None, Timedt=None, m
     :return:
     """
 
+    growing = True
+    if method == 1: growing = False
+    if method == 2: m = 1
+
     if filename is None:
         filename = " "
     # initialize
@@ -53,8 +60,9 @@ def KNNcalc(vol_data, dates=None, k=1, warmup=400, filename=None, Timedt=None, m
     try:
         while iterator < (len(vol_data)-warmup):
             # load in the datapoints
-            # moving window
-            train_set = vol_data[iterator:(warmup+iterator)]
+            # moving window (now changed to growing)
+            if not growing: train_set = vol_data[0:(warmup+iterator)]
+            else: train_set = vol_data[iterator:warmup+iterator]
             last_sample = train_set.iloc[- 1]
 
             if method == 1:
@@ -68,15 +76,15 @@ def KNNcalc(vol_data, dates=None, k=1, warmup=400, filename=None, Timedt=None, m
                 sigma = vol_data[kn_index]
                 prediction = prediction.append(pd.Series([np.dot(alpha_j, sigma)], index=[iterator]))
 
-            elif method == 2:
-                diff = (last_sample - train_set)**2 + (train_set.index-train_set.index[-1])**2
+            elif method == 2 or method == 3:
+                diff = (last_sample - train_set)**2 + m*(train_set.index-train_set.index[-1])**2
                 absdiff = diff.sort_values()
                 kn_index = diff.reindex(absdiff.index)[1:k + 1].index + 1
                 squared = absdiff[1:k + 1] 
 
                 c = 1 / sum(1/squared)
                 alpha_j = c/squared
-                ds = np.sqrt(vol_data[kn_index]**2 + kn_index**2)
+                ds = np.sqrt(vol_data[kn_index]**2 + m*kn_index**2)
                 prediction = prediction.append(pd.Series([np.dot(alpha_j, ds)], index=[iterator]))
 
             else:
