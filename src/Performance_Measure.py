@@ -45,7 +45,7 @@ class PerformanceMeasure(object):
             print("QL is: " + str(self.QL))
         elif isinstance(observed,pd.core.frame.DataFrame) & isinstance(prediction,pd.core.frame.DataFrame):
             # the line below will only work if the data is not a dataframe
-            value = np.divide(prediction, observed)
+            value = np.divide(observed,prediction)
             ones = np.ones(np.shape(observed))
             self.QL = (1 / len(observed)) * (np.sum(value - np.log(value) - ones))
             ql_sum = pd.Series(sum(self.QL), index=['SumQL'])
