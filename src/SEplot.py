@@ -17,7 +17,7 @@ def count(func):
 
 
 @count
-def se_plot(y, y_fit, dates=None, function_method=None):
+def se_plot(y, y_fit, dates=None, function_method=None,mode=None):
     """
     :param y: source data
     :param y_fit: fit from LR
@@ -44,8 +44,11 @@ def se_plot(y, y_fit, dates=None, function_method=None):
 
     else:
         SE = (y_fit.ravel() - y.ravel()) ** 2
-        ts2 = pd.DataFrame({'SE': np.ravel(np.log(SE))})
-        ts2['Date'] = pd.DataFrame(dates)
+        if mode is None: ts2 = pd.DataFrame({'SE': np.ravel(np.log(SE))})
+        else: ts2 = pd.DataFrame({'SE':np.ravel(SE)})
+        date_c = dates.copy()
+        date_c = date_c.reset_index()
+        ts2['Date'] = pd.DataFrame(date_c.Date)
     # reshape will be deprecated. the line below is not necessarily the correct one.
     # SE = (y_fit.values.reshape(len(y), 1) - y.values.reshape(len(y), 1)) ** 2
     # plt.figure(n)
@@ -59,15 +62,16 @@ def se_plot(y, y_fit, dates=None, function_method=None):
         dates = dates.reset_index()
         dates = dates.Date
 
-        # ts2['Date'] = pd.DataFrame(dates)
+        #ts2['Date'] = pd.DataFrame(dates)
 
 
         plt.gcf()
-        plt.plot(ts2['Date'], ts2['SE'], label=function_method)
+        plt.plot(ts2['Date'].dropna(), ts2['SE'], label=function_method)
 
 
 
     plt.xlabel("Years")
-    plt.ylabel("ln(SE)")
+    if mode is None: plt.ylabel("ln(SE)")
+    else: plt.ylabel("MSE") 
 
 
