@@ -4,7 +4,7 @@ from Performance_Measure import *
 from SEplot import se_plot as SE
 
 
-def KNN(vol_data, k=[np.range(1,21)], warmup=400, filename=None, Timedt=None, method=[1,2]):
+def KNN(vol_data, k=[range(1,21)], warmup=400, filename=None, Timedt=None, method=[1,2]):
     vol_data_input = vol_data['Volatility_Time']
     dates = vol_data['Date']
 

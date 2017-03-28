@@ -19,7 +19,7 @@ class FunctionCalls(object):
     def __init__(self):
         pass
 
-    def function_runs(self,dates=None, filename=None, stringinput=None, warmup=None,input_data=None, tnplus1=None, lr=None, arch=None, garchpq=None, k_nn=None, var_q=None):
+    def function_runs(self,dates=None, filename=None, stringinput=None, warmup=None,input_data=None, tnplus1=None, lr=None, arch=None, garchpq=None, k_nn=None, var_q=None, LASSO=False):
         output = list()
 
         """tnplus1"""
@@ -124,9 +124,9 @@ class FunctionCalls(object):
                 for count, elem in enumerate(var_q):
                     # KNNmethod = KNN(vol_data=input_data, k=elem, warmup=warmup, filename=filename, Timedt=stringinput)
                     VAR_q = VAR(p=elem, combined_vol=input_data, warmup_period=warmup)\
-                                .VAR_calc(Timedt=stringinput, dates=dates, filename=filename)
-
-
+                                .VAR_calc(Timedt=stringinput, dates=dates, filename=filename, doLASSO_only=LASSO)
+                    import matplotlib.pyplot as plt
+                    plt.show()
                     # the line below doesnt work at the moment...
                     # output = result_to_df_list(list_name=output, method_result=VAR_q,
                     #                            index_value=['VAR_p='+str(elem)], column_value=['MSE', 'QL'])

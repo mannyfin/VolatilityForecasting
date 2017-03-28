@@ -2,7 +2,8 @@ import pandas as pd
 import numpy as np
 from Performance_Measure import *
 from SEplot import se_plot as SE
-
+import matplotlib.pyplot as plt
+from LASSO import lasso_regression
 
 class VAR(object):
     """
@@ -16,7 +17,7 @@ class VAR(object):
         self.combined_vol = combined_vol
         self.warmup_period = warmup_period
 
-    def VAR_calc(self, Timedt, dates, filename):
+    def VAR_calc(self, Timedt, dates, filename, doLASSO_only=False):
         # provides the whole x matrix.
         self.xmat = pd.DataFrame([sum([self.combined_vol[currency].loc[i + self.p - 1:i:-1].as_matrix().tolist()
                                   for currency in self.combined_vol.keys()], [])
@@ -100,34 +101,43 @@ class VAR(object):
             y_predicted = X_T1*beta_T1
 len(self.xmat)-self.warmup_period)
         """
-        beta = []
-        prediction=[]
-        for iteration in range(len(self.ymat)-self.warmup_period):
+        if doLASSO_only==False:
+            beta = []
+            prediction=[]
+            for iteration in range(len(self.ymat)-self.warmup_period):
 
-            # X goes from 0 to warmup_period (T1-1). Ex. for p=3 and warmup=100,
-            # x index goes from 0 to 99, & col=3*numfiles
-            xmat_var = self.xmat[:(self.warmup_period+ iteration) ]
+                # X goes from 0 to warmup_period (T1-1). Ex. for p=3 and warmup=100,
+                # x index goes from 0 to 99, & col=3*numfiles
+                xmat_var = self.xmat[:(self.warmup_period+ iteration) ]
 
-            # Y goes from p to the warmup period+p. Ex. for p = 3 and warmup = 100x y index goes from 3 to 102 inclusive
-            ymat_var = self.combined_vol[self.p:(self.warmup_period + self.p + iteration)]
+                # Y goes from p to the warmup period+p. Ex. for p = 3 and warmup = 100x y index goes from 3 to 102 inclusive
+                ymat_var = self.combined_vol[self.p:(self.warmup_period + self.p + iteration)]
 
-            # We can ravel the betas below to stack them row by row if we want to use them later for a pandas DataFrame
-            # The ravel would have to be done after the prediction.append() line.
-            beta.append(np.matmul(np.linalg.pinv(xmat_var.T.dot(xmat_var)), np.matmul(xmat_var.T, ymat_var)))
+                # We can ravel the betas below to stack them row by row if we want to use them later for a pandas DataFrame
+                # The ravel would have to be done after the prediction.append() line.
+                beta.append(np.matmul(np.linalg.pinv(xmat_var.T.dot(xmat_var)), np.matmul(xmat_var.T, ymat_var)))
 
-            # the x used here is the row after the warmup period, T1. i.e. if xmat_var is from 0:99 inclusive, then
-            # value passed for x is row 100
-            prediction.append(np.matmul(self.xmat[len(xmat_var):len(xmat_var) + 1], beta[-1])[0].tolist())
-        prediction = pd.DataFrame(prediction, columns=self.combined_vol.keys())
+                # the x used here is the row after the warmup period, T1. i.e. if xmat_var is from 0:99 inclusive, then
+                # value passed for x is row 100
+                prediction.append(np.matmul(self.xmat[len(xmat_var):len(xmat_var) + 1], beta[-1])[0].tolist())
+            prediction = pd.DataFrame(prediction, columns=self.combined_vol.keys())
 
-        # observed: ex.For the case of p = 3 is from index 103:1299 inclusive, 1197 elements total for warmup_period=100
-        observed = self.ymat[self.warmup_period:]
-        # now calculate MSE, QL and so forth
-        Performance_ = PerformanceMeasure()
-        MSE = Performance_.mean_se(observed=observed, prediction=prediction)
-        QL = Performance_.quasi_likelihood(observed=observed, prediction=prediction)
+            # observed: ex.For the case of p = 3 is from index 103:1299 inclusive, 1197 elements total for warmup_period=100
+            observed = self.ymat[self.warmup_period:]
+            # now calculate MSE, QL and so forth
+            Performance_ = PerformanceMeasure()
+            MSE = Performance_.mean_se(observed=observed, prediction=prediction)
+            QL = Performance_.quasi_likelihood(observed=observed, prediction=prediction)
 
-        """ return a plot of the Squared error"""
-        label = str(filename) + " " + str(Timedt) + " SE (" + str(self.p) + ") VAR Volatility"
-        SE(observed, prediction, dates.iloc[(self.warmup_period+self.p):], function_method=label)
+            """ return a plot of the Squared error"""
+            label = str(filename) + " " + str(Timedt) + " SE (" + str(self.p) + ") VAR Volatility"
+            SE(observed, prediction, dates.iloc[(self.warmup_period+self.p):], function_method=label)
+            plt.title('VAR for p = '+str(self.p))
+
+        elif doLASSO_only==True:
+            print("Performing LASSO regression")
+            blah=lasso_regression(self.xmat,self.ymat, self.p, dates, alpha=np.linspace(0.0001,2,1e3))
+            MSE=[]
+            QL=[]
+
         return MSE, QL

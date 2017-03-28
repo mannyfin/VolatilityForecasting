@@ -34,13 +34,17 @@ def se_plot(y, y_fit, dates=None, function_method=None,mode=None):
     # Squared error
 
     if isinstance(y, pd.core.frame.DataFrame) & isinstance(y_fit, pd.core.frame.DataFrame):
-        SE = np.square(np.subtract(y, y_fit))
+        # this is really logSE
+        SE = np.log(np.square(np.subtract(y, y_fit)))
 
         # this line converts to df and transposes from cols to rows
         SE = pd.DataFrame(SE)
+        SE=SE.join(dates.Date)
+        SE=SE.set_index('Date')
         plt.figure(se_plot.counter, figsize=(12,7))
         # fix this line below to plot dates properly
-        SE.plot(kind='line')
+        SE.plot(kind='line').legend(loc='center left', bbox_to_anchor=(1,0.5))
+
 
     else:
         SE = (y_fit.ravel() - y.ravel()) ** 2
