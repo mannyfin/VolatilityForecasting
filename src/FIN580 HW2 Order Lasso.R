@@ -1,12 +1,7 @@
 # FIN580 Ordered LASSO
 
-#http://finzi.psych.upenn.edu/library/orderedLasso/html/predict.orderedLasso.html
-# https://www.researchgate.net/figure/281273999_fig2_Figure-2-Lambda-vs-MSE-for-Lasso-fit-Figure-3-Lambda-vs-MSE-for-Elastic-Net-fit
-# http://www.wbnicholson.com/BigVAR.html
-
 library(Metrics)
 library(orderedLasso)
-# library(BigVAR)
 
 setwd("C:/Users/YYJ/Desktop/FIN580/Homework1/VolatilityForecasting/src")
 xmat_p_1 <- read.csv("xmat_p_1.csv", header = TRUE, sep = ",")
@@ -121,31 +116,30 @@ Optimal_lambda_df<-function(p,lambdaSeq,fileNames){
   return (optimal_lambdas)
 }  
 
-Optimal_lambdas_p_1_ext = Optimal_lambda_df(p=1,lambdaSeq=c(exp(seq(-10,0,0.05)),seq(1.01,2,0.01),seq(3,400,1)),fileNames)
-Optimal_lambdas_p_2_ext = Optimal_lambda_df(p=2,lambdaSeq=c(exp(seq(-10,0,0.05)),seq(1.01,2,0.01),seq(3,400,1)),fileNames)
-Optimal_lambdas_p_3_ext = Optimal_lambda_df(p=3,lambdaSeq=c(exp(seq(-10,0,0.05)),seq(1.01,2,0.01),seq(3,400,1)),fileNames)
 
-# lambdaSeq=c(exp(seq(-10,0,0.05)),seq(1.01,2,0.01),seq(3,400,1))
-options("scipen"=999, "digits"=4)
-Optimal_lambdas_p_1_ext
-# Optimal_lambdas_p_1: 0.0000454   1.1100000   0.0672055   0.0000454 132.0000000 400.0000000  20.0000000   0.0000454  23.0000000
-Optimal_lambdas_p_2_ext
-# Optimal_lambdas_p_2: 0.0000454 0.0223708 0.0000454 0.9512294 0.0287246 0.0780817 0.0301974 0.0000454 0.0000454
-Optimal_lambdas_p_3_ext
-# Optimal_lambdas_p_3: 0.006097 0.023518 0.022371 0.035084 0.014996 0.070651 0.074274 0.006097 0.005517
+Optimal_lambdas_p_1 = Optimal_lambda_df(p=1,lambdaSeq= c(seq(0.01,2,0.01),c(3,400,1)),fileNames)
+Optimal_lambdas_p_2 = Optimal_lambda_df(p=2,lambdaSeq= c(seq(0.01,2,0.01),c(3,400,1)),fileNames)
+Optimal_lambdas_p_3 = Optimal_lambda_df(p=3,lambdaSeq= c(seq(0.01,2,0.01),c(3,400,1)),fileNames)
 
 # lambdaSeq = c(seq(0.01,2,0.01),c(3,400,1))
 # Optimal_lambdas_p_1:  0.01   1.11   0.07   1.38 132.00 400.00  20.00   0.01  23.00
 # Optimal_lambdas_p_2: 0.01 206.00   0.48   0.92   0.03   0.08   0.03   0.01   0.01
 # Optimal_lambdas_p_3: 0.01   0.03   0.03   0.04 178.00   0.43   0.08   0.01   0.01
 
-# Optimal_lambdas_p_1_zoomin = Optimal_lambda_df(p=1,lambdaSeq=exp(seq(-10,0,0.05)),fileNames)
-# # Optimal_lambdas_p_1_zoomin: 4.539993e-05 1.000000e+00 6.720551e-02 4.539993e-05 1.000000e+00 1.000000e+00 1.737739e-01 4.539993e-05 3.011942e-01
-# Optimal_lambdas_p_2_zoomin = Optimal_lambda_df(p=1,lambdaSeq=exp(seq(-10,0,0.05)),fileNames)
-# # Optimal_lambdas_p_2_zoomin: 4.539993e-05 1.000000e+00 6.720551e-02 4.539993e-05 1.000000e+00 1.000000e+00 1.737739e-01 4.539993e-05 3.011942e-01
-# Optimal_lambdas_p_3_zoomin = Optimal_lambda_df(p=1,lambdaSeq=exp(seq(-10,0,0.05)),fileNames)
-# # Optimal_lambdas_p_3_zoomin:  4.539993e-05 1.000000e+00 6.720551e-02 4.539993e-05 1.000000e+00 1.000000e+00 1.737739e-01 4.539993e-05 3.011942e-01
 
+Optimal_lambdas_p_1_ext = Optimal_lambda_df(p=1,lambdaSeq=c(exp(seq(-10,0,0.05)),seq(1.01,2,0.01),seq(3,400,1)),fileNames)
+Optimal_lambdas_p_2_ext = Optimal_lambda_df(p=2,lambdaSeq=c(exp(seq(-10,0,0.05)),seq(1.01,2,0.01),seq(3,400,1)),fileNames)
+Optimal_lambdas_p_3_ext = Optimal_lambda_df(p=3,lambdaSeq=c(exp(seq(-10,0,0.05)),seq(1.01,2,0.01),seq(3,400,1)),fileNames)
+
+
+# lambdaSeq=c(exp(seq(-10,0,0.05)),seq(1.01,2,0.01),seq(3,400,1))
+options("scipen"=999, "digits"=4)
+Optimal_lambdas_p_1_ext
+# Optimal_lambdas_p_1_ext: 0.0000454   1.1100000   0.0672055   0.0000454 132.0000000 400.0000000  20.0000000   0.0000454  23.0000000
+Optimal_lambdas_p_2_ext
+# Optimal_lambdas_p_2_ext: 0.0000454 0.0223708 0.0000454 0.9512294 0.0287246 0.0780817 0.0301974 0.0000454 0.0000454
+Optimal_lambdas_p_3_ext
+# Optimal_lambdas_p_3_ext: 0.006097 0.023518 0.022371 0.035084 0.014996 0.070651 0.074274 0.006097 0.005517
 
 
 
@@ -205,10 +199,18 @@ for(i in c(1:9)){
 }
 
 # previous results
-# Optimal_lambdas_p_1:f  0.01   1.11   0.07   1.38 132.00 400.00  20.00   0.01  23.00
+# lambdaSeq = c(seq(0.01,2,0.01),c(3,400,1))
+# Optimal_lambdas_p_1: 0.01   1.11   0.07   1.38 132.00 400.00  20.00   0.01  23.00
 # Optimal_lambdas_p_2: 0.01 206.00   0.48   0.92   0.03   0.08   0.03   0.01   0.01
 # Optimal_lambdas_p_3: 0.01   0.03   0.03   0.04 178.00   0.43   0.08   0.01   0.01
 
+# lambdaSeq=c(exp(seq(-10,0,0.05)),seq(1.01,2,0.01),seq(3,400,1))
+# Optimal_lambdas_p_1_ext: 0.0000454   1.1100000   0.0672055   0.0000454 132.0000000 400.0000000  20.0000000   0.0000454  23.0000000
+# Optimal_lambdas_p_2_ext: 0.0000454 0.0223708 0.0000454 0.9512294 0.0287246 0.0780817 0.0301974 0.0000454 0.0000454
+# Optimal_lambdas_p_3_ext: 0.006097 0.023518 0.022371 0.035084 0.014996 0.070651 0.074274 0.006097 0.005517
+
+
+# new results
 # lambdaSeq = c(seq(0.01,2,0.01),c(3,400,1))
 # Optimal_lambdas_p_1_new: 0.01   1.11   0.01   1.38 127.00 279.00  17.00   0.01  21.00
 # Optimal_lambdas_p_2_new: 0.01 206.00   0.48   0.92   0.03   0.08   0.03   0.01   0.01
@@ -316,7 +318,7 @@ Test_Performance_ext <- function(p,observed_y, dates,fileNames){
     SE <- (observed_y[,k] - predicted_y_test[,k])^2
     jpeg(paste("QL_p_",p,"_",fileNames[k],".jpg", sep=""))
     plot(dates,SE,type="l",xlim=range(dates), ylim=range(SE),
-         xlab = "Time",ylab = "Squared Error",main = paste("Ordered LASSO (ext)_Squared Errors_Test Sample_p_",p,"_",fileNames[k]))
+         xlab = "Time",ylab = "Squared Error",main = paste("Ordered LASSO(ext)_Squared Error_Test Sample_p_",p,"_",fileNames[k]))
     dev.off()
   }
   

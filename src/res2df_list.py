@@ -14,9 +14,12 @@ def result_to_df_list(list_name=list, method_result=tuple, index_value=list, col
 
     # has issues if it is passed a dataframe. May need to create a Multi-level dataframe
     # reshape this
-    method_result = np.reshape(method_result, [len(index_value), len(column_value)])
-    df = pd.DataFrame()
-    df = df.append(pd.DataFrame(method_result, index=index_value, columns=column_value))
+    if isinstance(method_result, pd.core.frame.DataFrame):
+        df=method_result
+    else:
+        method_result = np.reshape(method_result, [len(index_value), len(column_value)])
+        df = pd.DataFrame()
+        df = df.append(pd.DataFrame(method_result, index=index_value, columns=column_value))
     list_name.append(df)
     return list_name
 

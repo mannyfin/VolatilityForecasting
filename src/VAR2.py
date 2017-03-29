@@ -2,12 +2,15 @@ import pandas as pd
 import numpy as np
 from Performance_Measure import *
 from SEplot import se_plot as SE
-
+import matplotlib.pyplot as plt
+from LASSO import lasso_regression
 
 class VAR(object):
     """
     VAR forecaster
-
+    p = lag
+    warmup_period = training period, int
+    combined_vol = vol of all currencies
     """
 
     def __init__(self, p, combined_vol, warmup_period):
@@ -17,6 +20,13 @@ class VAR(object):
         self.warmup_period = warmup_period
 
     def VAR_calc(self, Timedt, dates, filename):
+        """
+        Calculate VAR
+        :param Timedt: str to be added to plot
+        :param dates: df of dates (timestamps)
+        :param filename: filename of currency
+        :return: MSE and QL
+        """
         # provides the whole x matrix.
         self.xmat = pd.DataFrame([sum([self.combined_vol[currency].loc[i + self.p - 1:i:-1].as_matrix().tolist()
                                   for currency in self.combined_vol.keys()], [])
@@ -127,7 +137,9 @@ len(self.xmat)-self.warmup_period)
         MSE = Performance_.mean_se(observed=observed, prediction=prediction)
         QL = Performance_.quasi_likelihood(observed=observed, prediction=prediction)
 
-        """ return a plot of the Squared error"""
+        """ return a plot of the log of the Squared error"""
         label = str(filename) + " " + str(Timedt) + " SE (" + str(self.p) + ") VAR Volatility"
         SE(observed, prediction, dates.iloc[(self.warmup_period+self.p):], function_method=label)
+        plt.title('VAR for p = '+str(self.p))
+
         return MSE, QL
