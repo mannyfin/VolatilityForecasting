@@ -1,222 +1,143 @@
-# This file implements VAR (vector auto regression) described  in the paper
-# Wilms, Ines, Jeroen Rombouts, and Christophe Croux. "Lasso-based forecast combinations for forecasting realized variances." (2016).
-
-# We only implements VAR on daily volatility data.
-# We take log of annualized volatility to get logRV.
-# We divide the data into training sample (2/3) and test sample (1/3).
-# For lag p = 1, look-back rolling window is 100.
-# For lag p = 2, look-back rolling window is 200.
-# For lag p = 3, look-back rolling window is 300.
-# From the training sample, we get the best p giving the smallest MSE;
-# Using the optimal p, we fit the model and make predictions on the test sample.
-# We used a rolling window method rather than a growing window method.
-
-
-import numpy as np
 import pandas as pd
+import numpy as np
 from Performance_Measure import *
-from sklearn.linear_model import LinearRegression as lr
+from SEplot import se_plot as SE
+import matplotlib.pyplot as plt
+from LASSO import lasso_regression
 
-'''
-    Construct y as a list of 9 lists.
-    The k-th list inside y is a series of logRV for the k-th currency pair for k=1,2,...,9
-'''
-def get_y(LogRV_df,q, t,n):
-# def get_y(LogRV_df, q, p, t, n):
+class VAR(object):
+    """
+    VAR forecaster
 
-    '''
-    :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
-    :param q: q=9 in this project since we have 9 currency pairs
-    :param p: p is lag
-    :param t: t = indicator
-    :param n: n = length of the look-back rolling window
-    :return: y as inputs into LR for all currency pairs
-    '''
-    y = []
-    # len(LogRV_df.keys()) is q is 9
-    for i in range(q):
-        # y_i= []
-        # for k in range(n):
-            # "t here is bound to predictLogRV...."
-        # y_i.append( LogRV_df.iloc[t+k][i] )
-        # y.append(y_i)
-        y.append(LogRV_df.iloc[t:t+n, i])
+    """
 
-    return y
+    def __init__(self, p, combined_vol, warmup_period):
+        assert isinstance(combined_vol, pd.core.frame.DataFrame)
+        self.p = p
+        self.combined_vol = combined_vol
+        self.warmup_period = warmup_period
 
+    def VAR_calc(self, Timedt, dates, filename, doLASSO_only=False):
+        # provides the whole x matrix.
+        self.xmat = pd.DataFrame([sum([self.combined_vol[currency].loc[i + self.p - 1:i:-1].as_matrix().tolist()
+                                  for currency in self.combined_vol.keys()], [])
+                                  for i in range(len(self.combined_vol) - self.p)])
 
-def x_mat_t_n_qp(LogRV_df,q, p, t,n):
-    '''
-    :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
-    :param q: q=9 in this project since we have 9 currency pairs
-    :param p: p is lag
-    :param t: t = time indicator
-    :param n: n = length of the look-back rolling window
-    :return: the x matrix as a input for regression, where the dimension of x is n*(qp)
-    '''
-    x =  pd.DataFrame()
-    for m in range(n):
-        x_t_vec = []
-        # this is different from the k in the y creation
-        for k in range(q):
-            for i in range(1, p+1):
-                "t here is bound to predictLogRV...."
-                # Why not just call these in the right order and then reverse them?
-                # Right now they are called as: element [t+m-i] = 3, 2, 1 for iteration i = 1
-                x_t_vec.append(LogRV_df.iloc[t+m-i][k])
-        x = x.append([x_t_vec])
-    return x
+        # provides the whole y matrix
+        self.ymat = self.combined_vol[self.p:]
+        """
+        initial xmat, ymat
+        self.xmat[:self.warmup_period]
 
-'''
-     Fitting parameters and making prediction based on fitted models
-     PredictedlogRV collects the predicted logRV for all 9 currency pairs
+        feel free to use log of the vols, or whatever you'd like as an input. Doesn't need to be defined inside the fcn.
+        ymat = daily_vol_combined[p:warmup_period + p]
+        test = xmat[:warmup_period]
 
-'''
-# def predictlogRV(LogRV_df,q,p,t,n):
+        check: ymat[-4:] vs xmat: test[-3:]
 
+        Ex.p = 3 and warmup = 100 here...
+        ymat[-4:]
+                Out[236]:
+                       SEKUSD    CADUSD    CHFUSD
+                99   0.207160  0.132623  0.180368
+                100  0.193095  0.115839  0.146339
+                101  0.202393  0.119725  0.158681
+                102  0.185685  0.113315  0.147309
 
-def predictlogRV(LogRV_df, q, p, n,stringin=None):
+        test[-3:]
+                Out[238]:
+                           0         1         2         3         4         5         6  \
+                97  0.207160  0.217591  0.262496  0.132623  0.157432  0.204130  0.180368
+                98  0.193095  0.207160  0.217591  0.115839  0.132623  0.157432  0.146339
+                99  0.202393  0.193095  0.207160  0.119725  0.115839  0.132623  0.158681
+                     7         8
+                97  0.182417  0.224175
+                98  0.180368  0.182417
+                99  0.146339  0.180368
 
-    '''
-    :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
-    :param q: q=9 in this project since we have 9 currency pairs
-    :param p: p is lag
-    :param n: n = length of the look-back rolling window
-    :return: the predicted logRV for all 9 currency pairs in the training sample
-    '''
-    # diff range of t
-    PredictedlogRVforAll = []
-    obs_yforAll = []
-    for t in range(p,int(2/3*len(LogRV_df))-n):
-        x = x_mat_t_n_qp(LogRV_df,q, p, t,n)
-        y = get_y(LogRV_df,q, t,n)
-        PredictedlogRV = []
-        obs_y = []
-        for i in range(q):
-            A = lr()
-            A.fit( x, y[i] )
-            b = A.coef_
-            c = A.intercept_
-            x_used_in_pred = x_mat_t_n_qp(LogRV_df,q, p, t+1,n)
-            PredictedlogRV.append( A.predict(x_used_in_pred.tail(1).values.reshape(1, -1))[0])
-            obs_y.append(get_y(LogRV_df, q, t + 1, n)[i][-1])
-        PredictedlogRVforAll.append(PredictedlogRV)
-        obs_yforAll.append(obs_y)
-        print(str(stringin) + str(p) + "_t_" + str(t))
+        # Calculate beta
+        # beta = (X_T * X)^-1 * ( X_T * Y)
+        beta = np.matmul(np.linalg.pinv(self.xmat.T.dot(self.xmat)), np.matmul(self.xmat.T, self.ymat))
 
-        mean_MSE, mean_QL, MSEforAll, QLforAll = VAR_MSE_QL(PredictedlogRVforAll, obs_yforAll, q)
+        Calculate y_predicted:
 
-    return mean_MSE, mean_QL, MSEforAll, QLforAll
+        y_predicted = X_T1*beta_T1,fit
 
-'''
-    Obtaining MSE and QL
-'''
-def VAR_MSE_QL(PredictedlogRVforAll, y, q):
-    '''
-    :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
-    :param y: realized logRV for all currency pairs
-    :param q: q=9 in this project since we have 9 currency pairs
-    :param p: p is lag
-    :param n: n = length of the look-back rolling window
-    :param TrainOrTest: TrainOrTest = "Train" or "Test"
-    :return: MSE, QL and SE plot
-    '''
-    # if TrainOrTest == "Train":
-    #     PredictedlogRVforAll, y = predictlogRV(LogRV_df,q, p, n, 'train_p_')[0:2]
-    #
-    # elif TrainOrTest == "Test":
-    #     PredictedlogRVforAll, y = predictlogRV(LogRV_df, q, p, n, 'test_')[0:2]
+            where y_predicted = y_T1+1
 
-    y = np.array(y).T
-    PredictedlogRVforAll = np.array(PredictedlogRVforAll).T
+        the line below is wrong because it uses X_T1-1 instead of X_T1
 
-    Performance_ = PerformanceMeasure()
-    MSEforAll = []
-    QLforAll = []
-    for i in range(q):
-        MSE = Performance_.mean_se(observed=np.exp(y[i]), prediction=np.exp(PredictedlogRVforAll[i]))
-        QL = Performance_.quasi_likelihood(observed=np.exp(y[i]), prediction=np.exp(PredictedlogRVforAll[i]))
-        MSEforAll.append(MSE)
-        QLforAll.append(QL)
-    mean_MSE = np.mean(MSEforAll)
-    mean_QL = np.mean(QLforAll)
+        y_prediction = np.matmul(self.test[-1:], beta)
 
-    return mean_MSE, mean_QL, MSEforAll, QLforAll
+        Here is the last row of ymat. i.e. y_T1
+            ymat[-1:]
+            Out[240]:
+                   SEKUSD    CADUSD    CHFUSD
+            102  0.185685  0.113315  0.147309
 
-'''
-    Obtaining optimal p
-'''
+        We instead index into the row after the last row of xmat_var using xmat (the complete one)
 
-def optimal_p(LogRV_df,q,p_series):
-    '''
+         This is incorrect:
+            test[-1:]
+            Out[239]:
+                       0         1        2         3         4         5         6  \
+            99  0.202393  0.193095  0.20716  0.119725  0.115839  0.132623  0.158681
+                       7         8
+            99  0.146339  0.180368
 
-    :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
-    :param q: q = 9  # q is the number of currency pairs
-    :param p_series: p_series = [1, 2, 3]  # p is lag, picking 1,2 and 3 according to Amin's suggesting
-    :return: optimal_p out of 1,2,3
-    '''
-    VAR_p1= predictlogRV(LogRV_df, q, p=p_series[0], n=p_series[0]*100, stringin="Train")
-    VAR_p2= predictlogRV(LogRV_df, q, p=p_series[1], n=p_series[1]*100, stringin="Train")
-    VAR_p3= predictlogRV(LogRV_df, q, p=p_series[2], n=p_series[2]*100, stringin="Train")
+         This is correct:
+            xmat[len(test):len(test)+1]
+            Out[230]:
+                        0         1         2         3         4         5         6  \
+            100  0.185685  0.202393  0.193095  0.113315  0.119725  0.115839  0.147309
+                        7         8
+            100  0.158681  0.146339
 
-    MSEs = [VAR_p1[0],VAR_p2[0],VAR_p3[0]]
-    QLs = [VAR_p1[1],VAR_p2[1],VAR_p3[1]]
+        Notice columns, 0, 3, 6 are the elements in ymat[-1:] (i.e. y_T1).
+        This means that xmat[len(test):len(test)+1] is X_T1
 
-    optimal_p_MLE = MSEs.index(min(MSEs))+1 # the optimal p according to MLE criterion is 3
-    optimal_p_QL = QLs.index(min(QLs))+1 # the optimal p according to QL criterion is 3 as well
-    optimal_p = optimal_p_MLE # we use the optimal p according to MLE criterion as the optimal p
-    return optimal_p
+        We use this to calculate y_predicted: (i.e. y_T1+1):
 
+            y_predicted = X_T1*beta_T1
+len(self.xmat)-self.warmup_period)
+        """
+        if doLASSO_only==False:
+            beta = []
+            prediction=[]
+            for iteration in range(len(self.ymat)-self.warmup_period):
 
-'''
-    Obtaining squared errors
-'''
+                # X goes from 0 to warmup_period (T1-1). Ex. for p=3 and warmup=100,
+                # x index goes from 0 to 99, & col=3*numfiles
+                xmat_var = self.xmat[:(self.warmup_period+ iteration) ]
 
+                # Y goes from p to the warmup period+p. Ex. for p = 3 and warmup = 100x y index goes from 3 to 102 inclusive
+                ymat_var = self.combined_vol[self.p:(self.warmup_period + self.p + iteration)]
 
-def VAR_SE(LogRV_df, q, p_series, data):
-# def VAR_SE(LogRV_df, q, p_series, daily_lookback_series, data):
-    '''
+                # We can ravel the betas below to stack them row by row if we want to use them later for a pandas DataFrame
+                # The ravel would have to be done after the prediction.append() line.
+                beta.append(np.matmul(np.linalg.pinv(xmat_var.T.dot(xmat_var)), np.matmul(xmat_var.T, ymat_var)))
 
-    :param LogRV_df: LogRV_df = np.log(daily_vol_combined)
-    :param q: q=9
-    :param p_series: p_series=[1,2,3]
-    :param data: used in plotting SE
-    :return: SE plot
-    '''
-    # TODO: input correct data input
-    # len_training = int(2 / 3 * len(LogRV_df))
-    p = optimal_p(LogRV_df,q,p_series)
-    # p = optimal_p(LogRV_df,q,p_series,daily_lookback_series,len_training)
-    t= daily_lookback_series[p-1]
-    n= p*100
-    # should be test data passed as string
-    PredictedlogRVforAll,y = predictlogRV(LogRV_df, q, p, n)[0:2]
-    # PredictedlogRVforAll = predictlogRV(LogRV_df, q, p, t, n)[0]
-    # y = predictlogRV_trainingSample(LogRV_df, q, p, n)[1]
-    # y = get_y(LogRV_df, q, t, n)
-    # y = get_y(LogRV_df, q, p, t, n)
-    label = "VAR"
-    # TODO: change this label
-    for i in range(q):
-        SE(np.sqrt(np.e(y[i])), np.sqrt(np.e(PredictedlogRVforAll[i])), dates, function_method=label)
-        # TODO: get dates
-        # TODO: add return
+                # the x used here is the row after the warmup period, T1. i.e. if xmat_var is from 0:99 inclusive, then
+                # value passed for x is row 100
+                prediction.append(np.matmul(self.xmat[len(xmat_var):len(xmat_var) + 1], beta[-1])[0].tolist())
+            prediction = pd.DataFrame(prediction, columns=self.combined_vol.keys())
 
-'''
-    Using the optimal p on the test sample
-'''
-def Test_Sample_MSE_QL(LogRV_df,q,p_series):
-# def Test_Sample_MSE_QL(LogRV_df,q,p_series,daily_warmup_series):
-#     len_training = int(2 / 3 * len(LogRV_df))
-    p = optimal_p(LogRV_df,q,p_series)
-    # p = optimal_p(LogRV_df,q,p_series,daily_warmup_series,len_training)
-    MSE_QL_optimal_p = predictlogRV(LogRV_df,q,p, n=p*100, stringin="Test")
-    MSE_optimal_p_avg = MSE_QL_optimal_p[0] # average MSE of 9 currency pairs
-    QL_optimal_p_avg = MSE_QL_optimal_p[1]  # average QL of 9 currency pairs
-    MSE_optimal_p_forAll = MSE_QL_optimal_p[2] # MSE of all 9 currency pairs
-    QL_optimal_p_forAll = MSE_QL_optimal_p[3]  # QL of all 9 currency pairs
+            # observed: ex.For the case of p = 3 is from index 103:1299 inclusive, 1197 elements total for warmup_period=100
+            observed = self.ymat[self.warmup_period:]
+            # now calculate MSE, QL and so forth
+            Performance_ = PerformanceMeasure()
+            MSE = Performance_.mean_se(observed=observed, prediction=prediction)
+            QL = Performance_.quasi_likelihood(observed=observed, prediction=prediction)
 
+            """ return a plot of the Squared error"""
+            label = str(filename) + " " + str(Timedt) + " SE (" + str(self.p) + ") VAR Volatility"
+            SE(observed, prediction, dates.iloc[(self.warmup_period+self.p):], function_method=label)
+            plt.title('VAR for p = '+str(self.p))
 
-    return MSE_QL_optimal_p,MSE_optimal_p_avg,QL_optimal_p_avg,MSE_optimal_p_forAll,QL_optimal_p_forAll
+        elif doLASSO_only==True:
+            print("Performing LASSO regression")
+            blah=lasso_regression(self.xmat,self.ymat, self.p, dates, alpha=np.linspace(0.0000000001,0.0000005,1e4))
+            MSE=[]
+            QL=[]
 
-# Test_Sample_MSE_QL(LogRV_df = np.log(daily_vol_combined), q=9, p_series=[1,2,3])
+        return MSE, QL

@@ -124,7 +124,7 @@ class FunctionCalls(object):
                 for count, elem in enumerate(var_q):
                     # KNNmethod = KNN(vol_data=input_data, k=elem, warmup=warmup, filename=filename, Timedt=stringinput)
                     VAR_q = VAR(p=elem, combined_vol=input_data, warmup_period=warmup)\
-                                .VAR_calc(Timedt=stringinput, dates=dates, filename=filename, doLASSO_only=LASSO)
+                                .VAR_calc(Timedt=stringinput, dates=dates, filename=filename)
                     import matplotlib.pyplot as plt
                     plt.show()
                     # the line below doesnt work at the moment...

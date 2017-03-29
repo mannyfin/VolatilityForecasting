@@ -24,10 +24,7 @@ def se_plot(y, y_fit, dates=None, function_method=None,mode=None):
     :param n: the num of trailing days. This is an [int]
     :return:
     """
-    # TODO: what is n? Add description to dates and function_method
 
-
-    # def se_plot(x, y, y_fit1):
     import numpy as np
     import pandas as pd
 
@@ -39,12 +36,11 @@ def se_plot(y, y_fit, dates=None, function_method=None,mode=None):
 
         # this line converts to df and transposes from cols to rows
         SE = pd.DataFrame(SE)
+        # adding dates
         SE=SE.join(dates.Date)
         SE=SE.set_index('Date')
-        plt.figure(se_plot.counter, figsize=(12,7))
-        # fix this line below to plot dates properly
-        SE.plot(kind='line').legend(loc='center left', bbox_to_anchor=(1,0.5))
 
+        SE.plot(kind='line', figsize=(12, 7)).legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
     else:
         SE = (y_fit.ravel() - y.ravel()) ** 2
@@ -53,26 +49,13 @@ def se_plot(y, y_fit, dates=None, function_method=None,mode=None):
         date_c = dates.copy()
         date_c = date_c.reset_index()
         ts2['Date'] = pd.DataFrame(date_c.Date)
-    # reshape will be deprecated. the line below is not necessarily the correct one.
-    # SE = (y_fit.values.reshape(len(y), 1) - y.values.reshape(len(y), 1)) ** 2
-    # plt.figure(n)
         plt.figure(se_plot.counter, figsize=(12,7))
-
-
-        # ts2 = pd.DataFrame({'SE': np.ravel(np.log(SE))})
-
-        # may need to reset index..
 
         dates = dates.reset_index()
         dates = dates.Date
 
-        #ts2['Date'] = pd.DataFrame(dates)
-
-
         plt.gcf()
         plt.plot(ts2['Date'].dropna(), ts2['SE'], label=function_method)
-
-
 
     plt.xlabel("Years")
     if mode is None: plt.ylabel("ln(SE)")
