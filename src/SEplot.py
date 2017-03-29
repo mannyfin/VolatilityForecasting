@@ -47,7 +47,7 @@ def se_plot(y, y_fit, dates=None, function_method=None, mode=None):
 
     else:
         SE = (y_fit.ravel() - y.ravel()) ** 2
-        if mode is None: ts2 = pd.DataFrame({'SE': np.ravel(np.log(SE))})
+        if mode is None: ts2 = pd.DataFrame({'SE': np.ravel(np.log(SE.astype('float64')))})
         else: ts2 = pd.DataFrame({'SE':np.ravel(SE)})
         date_c = dates.copy()
         date_c = date_c.reset_index()

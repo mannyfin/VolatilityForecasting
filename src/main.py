@@ -178,7 +178,7 @@ daily_ret_combined.reset_index(drop=True, inplace=True)
 
 # optimal_p,MSE_optimal_p_avg,QL_optimal_p_avg,MSE_optimal_p_forAll,QL_optimal_p_forAll =
 #       Test_Sample_MSE_QL(LogRV_df = np.log(daily_vol_combined), q=9, p_series=[1,2,3])
-p=3
+
 # xmat = [sum([daily_vol_combined[currency][i+p-1:i:-1].as_matrix().tolist()
         #       for currency in daily_vol_combined.keys()],[]) for i in range(len(daily_vol_combined)-p)]
 # use this below
@@ -196,5 +196,4 @@ VAR_test = fc.function_runs(dates=dates, filename='Combined Curr.', stringinput=
 #
 #
 plt.show()
-print("hi")
 print("Complete")

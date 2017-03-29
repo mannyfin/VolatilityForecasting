@@ -14,7 +14,7 @@ from garch_pq_model import GarchModel as gm
 # from arch_q_model import ArchModelQ as am
 import numpy as np
 import pandas as pd
-from KNNmethods import KNN
+# from KNNmethods import KNN
 from function_runs import *
 
 from VAR2 import *
@@ -158,7 +158,7 @@ for filenames in filenamesx:
     print("hi")
     # does not have zeroes
     daily_vol_combined = dailyvol_zeroes[(dailyvol_zeroes != 0).all(1)]
-    #  TODO fix dates, because there's an inconsistency.
+
     try:
         dates = daily_vol_combined.Date.loc[:, ~daily_vol_combined.Date.columns.duplicated()].reset_index()
         daily_vol_combined.drop('Date', axis=1, inplace=True)
@@ -199,7 +199,6 @@ for filenames in filenamesx:
 
     training_sample.reset_index(drop=True)
     training_date = training_sample["Date"]
-
 
     test_sample.reset_index(drop=True)
     test_date = test_sample['Date']

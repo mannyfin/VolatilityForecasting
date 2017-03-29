@@ -1,8 +1,9 @@
 from PastAsPresent import *
 from linear_regression import *
 from garch_pq_model import GarchModel as gm
-from KNN import KNN
+# from KNN import KNN
 import numpy as np
+from KNN import KNN
 import pandas as pd
 from res2df_list import *
 from VAR2 import *
