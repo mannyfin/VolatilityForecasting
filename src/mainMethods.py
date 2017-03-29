@@ -213,7 +213,7 @@ for filenames in filenamesx:
             for i in np.arange(2,21) ] for warmup in np.arange(100,200,500)]
         else:
             KNN_test.append(fc.function_runs(dates=test_date, filename=filenames, stringinput='Daily',warmup=100,input_data=test_sample,k_nn=[20]))
-
+plt.show()
 """plt.close()
 
 if len(KNN_training) != 1:
