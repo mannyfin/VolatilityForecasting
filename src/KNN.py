@@ -4,15 +4,16 @@ from Performance_Measure import *
 from SEplot import se_plot as SE
 
 
-def KNN(vol_data, k=[np.range(1,21)], warmup=400, filename=None, Timedt=None, method=[1,2]):
-    vol_data_input = vol_data['Volatility_Time']
-    dates = vol_data['Date']
+def KNN(vol_data, k=[np.arange(1,21)], warmup=400, filename=None, Timedt=None, method=[0]):
+    vol_data_input = vol_data.iloc[:,1]
+    dates = pd.Series(vol_data.Date)
 
     # This can be done more efficiently by moving k list directly into k
 
     knns = [[ks, m, KNNcalc(vol_data=vol_data_input, dates =dates, k=ks, warmup=warmup,filename=filename, Timedt=Timedt, method=m)]
     for m in method for ks in k]
-    return knns
+
+    return knns[0][2]
 
 
 def KNNcalc(vol_data, dates=None, k=1, warmup=400, filename=None, Timedt=None, method=1, m=0):
@@ -65,7 +66,7 @@ def KNNcalc(vol_data, dates=None, k=1, warmup=400, filename=None, Timedt=None, m
             else: train_set = vol_data[iterator:warmup+iterator]
             last_sample = train_set.iloc[- 1]
 
-            if method == 1:
+            if method == 1 or method == 0:
                 diff = last_sample - train_set
                 absdiff = diff.abs().sort_values()
                 kn_index = diff.reindex(absdiff.index)[1:k + 1].index + 1
@@ -102,12 +103,13 @@ def KNNcalc(vol_data, dates=None, k=1, warmup=400, filename=None, Timedt=None, m
     # now calculate MSE, QL and so forth
     Performance_ = PerformanceMeasure()
     MSE = Performance_.mean_se(observed=vol_data.iloc[warmup:], prediction=prediction)
-    QL = Performance_.quasi_likelihood(observed=vol_data.iloc[warmup:], prediction=prediction)
+    QL = 1.#Performance_.quasi_likelihood(observed=vol_data.iloc[warmup:], prediction=prediction)
 
-    label = str(filename) + " " + str(Timedt) + " SE (" + str(k) + ") KNN Volatility"
-    print(label)
+    label = str(filename.replace(".csv","")) #+ " " + str(Timedt) + " SE (" + str(k) + ") KNN Volatility"
+    #print(label,MSE)
     """ return a plot of the Squared error"""
-    SE(vol_data.iloc[warmup:], prediction, dates.iloc[warmup:], function_method=label)
+    SE(vol_data.iloc[warmup:], prediction, dates.iloc[warmup:], function_method=label)#, mode="no log")
+
 
     return MSE, QL
 
