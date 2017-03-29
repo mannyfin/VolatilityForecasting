@@ -17,12 +17,15 @@ def count(func):
 
 
 @count
-def se_plot(y, y_fit, dates=None, function_method=None,mode=None):
+def se_plot(y, y_fit, dates=None, function_method=None, mode=None):
     """
+    
     :param y: source data
-    :param y_fit: fit from LR
-    :param n: the num of trailing days. This is an [int]
-    :return:
+    :param y_fit:  fit from model
+    :param dates: dates for x axis plotting
+    :param function_method: MSE or QL
+    :param mode: choose between MSE or ln(MSE), if mode = None, then ylabel-> ln(MSE), else ylabel->MSE
+    :return: 
     """
 
     import numpy as np
