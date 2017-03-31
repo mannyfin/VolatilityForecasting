@@ -155,7 +155,7 @@ print("hi")
 # does not have zeroes
 daily_vol_combined = dailyvol_zeroes[(dailyvol_zeroes != 0).all(1)]
 #  TODO fix dates, because there's an inconsistency.
-dates = daily_vol_combined.Date.loc[:, ~daily_vol_combined.Date.columns.duplicated()]
+dates = daily_vol_combined.Date.loc[:, ~daily_vol_combined.Date.columns.duplicated()].reset_index()
 # drop duplicate columns
 daily_vol_combined.drop('Date', axis=1, inplace=True)
 daily_vol_combined=daily_vol_combined.apply(pd.to_numeric)
@@ -178,13 +178,14 @@ daily_ret_combined.reset_index(drop=True, inplace=True)
 
 # optimal_p,MSE_optimal_p_avg,QL_optimal_p_avg,MSE_optimal_p_forAll,QL_optimal_p_forAll =
 #       Test_Sample_MSE_QL(LogRV_df = np.log(daily_vol_combined), q=9, p_series=[1,2,3])
-p=3
+
 # xmat = [sum([daily_vol_combined[currency][i+p-1:i:-1].as_matrix().tolist()
         #       for currency in daily_vol_combined.keys()],[]) for i in range(len(daily_vol_combined)-p)]
 # use this below
 fc = FunctionCalls()
 # xmat = pd.DataFrame([sum([daily_vol_combined[currency].loc[i+p-1:i:-1].as_matrix().tolist() for currency in daily_vol_combined.keys()],[]) for i in range(len(daily_vol_combined)-p)])
-VAR_test = fc.function_runs(dates=dates, filename='Combined Curr.', stringinput='Daily', warmup=100, input_data=np.log(daily_vol_combined), var_q=[1, 2, 3])
+# VAR_test = fc.function_runs(dates=dates, filename='Combined Curr.', stringinput='Daily', warmup=909, input_data=np.log(daily_vol_combined), var_q=[1, 2, 3])
+VAR_test = fc.function_runs(dates=dates, filename='Combined Curr.', stringinput='Daily', warmup=909, input_data=np.log(daily_vol_combined), var_q=[1, 2, 3])
 
 
 # """Output multiple plots into a pdf file"""
@@ -194,5 +195,5 @@ VAR_test = fc.function_runs(dates=dates, filename='Combined Curr.', stringinput=
 # pdf.close()
 #
 #
-print("hi")
+plt.show()
 print("Complete")

@@ -1,8 +1,9 @@
 from PastAsPresent import *
 from linear_regression import *
 from garch_pq_model import GarchModel as gm
-from KNN import KNN
+# from KNN import KNN
 import numpy as np
+from KNN import KNN
 import pandas as pd
 from res2df_list import *
 from VAR2 import *
@@ -19,7 +20,7 @@ class FunctionCalls(object):
     def __init__(self):
         pass
 
-    def function_runs(self,dates=None, filename=None, stringinput=None, warmup=None,input_data=None, tnplus1=None, lr=None, arch=None, garchpq=None, k_nn=None, var_q=None):
+    def function_runs(self,dates=None, filename=None, stringinput=None, warmup=None,input_data=None, tnplus1=None, lr=None, arch=None, garchpq=None, k_nn=None, var_q=None, LASSO=False):
         output = list()
 
         """tnplus1"""
@@ -125,8 +126,8 @@ class FunctionCalls(object):
                     # KNNmethod = KNN(vol_data=input_data, k=elem, warmup=warmup, filename=filename, Timedt=stringinput)
                     VAR_q = VAR(p=elem, combined_vol=input_data, warmup_period=warmup)\
                                 .VAR_calc(Timedt=stringinput, dates=dates, filename=filename)
-
-
+                    import matplotlib.pyplot as plt
+                    plt.show()
                     # the line below doesnt work at the moment...
                     # output = result_to_df_list(list_name=output, method_result=VAR_q,
                     #                            index_value=['VAR_p='+str(elem)], column_value=['MSE', 'QL'])
