@@ -12,7 +12,6 @@ def Obtain_Traing_Test(df, Delta):
     :param Delta: Delta value which is a candidate of the optimized Delta
     :return: the training and test sample
     """
-    df['label'] = 0
 
     # labeling
     values1 = abs(df.vol_now - df.vol_past * (1 + Delta))
