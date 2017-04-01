@@ -18,7 +18,7 @@ from KNN import KNN
 from function_runs import *
 
 from VAR_new import *
-
+from SVM import test
 
 import matplotlib.backends.backend_pdf
 print("hi")
@@ -63,6 +63,12 @@ for count, name in enumerate(filenames):
 
     # dailyret_zeroes = pd.concat([dailyret_zeroes, daily_ret_zeroes['Return_Time']], axis=1)
     dailyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
+
+
+
+    "SVM"
+    svm = test(daily_ret,daily_vol_result)
+
 
     # weeklyret_zeroes = pd.concat([weeklyret_zeroes, weekly_ret_zeroes['Return_Time']], axis=1)
     # weeklyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
