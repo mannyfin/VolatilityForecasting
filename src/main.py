@@ -23,7 +23,7 @@ from returnvoldf import retvoldf
 import matplotlib.backends.backend_pdf
 print("hi")
 # filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-filenames = ['SEKUSD.csv','CADUSD.csv',  'CHFUSD.csv',]
+filenames = ['AUDUSD.csv']
 
 v = pd.read_csv('v.csv')
 v.columns = ['Date', 'value']
@@ -70,7 +70,7 @@ for count, name in enumerate(filenames):
 
 
 
-    "SVM"
+    "returnvoldf"
     preprocess = retvoldf(daily_ret, daily_vol_result, v)
 
 
