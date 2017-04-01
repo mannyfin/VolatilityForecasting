@@ -21,7 +21,7 @@ def Obtain_Traing_Test(df, Delta):
     condition = values1 < values2
     df.loc[condition, 'label'] = 1
     df.loc[~condition, 'label'] = -1"""
-    df = fc.forecaster_classifier(df ,fdict={'fxn':fc.volonly,'params':{'delta':Delta}})
+    df = fc.forecaster_classifier(df ,{'fxn':fc.volonly,'params':{'delta':Delta}})
 
     # seperate data into training and test samples
     condition2 = df.V == 1
