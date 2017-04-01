@@ -14,6 +14,7 @@ def forecaster_classifier(df,drop=False,**kwargs):
 			df['E'+vs] = df[kvs].rolling(v).mean().copy()
 			kwargs['params'][name] = 'E'+vs
 
+	df.dropna(inplace=True,axis=0)
 
 	df['label'] = df.apply(kwargs['fxn'],**kwargs['params'],axis=1)
 
@@ -46,17 +47,22 @@ def volandret(x,**kwargs):
 	:param params: dictionary of delta and vol_name and ret_name which is a candidate of the optimized Delta
 	:return: integer 1 or -1
 	"""
+
 	delta = kwargs['delta']
+	print(delta)
 	v_name = kwargs['vol_name']
+	print(v_name)
+	print(kwargs['ret_name'])
 	r_name = kwargs['ret_name']
-	upside1 = abs(x['vol_now'] - (x[v_name]+ x[ret_name])*(1+delta))
-	upside2 = abs(x['vol_now'] - (x[v_name]+ x[ret_name])*(1-delta))
+
+	upside1 = abs(x['vol_now'] - (x[v_name]+ x[r_name])*(1+delta))
+	upside2 = abs(x['vol_now'] - (x[v_name]+ x[r_name])*(1-delta))
 
 	upside = min(upside1,upside2)
 
 
-	downside1 = abs(x['vol_now'] - (x[v_name]*(1+delta)+ x[ret_name]*(1-delta)))
-	downside2 = abs(x['vol_now'] - (x[v_name]*(1-delta)+ x[ret_name]*(1+delta)))
+	downside1 = abs(x['vol_now'] - (x[v_name]*(1+delta)+ x[r_name]*(1-delta)))
+	downside2 = abs(x['vol_now'] - (x[v_name]*(1-delta)+ x[r_name]*(1+delta)))
 
 	downside = min(downside1,downside2)
 	return 1 if upside < downside else -1
