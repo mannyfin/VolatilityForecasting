@@ -21,7 +21,8 @@ def Obtain_Traing_Test(df, Delta):
     condition = values1 < values2
     df.loc[condition, 'label'] = 1
     df.loc[~condition, 'label'] = -1"""
-    df = fc.forecaster_classifier(df ,{'fxn':fc.volonly,'params':{'delta':Delta}})
+    df = fc.forecaster_classifier(df ,fxn=fc.volonly,params={'delta':Delta,
+                                                            'vol_name':'vol_past'})
 
     # seperate data into training and test samples
     condition2 = df.V == 1
@@ -120,4 +121,4 @@ def MSE_QL_SE_Test(preprocess,warmup, filename):
 
     return MSE_test, QL_test
 
-MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD")
+#MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD")
