@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def forecaster_classifier(df,**kwargs):
+def forecaster_classifier(df,drop=False,**kwargs):
 	"""
 	:param df: columns including Date, V(seperating training and test samples), ret_past, vol_past, vol_now, vol_future
 	:param Delta: Delta value which is a candidate of the optimized Delta
@@ -18,11 +18,12 @@ def forecaster_classifier(df,**kwargs):
 	df['label'] = df.apply(kwargs['fxn'],**kwargs['params'],axis=1)
 
 	#clean up
-	for name in ['Ep','Eq']: 
-		try: 
-			df.drop(name,axis=1,inplace=True)
-		except:
-			print((10*"# "+"Selected method does not require rolling averages"))
+	if drop:
+		for name in ['Ep','Eq']: 
+			try: 
+				df.drop(name,axis=1,inplace=True)
+			except:
+				print((10*"# "+"Selected method does not require rolling averages"))
 
 	return df
 
