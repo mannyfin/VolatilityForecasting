@@ -15,5 +15,7 @@ def retvoldf(ret, vol, v):
                          .shift(-1), vol.Volatility_Time[:].shift(-2)], axis=1).dropna().set_index('Date')
     preprocess = v.join(combined, how='inner')
     preprocess.columns = ['V', 'ret_past', 'vol_past', 'vol_now', 'vol_future']
+    # make label column
+    preprocess['label'] = 0
 
     return preprocess

@@ -14,7 +14,6 @@ from garch_pq_model import GarchModel as gm
 # from arch_q_model import ArchModelQ as am
 import numpy as np
 import pandas as pd
-from KNN import KNN
 from function_runs import *
 
 from VAR_new import *
