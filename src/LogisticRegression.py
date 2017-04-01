@@ -25,10 +25,8 @@ def Obtain_Traing_Test(df, Delta):
     condition2 = df.V == 1
     df_training = df.loc[condition2]
     df_training = df_training.reset_index()
-    df_training = df_training.drop('index', 1)
     df_test = df.loc[~condition2]
     df_test = df_test.reset_index()
-    df_test = df_test.drop('index', 1)
     return df_training, df_test
 
 
@@ -42,10 +40,9 @@ def PredictVol(df, Delta):
     # model fitting and making predictions
     Model = Logit()
     Model.fit(np.array(df.vol_past).reshape(len(df.vol_past),1), np.array(df.label))
-    predicted_y_t = Model.predict(np.array(df.vol_now).reshape(len(df.vol_now), 1))
-    df['predicted_y_t'] = pd.Series(predicted_y_t, index=df.index)
-    df['vol_future_pred'] = df.vol_now * (1 + Delta * df.predicted_y_t)
-    return df.vol_future_pred
+    predicted_y_t = Model.predict(df.vol_now[-1])
+    return predicted_y_t
+
 
 # Calculating MSE and QL for training/test sample
 def Logit_MSE_QL(df, Delta):
@@ -56,7 +53,10 @@ def Logit_MSE_QL(df, Delta):
     """
     # model fitting and making predictions
     Performance_ = PerformanceMeasure()
-    PredictedVol = PredictVol(df, Delta)
+
+    PredictedVol = []
+    # for i in range(...):
+    #     PredictedVol.append(PredictVol(df[:400 or 399 or 398+i], Delta))
     MSE = Performance_.mean_se(observed=df.vol_future, prediction=PredictedVol)
     QL = Performance_.quasi_likelihood(observed=df.vol_future, prediction=PredictedVol)
     return MSE, QL
@@ -72,13 +72,20 @@ def Optimize(df, DeltaSeq,filename):
     for i in range(len(DeltaSeq)):
         MSEs.append(Logit_MSE_QL(df, DeltaSeq[i])[0])
 
+    minIndex = MSEs.index(min(MSEs))
+    OptimalDelta = DeltaSeq[minIndex]
+
     plt.plot(DeltaSeq,MSEs)
     plt.xlabel('Delta')
     plt.ylabel('MSE')
     plt.title(str(filename)+' Delta against MSE')
     plt.show()
+    return OptimalDelta
+
+
 
 
 DeltaSeq = np.linspace(0.1, 1, num=10)
-
+optimalDelta = Optimize(df=preprocess, DeltaSeq,filename="AUDUSD.csv")
+PredictVol(df, optimalDelta)
 
