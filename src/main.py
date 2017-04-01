@@ -18,12 +18,16 @@ from KNN import KNN
 from function_runs import *
 
 from VAR_new import *
-from SVM import test
+from returnvoldf import retvoldf
 
 import matplotlib.backends.backend_pdf
 print("hi")
 # filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
 filenames = ['SEKUSD.csv','CADUSD.csv',  'CHFUSD.csv',]
+
+v = pd.read_csv('v.csv')
+v.columns = ['Date', 'value']
+v = v.set_index('Date')
 
 dailyvol_zeroes= pd.DataFrame()
 weeklyvol_zeroes= pd.DataFrame()
@@ -67,7 +71,7 @@ for count, name in enumerate(filenames):
 
 
     "SVM"
-    svm = test(daily_ret,daily_vol_result)
+    preprocess = retvoldf(daily_ret, daily_vol_result, v)
 
 
     # weeklyret_zeroes = pd.concat([weeklyret_zeroes, weekly_ret_zeroes['Return_Time']], axis=1)
