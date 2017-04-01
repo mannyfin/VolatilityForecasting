@@ -48,7 +48,7 @@ for count, name in enumerate(filenames):
     print("Running file: " + str(name))
     warmup_period = 400
     daily_vol_result, daily_ret, daily_vol_zeroes, daily_ret_zeroes = time_vol_calc(df_single_day)
-    # weekly_vol_result, weekly_ret, weekly_vol_zeroes, weekly_ret_zeroes = time_vol_calc(df_single_week)
+    weekly_vol_result, weekly_ret, weekly_vol_zeroes, weekly_ret_zeroes = time_vol_calc(df_single_week)
     # monthly_vol_result, monthly_ret, monthly_vol_zeroes, monthly_ret_zeroes = time_vol_calc(df_single_month)
 
     # be careful of the underscore, _
@@ -57,22 +57,26 @@ for count, name in enumerate(filenames):
     # dailyvol_zeroes = pd.concat([dailyvol_zeroes, daily_vol_zeroes['Volatility_Time']], axis=1)
 
     dailyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
-    # weeklyvol_zeroes = pd.concat([weeklyvol_zeroes, weekly_vol_zeroes['Volatility_Time']], axis=1)
-    # weeklyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
+    
+    weeklyvol_zeroes = pd.concat([weeklyvol_zeroes, weekly_vol_zeroes['Volatility_Time']], axis=1)
+    weeklyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
     # monthlyvol_zeroes = pd.concat([monthlyvol_zeroes, monthly_vol_zeroes['Volatility_Time']], axis=1)
     # monthlyvol_zeroes.rename(columns={'Volatility_Time': name}, inplace=True)
 
     # be careful of the underscore, _
     dailyret_zeroes = pd.concat([dailyret_zeroes, daily_ret_zeroes], axis=1)
+    weeklyret_zeroes = pd.concat([weeklyret_zeroes, weekly_ret_zeroes], axis=1)
 
     # dailyret_zeroes = pd.concat([dailyret_zeroes, daily_ret_zeroes['Return_Time']], axis=1)
     dailyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
+    weeklyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
+
 
 
 
     "returnvoldf"
     preprocess = retvoldf(daily_ret, daily_vol_result, v)
-
+    preprocess_w = retvoldf(weekly_ret,weekly_vol_result,v)
 
     # weeklyret_zeroes = pd.concat([weeklyret_zeroes, weekly_ret_zeroes['Return_Time']], axis=1)
     # weeklyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
