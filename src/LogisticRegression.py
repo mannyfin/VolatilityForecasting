@@ -116,7 +116,8 @@ def MSE_QL_SE_Test(preprocess,warmup, filename):
     """ return a plot of the squared error"""
     SE(observed, prediction, df_test.Date[warmup-2:])
     plt.title(str(filename) + '_Squared Error_Logistic Regression')
+    plt.show()
 
     return MSE_test, QL_test
 
-MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD.csv")
+MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD")
