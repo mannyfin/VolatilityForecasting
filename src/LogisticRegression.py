@@ -72,13 +72,20 @@ def Optimize(df, DeltaSeq,filename):
     for i in range(len(DeltaSeq)):
         MSEs.append(Logit_MSE_QL(df, DeltaSeq[i])[0])
 
+    minIndex = MSEs.index(min(MSEs))
+    OptimalDelta = DeltaSeq[minIndex]
+
     plt.plot(DeltaSeq,MSEs)
     plt.xlabel('Delta')
     plt.ylabel('MSE')
     plt.title(str(filename)+' Delta against MSE')
     plt.show()
+    return OptimalDelta
+
+
 
 
 DeltaSeq = np.linspace(0.1, 1, num=10)
-
+optimalDelta = Optimize(df=preprocess, DeltaSeq,filename="AUDUSD.csv")
+PredictVol(df, optimalDelta)
 
