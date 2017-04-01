@@ -18,11 +18,12 @@ from function_runs import *
 
 from VAR_new import *
 from returnvoldf import retvoldf
+import LogisticReg_SVM_KernelSVM as LR
 
 import matplotlib.backends.backend_pdf
 print("hi")
-# filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-filenames = ['AUDUSD.csv']
+filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+# filenames = ['AUDUSD.csv']
 
 v = pd.read_csv('v.csv')
 v.columns = ['Date', 'value']
@@ -76,6 +77,8 @@ for count, name in enumerate(filenames):
     "returnvoldf"
     preprocess = retvoldf(daily_ret, daily_vol_result, v)
     preprocess_w = retvoldf(weekly_ret,weekly_vol_result,v)
+
+    LR.Obtain_Traing_Test(preprocess, 0.2)
 
     # weeklyret_zeroes = pd.concat([weeklyret_zeroes, weekly_ret_zeroes['Return_Time']], axis=1)
     # weeklyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
