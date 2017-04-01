@@ -9,13 +9,17 @@ def forecaster_classifier(df,fdict={}):
     :param fdict: is a fxn with params
     :return: the df with value label
     """
-    for vs,kvs in zip(['p','q'],['vol_past','ret_past']):
+    for vs,kvs,name in zip(['p','q'],['vol_past','ret_past'],['vol_name','ret_name']):
     	if vs in fdict['params'].keys():
     		v = int(fdict['params'][vs])
     		df['E'+vs] = df[kvs].rolling(v).mean().copy()
+    		fdict['params'][name] = 'E'+vs
 
 
     df['label'] = df.apply(fdict['fxn'],args=(fdict['params']),axis=1)
+    
+    #clean up
+    for name in ['Ep','Eq']: df.drop(name,axis=1,inplace=True)
     
     return df
 
