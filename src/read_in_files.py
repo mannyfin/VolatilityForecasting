@@ -9,7 +9,13 @@ def read_in_files(file_names):
     import pandas as pd
     # change working directory to where the files are located
     # startdir = os.chdir(os.path.join(os.getenv('userprofile'), 'Desktop\\FIN580\\Homework1'))
-    os.chdir(os.path.join(os.getenv('userprofile'), 'Desktop/FIN580/Homework1/VolatilityForecasting/src'))
+    try: 
+        os.chdir(os.path.join(os.getenv('userprofile'), 'Desktop/FIN580/Homework1/VolatilityForecasting/src'))
+    except:
+        try:
+            os.chdir(os.getcwd())
+        except:
+            raise Error("No possible directory found")
 
     file1 = pd.read_csv(file_names)
     # file1 = pd.read_csv(file_names, parse_dates=[['Date', 'Time']])
