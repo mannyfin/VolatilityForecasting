@@ -15,10 +15,14 @@ def forecaster_classifier(df,**kwargs):
 			kwargs['params'][name] = 'E'+vs
 
 
-	df['label'] = df.apply(kwargs['fxn'],args=(kwargs['params'],),axis=1)
+	df['label'] = df.apply(kwargs['fxn'],**kwargs['params'],axis=1)
 
 	#clean up
-	for name in ['Ep','Eq']: df.drop(name,axis=1,inplace=True)
+	for name in ['Ep','Eq']: 
+		try: 
+			df.drop(name,axis=1,inplace=True)
+		except:
+			print((10*"# "+"Selected method does not require rolling averages"))
 
 	return df
 
