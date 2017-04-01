@@ -4,6 +4,7 @@ from Performance_Measure import *
 from SEplot import se_plot as SE
 import pandas as pd
 import matplotlib.pyplot as plt
+import forecaster_classifier as fc
 
 # adding labels and obtaining the training and the test samples for a given Delta value
 def Obtain_Traing_Test(df, Delta):
@@ -12,14 +13,15 @@ def Obtain_Traing_Test(df, Delta):
     :param Delta: Delta value which is a candidate of the optimized Delta
     :return: the training and test sample
     """
-    df['label'] = 0
+    """df['label'] = 0
 
     # labeling
     values1 = abs(df.vol_now - df.vol_past * (1 + Delta))
     values2 = abs(df.vol_now - df.vol_past * (1 - Delta))
     condition = values1 < values2
     df.loc[condition, 'label'] = 1
-    df.loc[~condition, 'label'] = -1
+    df.loc[~condition, 'label'] = -1"""
+    df = fc.forecaster_classifier(df ,fdict={'fxn':fc.volonly,'params':{'delta':Delta}})
 
     # seperate data into training and test samples
     condition2 = df.V == 1
