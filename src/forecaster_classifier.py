@@ -49,10 +49,7 @@ def volandret(x,**kwargs):
 	"""
 
 	delta = kwargs['delta']
-	print(delta)
 	v_name = kwargs['vol_name']
-	print(v_name)
-	print(kwargs['ret_name'])
 	r_name = kwargs['ret_name']
 
 	upside1 = abs(x['vol_now'] - (x[v_name]+ x[r_name])*(1+delta))
