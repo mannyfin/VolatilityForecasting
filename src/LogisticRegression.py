@@ -10,7 +10,7 @@ def Obtain_Traing_Test(df, Delta):
     """
     :param df: columns including Date, V(seperating training and test samples), ret_past, vol_past, vol_now, vol_future
     :param Delta: Delta value which is a candidate of the optimized Delta
-    :return: the predicted volatilities
+    :return: the training and test sample
     """
     df['label'] = 0
 
@@ -29,36 +29,47 @@ def Obtain_Traing_Test(df, Delta):
     df_test = df_test.reset_index()
     return df_training, df_test
 
-
 # volatility prediction for training/test sample
-def PredictVol(df, Delta):
+def PredictVol(preprocess, Delta, warmup, train_or_test):
     """
-    :param df: can be training or test sample
+    :param preprocess: the data frame created in main.py by returnvoldf.py
     :param Delta: Delta value which is a candidate of the optimized Delta
-    :return: the predicted volatilities
+    :param warmup: the number of observations as a warm-up period for the model
+    :param train_or_test: a string of "train" or "test"
+    :return: all predicted volatilities
     """
-    # model fitting and making predictions
-    Model = Logit()
-    Model.fit(np.array(df.vol_past).reshape(len(df.vol_past),1), np.array(df.label))
-    predicted_y_t = Model.predict(df.vol_now[-1])
-    return predicted_y_t
+    if train_or_test == "train":
+        df_whole = Obtain_Traing_Test(preprocess, Delta)[0]
+    elif train_or_test == "test":
+        df_whole = Obtain_Traing_Test(preprocess, Delta)[1]
 
+    PredictedVols = []
+    for i in range(np.shape(df_whole)[0]-warmup+2):
+        # model fitting and making predictions
+        df = df_whole[:warmup-2+i]
+        Model = Logit()
+        Model.fit(np.array(df.vol_now).reshape(len(df.vol_now),1), np.array(df.label))
+        predicted_y_t = Model.predict(df.vol_future.iloc[-1])
+        vol_future_pred = df.vol_future.iloc[-1] *(1+predicted_y_t*Delta)
+        PredictedVols.append(vol_future_pred)
+    vol_future_observed = df.vol_future[warmup-2:]
+    return PredictedVols, vol_future_observed
 
 # Calculating MSE and QL for training/test sample
-def Logit_MSE_QL(df, Delta):
+def Logit_MSE_QL(preprocess, Delta,warmup, train_or_test):
     """
-    :param df: can be training or test sample
+    :param preprocess: the data frame created in main.py by returnvoldf.py
     :param Delta: Delta value which is a candidate of the optimized Delta
+    :param warmup: the number of observations as a warm-up period for the model
+    :param train_or_test: a string of "train" or "test"
     :return: the MSE and QL to measure the prediction performance
     """
     # model fitting and making predictions
     Performance_ = PerformanceMeasure()
+    PredictedVols = PredictVol(preprocess, Delta, warmup, train_or_test)
 
-    PredictedVol = []
-    # for i in range(...):
-    #     PredictedVol.append(PredictVol(df[:400 or 399 or 398+i], Delta))
-    MSE = Performance_.mean_se(observed=df.vol_future, prediction=PredictedVol)
-    QL = Performance_.quasi_likelihood(observed=df.vol_future, prediction=PredictedVol)
+    MSE = Performance_.mean_se(observed=preprocess.vol_future, prediction=PredictedVols)
+    QL = Performance_.quasi_likelihood(observed=preprocess.vol_future, prediction=PredictedVols)
     return MSE, QL
 
 # optimize in the training sample
