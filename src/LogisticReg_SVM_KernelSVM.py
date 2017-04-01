@@ -13,7 +13,10 @@ def Obtain_Traing_Test(df, Delta):
     :param Delta: Delta value which is a candidate of the optimized Delta
     :return: the training and test sample
     """
+<<<<<<< HEAD:src/LogisticRegression.py
+=======
     """df['label'] = 0
+>>>>>>> b06c8b50019f6bb0ea5f27b1ace4463a5eb5f5fd:src/LogisticReg_SVM_KernelSVM.py
 
     # labeling
     values1 = abs(df.vol_now - df.vol_past * (1 + Delta))
