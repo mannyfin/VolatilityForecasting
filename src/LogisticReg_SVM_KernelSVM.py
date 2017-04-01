@@ -8,21 +8,39 @@ import forecaster_classifier as fc
 from sklearn.svm import SVC as SVC
 
 # adding labels and obtaining the training and the test samples for a given Delta value
-def Obtain_Traing_Test(df, Delta):
+def Obtain_Traing_Test(df, Delta, method, p=None,q=None):
     """
     :param df: columns including Date, V(seperating training and test samples), ret_past, vol_past, vol_now, vol_future
     :param Delta: Delta value which is a candidate of the optimized Delta
+    :param method: method = 1,2,3 or 4
     :return: the training and test sample
     """
     df['label'] = 0
 
     # labeling
-    values1 = abs(df.vol_now - df.vol_past * (1 + Delta))
-    values2 = abs(df.vol_now - df.vol_past * (1 - Delta))
-    condition = values1 < values2
-    df.loc[condition, 'label'] = 1
-    df.loc[~condition, 'label'] = -1
-    # df = fc.forecaster_classifier(df ,{'fxn':fc.volonly,'params':{'delta':Delta}})
+    # values1 = abs(df.vol_now - df.vol_past * (1 + Delta))
+    # values2 = abs(df.vol_now - df.vol_past * (1 - Delta))
+    # condition = values1 < values2
+    # df.loc[condition, 'label'] = 1
+    # df.loc[~condition, 'label'] = -1
+
+    if method==1:
+        df = fc.forecaster_classifier(df,fxn=fc.volonly,params={'delta': Delta,'vol_name':'vol_past'})
+
+    elif method==2:
+        df = fc.forecaster_classifier(df, fxn=fc.volandret, params={'delta': Delta,
+                                                                'vol_name': 'vol_past',
+                                                                'ret_name': 'ret_past'})
+    elif method==3:
+        df = fc.forecaster_classifier(df, fxn=fc.volonly, params={'delta': Delta,
+                                                                    'vol_name': 'vol_past',
+                                                                    'p': p})
+
+    elif method==4:
+        df = fc.forecaster_classifier(df, fxn=fc.volandret, params={'delta': Delta,
+                                                                    'vol_name': 'vol_past',
+                                                                    'p': p,
+                                                                    'q':q, 'ret_name':'ret_past'})
 
     # seperate data into training and test samples
     condition2 = df.V == 1
@@ -33,7 +51,7 @@ def Obtain_Traing_Test(df, Delta):
     return df_training, df_test
 
 # volatility prediction for training/test sample
-def PredictVol(preprocess, Delta, warmup, train_or_test, model, deg=None):
+def PredictVol(preprocess, Delta, warmup, train_or_test, model, deg=None, method=None, p=None,q=None):
     """
     :param preprocess: the data frame created in main.py by returnvoldf.py
     :param Delta: Delta value which is a candidate of the optimized Delta
@@ -44,9 +62,9 @@ def PredictVol(preprocess, Delta, warmup, train_or_test, model, deg=None):
     :return: all predicted volatilities
     """
     if train_or_test == "train":
-        df_whole = Obtain_Traing_Test(preprocess, Delta)[0]
+        df_whole = Obtain_Traing_Test(preprocess, Delta, method, p,q)[0]
     elif train_or_test == "test":
-        df_whole = Obtain_Traing_Test(preprocess, Delta)[1]
+        df_whole = Obtain_Traing_Test(preprocess, Delta, method, p,q)[1]
 
     # specify the type of the model
     if model =="LogisticRegression":
@@ -74,7 +92,7 @@ def PredictVol(preprocess, Delta, warmup, train_or_test, model, deg=None):
     return pd.Series(PredictedVols), pd.Series(vol_future_observed)
 
 # Calculating MSE and QL for training/test sample
-def MSE_QL(preprocess, Delta,warmup, train_or_test, model, deg=None):
+def MSE_QL(preprocess, Delta,warmup, train_or_test, model, deg=None, method=None, p=None,q=None):
     """
     :param preprocess: the data frame created in main.py by returnvoldf.py
     :param Delta: Delta value which is a candidate of the optimized Delta
@@ -84,7 +102,7 @@ def MSE_QL(preprocess, Delta,warmup, train_or_test, model, deg=None):
     """
     # model fitting and making predictions
     Performance_ = PerformanceMeasure()
-    PredictedVols = PredictVol(preprocess, Delta, warmup, train_or_test, model, deg)
+    PredictedVols = PredictVol(preprocess, Delta, warmup, train_or_test, model, deg, method, p,q)
     prediction = PredictedVols[0]
     observed  = PredictedVols[1]
 
@@ -93,7 +111,7 @@ def MSE_QL(preprocess, Delta,warmup, train_or_test, model, deg=None):
     return MSE, QL,prediction,observed
 
 # optimize in the training sample
-def Optimize(preprocess, DeltaSeq,warmup, filename, model, deg=None):
+def Optimize(preprocess, DeltaSeq,warmup, filename, model, deg=None, method=None, p=None,q=None):
     """
     :param preprocess: the data frame created in main.py by returnvoldf.py
     :param DeltaSeq: a sequence of Delta values
@@ -103,7 +121,7 @@ def Optimize(preprocess, DeltaSeq,warmup, filename, model, deg=None):
     MSEs = []
     train_or_test = "train"
     for i in range(len(DeltaSeq)):
-        MSEOutput = MSE_QL(preprocess, DeltaSeq[i], warmup, train_or_test, model, deg)[0]
+        MSEOutput = MSE_QL(preprocess, DeltaSeq[i], warmup, train_or_test, model, deg, method, p,q)[0]
         MSEs.append(MSEOutput)
 
     minIndex = MSEs.index(min(MSEs))
@@ -118,12 +136,12 @@ def Optimize(preprocess, DeltaSeq,warmup, filename, model, deg=None):
 
 
 # measure the prediction performance in the test sample
-def MSE_QL_SE_Test(preprocess,warmup, filename, model, deg=None):
+def MSE_QL_SE_Test(preprocess,warmup, filename, model, deg=None, method=None, p=None,q=None):
     DeltaSeq = np.exp(np.linspace(-10, -2, num=100))
     OptimalDelta = Optimize(preprocess, DeltaSeq,warmup, filename, model, deg)
 
     train_or_test = "test"
-    Output = MSE_QL(preprocess, OptimalDelta,warmup, train_or_test, model, deg)
+    Output = MSE_QL(preprocess, OptimalDelta,warmup, train_or_test, model, deg,method, p,q)
     MSE_test = Output[0]
     QL_test = Output[1]
     prediction  = Output[2]
@@ -138,8 +156,8 @@ def MSE_QL_SE_Test(preprocess,warmup, filename, model, deg=None):
     return MSE_test, QL_test
 
 #model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
-TestResult_Logit = MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD", model="LogisticRegression")
-TestResult_SVM = MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD", model="SVM")
-TestResult_KernelSVM_poly = MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD", model="KernelSVM_poly", deg=3)
-TestResult_KernelSVM_rbf = MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD", model="KernelSVM_rbf")
-TestResult_KernelSVM_sigmoid = MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD", model="KernelSVM_sigmoid")
+TestResult_Logit = MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD", model="LogisticRegression",method=4, p=3,q=2)
+TestResult_SVM = MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD", model="SVM",method=4, p=3,q=2)
+TestResult_KernelSVM_poly = MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD", model="KernelSVM_poly", deg=3,method=4, p=3,q=2)
+TestResult_KernelSVM_rbf = MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD", model="KernelSVM_rbf",method=4, p=3,q=2)
+TestResult_KernelSVM_sigmoid = MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD", model="KernelSVM_sigmoid",method=4, p=3,q=2)
