@@ -163,7 +163,7 @@ def MSE_QL_SE_Test(preprocess,DeltaSeq,warmup_test, filename, model, deg=None, f
     :return: 
     """
     warmup_train = 400
-    OptimalDelta = Optimize(preprocess, DeltaSeq,warmup_train, filename, model, deg)
+    OptimalDelta = Optimize(preprocess, DeltaSeq,warmup_train, filename, model, deg, forecaster=forecaster)
 
     train_or_test = "test"
     Output = MSE_QL(preprocess, OptimalDelta,warmup_test, train_or_test, model, deg,forecaster, p,q)
