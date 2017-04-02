@@ -137,14 +137,21 @@ def Optimize(preprocess, DeltaSeq,warmup, filename, model, deg=None, forecaster=
     for i in range(len(DeltaSeq)):
         MSEOutput = MSE_QL(preprocess, DeltaSeq[i], warmup, train_or_test, model, deg, forecaster, p,q)[0]
         MSEs.append(MSEOutput)
-
+    # find the index of the minimum MSE
     minIndex = MSEs.index(min(MSEs))
     OptimalDelta = DeltaSeq[minIndex]
+    # Find the index of min p and q based on line 142
 
+    """
+    # plot of MSE vs log Delta
+    # make different plots depending on different forecaster method. i.e. for forecaster=1, plot mse vs log delta
+    # for forecaster = 3, plot mse vs delta vs p
+    # for forecaster = 4, plot mse vs delta vs p vs q
+    """
     plt.plot(np.log(DeltaSeq),MSEs)
     plt.xlabel('log(Delta)')
     plt.ylabel('MSE')
-    plt.title(str(filename)+' MSE against Delta')
+    plt.title(str(filename)+' MSE against log(Delta)')
     plt.show()
     return OptimalDelta
 

@@ -79,9 +79,14 @@ for count, name in enumerate(filenames):
 
     # model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
     DeltaSeq = np.exp(np.linspace(-10, -2, num=100))
-
+    """
+    for forecaster = 1, no p and q, try different deg for KernalSVM poly     # try deg = 2,3, 4, 5
+    for forecaster = 2, no p and q, try different deg for KernalSVM poly     # try deg = 2,3, 4, 5
+    for forecaster = 3, p=3,5,10 and NO q, try different deg for KernalSVM poly     # try deg = 2,3, 4, 5.
+    for forecaster = 4, p=3,5,10 and q=3,5,10, try different deg for KernalSVM poly     # try deg = 2,3, 4, 5.
+    """
     TestResult_Logit = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=100, filename="AUDUSD", model="LogisticRegression",
-                                      forecaster=1)
+                                      forecaster=1, )
     TestResult_SVM = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename="AUDUSD", model="SVM",
                                     forecaster=4, p=3, q=2)
     TestResult_KernelSVM_poly = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename="AUDUSD", model="KernelSVM_poly", deg=3,
