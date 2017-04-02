@@ -120,7 +120,7 @@ def MSE_QL(preprocess, Delta,warmup, train_or_test, model, deg=None, forecaster=
     return MSE, QL,prediction,observed
 
 # optimize in the training sample
-def Optimize(preprocess, DeltaSeq,warmup, filename, model, deg=None, forecaster=None, p=None,q=None):
+def Optimize(preprocess, DeltaSeq,warmup, filename, model, deg=None, forecaster=None, p=None,q=None, stringinput=None):
     """
     :param preprocess: the data frame created in main.py by returnvoldf.py
     :param DeltaSeq: a sequence of Delta values
@@ -140,24 +140,25 @@ def Optimize(preprocess, DeltaSeq,warmup, filename, model, deg=None, forecaster=
     # find the index of the minimum MSE
     minIndex = MSEs.index(min(MSEs))
     OptimalDelta = DeltaSeq[minIndex]
-    # Find the index of min p and q based on line 142
+    # TODO Find the index of min p and q based on line 142
 
     """
     # plot of MSE vs log Delta
-    # make different plots depending on different forecaster method. i.e. for forecaster=1, plot mse vs log delta
-    # for forecaster = 3, plot mse vs delta vs p
-    # for forecaster = 4, plot mse vs delta vs p vs q
+    # make different plots depending on different forecaster method. i.e. for forecaster=1 or 2 plot mse vs log(delta)
+    # for forecaster = 3, plot mse vs log(delta) vs p
+    # for forecaster = 4, plot mse vs log(delta) vs p vs q
     """
     plt.plot(np.log(DeltaSeq),MSEs)
     plt.xlabel('log(Delta)')
     plt.ylabel('MSE')
-    plt.title(str(filename)+' MSE against log(Delta)')
+    plt.title(str(filename)+ ' ' + str(stringinput)+' MSE against log(Delta)')
     plt.show()
+    # save the figs
     return OptimalDelta
 
 
 # measure the prediction performance in the test sample
-def MSE_QL_SE_Test(preprocess,DeltaSeq,warmup_test, filename, model, deg=None, forecaster=None, p=None,q=None):
+def MSE_QL_SE_Test(preprocess,DeltaSeq,warmup_test, filename, model, deg=None, forecaster=None, p=None,q=None,stringinput=None):
     """
     :param preprocess: the data frame created in main.py by returnvoldf.py
     :param DeltaSeq: a sequence of Delta values
@@ -170,8 +171,9 @@ def MSE_QL_SE_Test(preprocess,DeltaSeq,warmup_test, filename, model, deg=None, f
     :return: 
     """
     warmup_train = 400
-    OptimalDelta = Optimize(preprocess, DeltaSeq,warmup_train, filename, model, deg, forecaster=forecaster)
-
+    # train the model
+    OptimalDelta = Optimize(preprocess, DeltaSeq,warmup_train, filename, model, deg, forecaster=forecaster,stringinput=stringinput)
+    # test the model
     train_or_test = "test"
     Output = MSE_QL(preprocess, OptimalDelta,warmup_test, train_or_test, model, deg,forecaster, p,q)
     MSE_test = Output[0]
@@ -181,8 +183,9 @@ def MSE_QL_SE_Test(preprocess,DeltaSeq,warmup_test, filename, model, deg=None, f
 
     df_test = Obtain_Traing_Test(preprocess, OptimalDelta, forecaster, p,q)[1]
     """ return a plot of the squared error"""
-    SE(observed, prediction, df_test.Date[warmup-2:])
-    plt.title(str(filename) + '_Squared Error_Logistic Regression')
+    SE(observed, prediction, df_test.Date[warmup_test-2:])
+    plt.title(str(filename) + ' ' +str(stringinput) + '_Squared Error_Logistic Regression')
+    # save the figs
     plt.show()
 
     return MSE_test, QL_test

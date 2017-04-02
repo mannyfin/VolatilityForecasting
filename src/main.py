@@ -74,6 +74,7 @@ for count, name in enumerate(filenames):
 
 
     "returnvoldf"
+    "We want to test daily and weekly data"
     preprocess = retvoldf(daily_ret, daily_vol_result, v)
     preprocess_w = retvoldf(weekly_ret,weekly_vol_result,v)
 
@@ -84,17 +85,20 @@ for count, name in enumerate(filenames):
     for forecaster = 2, no p and q, try different deg for KernalSVM poly     # try deg = 2,3, 4, 5
     for forecaster = 3, p=3,5,10 and NO q, try different deg for KernalSVM poly     # try deg = 2,3, 4, 5.
     for forecaster = 4, p=3,5,10 and q=3,5,10, try different deg for KernalSVM poly     # try deg = 2,3, 4, 5.
+    
+    For weekly data, reduce warmup in MSE_QL_SE_Test from 400 to another, and warmup_test from 100 to another value
+    passed daily or weekly into file
     """
-    TestResult_Logit = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=100, filename="AUDUSD", model="LogisticRegression",
-                                      forecaster=1, )
-    TestResult_SVM = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename="AUDUSD", model="SVM",
-                                    forecaster=4, p=3, q=2)
-    TestResult_KernelSVM_poly = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename="AUDUSD", model="KernelSVM_poly", deg=3,
-                                               forecaster=4, p=3, q=2)
-    TestResult_KernelSVM_rbf = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename="AUDUSD", model="KernelSVM_rbf",
-                                              forecaster=4, p=3, q=2)
-    TestResult_KernelSVM_sigmoid = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename="AUDUSD", model="KernelSVM_sigmoid",
-                                                  forecaster=4, p=3, q=2)
+    TestResult_Logit = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=100, filename=name, model="LogisticRegression",
+                                      forecaster=1, p=None, q=None, stringinput='Daily')
+    TestResult_SVM = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename=name, model="SVM",
+                                    forecaster=4, p=3, q=2, stringinput='Daily')
+    TestResult_KernelSVM_poly = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename=name, model="KernelSVM_poly", deg=3,
+                                               forecaster=4, p=3, q=2, stringinput='Daily')
+    TestResult_KernelSVM_rbf = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename=name, model="KernelSVM_rbf",
+                                              forecaster=4, p=3, q=2, stringinput='Daily')
+    TestResult_KernelSVM_sigmoid = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename=name, model="KernelSVM_sigmoid",
+                                                  forecaster=4, p=3, q=2, stringinput='Daily')
 
 
     # weeklyret_zeroes = pd.concat([weeklyret_zeroes, weekly_ret_zeroes['Return_Time']], axis=1)
@@ -215,10 +219,9 @@ daily_ret_combined.reset_index(drop=True, inplace=True)
 # xmat = [sum([daily_vol_combined[currency][i+p-1:i:-1].as_matrix().tolist()
         #       for currency in daily_vol_combined.keys()],[]) for i in range(len(daily_vol_combined)-p)]
 # use this below
-fc = FunctionCalls()
-# xmat = pd.DataFrame([sum([daily_vol_combined[currency].loc[i+p-1:i:-1].as_matrix().tolist() for currency in daily_vol_combined.keys()],[]) for i in range(len(daily_vol_combined)-p)])
+
+# fc = FunctionCalls()
 # VAR_test = fc.function_runs(dates=dates, filename='Combined Curr.', stringinput='Daily', warmup=909, input_data=np.log(daily_vol_combined), var_q=[1, 2, 3])
-VAR_test = fc.function_runs(dates=dates, filename='Combined Curr.', stringinput='Daily', warmup=909, input_data=np.log(daily_vol_combined), var_q=[1, 2, 3])
 
 
 # """Output multiple plots into a pdf file"""
