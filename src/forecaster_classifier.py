@@ -1,32 +1,34 @@
 import pandas as pd
 
 
-def forecaster_classifier(df,drop=False,**kwargs):
+def forecaster_classifier(df_out,drop=False,**kwargs):
 	"""
 	:param df: columns including Date, V(seperating training and test samples), ret_past, vol_past, vol_now, vol_future
 	:param Delta: Delta value which is a candidate of the optimized Delta
 	:param kwargs: is a fxn with params
 	:return: the df with value label
 	"""
+
+	# TODO fix bug here for SVM. the len of df changes
 	for vs,kvs,name in zip(['p','q'],['vol_past','ret_past'],['vol_name','ret_name']):
 		if vs in kwargs['params'].keys():
 			v = int(kwargs['params'][vs])
-			df['E'+vs] = df[kvs].rolling(v).mean().copy()
+			df_out['E'+vs] = df_out[kvs].rolling(v).mean().copy()
 			kwargs['params'][name] = 'E'+vs
 
-	df.dropna(inplace=True,axis=0)
+	df_out.dropna(inplace=True,axis=0)
 
-	df['label'] = df.apply(kwargs['fxn'],**kwargs['params'],axis=1)
+	df_out['label'] = df_out.apply(kwargs['fxn'],**kwargs['params'],axis=1)
 
 	#clean up
 	if drop:
 		for name in ['Ep','Eq']: 
 			try: 
-				df.drop(name,axis=1,inplace=True)
+				df_out.drop(name,axis=1,inplace=True)
 			except:
 				print((10*"# "+"Selected method does not require rolling averages"))
 
-	return df
+	return df_out
 
 def volonly(x,**kwargs):
 	"""

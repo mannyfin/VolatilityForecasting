@@ -52,6 +52,8 @@ def se_plot(y, y_fit, dates=None, function_method=None, mode=None):
         date_c = dates.copy()
         date_c = date_c.reset_index()
         ts2['Date'] = pd.DataFrame(date_c.Date)
+        # TODO FIX THIS COUNTER ISSUE
+        se_plot.counter = 1
         plt.figure(se_plot.counter, figsize=(12,7))
 
         dates = dates.reset_index()

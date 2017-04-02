@@ -52,7 +52,7 @@ def Obtain_Traing_Test(df, Delta, forecaster, p=None,q=None):
     return df_training, df_test
 
 # volatility prediction for training/test sample
-def PredictVol(preprocess, Delta, warmup, train_or_test, model, deg=None, forecaster=None, p=None,q=None):
+def PredictVol(preprocess_predict, Delta, warmup, train_or_test, model, deg=None, forecaster=None, p=None,q=None):
     """
     :param preprocess: the data frame created in main.py by returnvoldf.py
     :param Delta: Delta value which is a candidate of the optimized Delta
@@ -66,9 +66,9 @@ def PredictVol(preprocess, Delta, warmup, train_or_test, model, deg=None, foreca
     :return: all predicted volatilities
     """
     if train_or_test == "train":
-        df_whole = Obtain_Traing_Test(preprocess, Delta, forecaster, p,q)[0]
+        df_whole = Obtain_Traing_Test(preprocess_predict, Delta, forecaster, p,q)[0]
     elif train_or_test == "test":
-        df_whole = Obtain_Traing_Test(preprocess, Delta, forecaster, p,q)[1]
+        df_whole = Obtain_Traing_Test(preprocess_predict, Delta, forecaster, p,q)[1]
 
     # specify the type of the model
     if model =="LogisticRegression":
@@ -95,8 +95,9 @@ def PredictVol(preprocess, Delta, warmup, train_or_test, model, deg=None, foreca
     vol_future_observed = df_whole.vol_future[warmup-2:]
     return pd.Series(PredictedVols), pd.Series(vol_future_observed)
 
+
 # Calculating MSE and QL for training/test sample
-def MSE_QL(preprocess, Delta,warmup, train_or_test, model, deg=None, forecaster=None, p=None,q=None):
+def MSE_QL(preprocess_data_input, Delta,warmup, train_or_test, model, deg=None, forecaster=None, p=None,q=None):
     """
     :param preprocess: the data frame created in main.py by returnvoldf.py
     :param Delta: Delta value which is a candidate of the optimized Delta
@@ -111,7 +112,7 @@ def MSE_QL(preprocess, Delta,warmup, train_or_test, model, deg=None, forecaster=
     """
     # model fitting and making predictions
     Performance_ = PerformanceMeasure()
-    PredictedVols = PredictVol(preprocess, Delta, warmup, train_or_test, model, deg, forecaster, p,q)
+    PredictedVols = PredictVol(preprocess_data_input, Delta, warmup, train_or_test, model, deg, forecaster, p,q)
     prediction = PredictedVols[0]
     observed  = PredictedVols[1]
 
@@ -119,8 +120,9 @@ def MSE_QL(preprocess, Delta,warmup, train_or_test, model, deg=None, forecaster=
     QL = Performance_.quasi_likelihood(observed.astype('float64').astype('float64'), prediction.astype('float64'))
     return MSE, QL,prediction,observed
 
+
 # optimize in the training sample
-def Optimize(preprocess, DeltaSeq,warmup, filename, model, deg=None, forecaster=None, p=None,q=None, stringinput=None):
+def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, forecaster=None, p=None,q=None, stringinput=None):
     """
     :param preprocess: the data frame created in main.py by returnvoldf.py
     :param DeltaSeq: a sequence of Delta values
@@ -135,7 +137,7 @@ def Optimize(preprocess, DeltaSeq,warmup, filename, model, deg=None, forecaster=
     MSEs = []
     train_or_test = "train"
     for i in range(len(DeltaSeq)):
-        MSEOutput = MSE_QL(preprocess, DeltaSeq[i], warmup, train_or_test, model, deg, forecaster, p,q)[0]
+        MSEOutput = MSE_QL(preprocess_data, DeltaSeq[i], warmup, train_or_test, model, deg, forecaster, p,q)[0]
         MSEs.append(MSEOutput)
     # find the index of the minimum MSE
     minIndex = MSEs.index(min(MSEs))
@@ -159,7 +161,7 @@ def Optimize(preprocess, DeltaSeq,warmup, filename, model, deg=None, forecaster=
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' MSE against log(Delta) p=' + str(p)
     if forecaster == 4:
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' MSE against log(Delta) p=' \
-                + str(p) + 'q= ' + str(q)
+                + str(p) + ' q=' + str(q)
 
     plt.title(title)
     # save the figs
@@ -170,7 +172,7 @@ def Optimize(preprocess, DeltaSeq,warmup, filename, model, deg=None, forecaster=
 
 
 # measure the prediction performance in the test sample
-def MSE_QL_SE_Test(preprocess,DeltaSeq,warmup_test, filename, model, deg=None, forecaster=None, p=None,q=None,stringinput=None):
+def MSE_QL_SE_Test(preprocess_info,DeltaSeq,warmup_test, filename, model, deg=None, forecaster=None, p=None,q=None,stringinput=None):
     """
     :param preprocess: the data frame created in main.py by returnvoldf.py
     :param DeltaSeq: a sequence of Delta values
@@ -184,11 +186,11 @@ def MSE_QL_SE_Test(preprocess,DeltaSeq,warmup_test, filename, model, deg=None, f
     """
     warmup_train = 400
     # train the model
-    OptimalDelta = Optimize(preprocess, DeltaSeq,warmup_train, filename, model, deg, p=p, q=q, forecaster=forecaster,
+    OptimalDelta = Optimize(preprocess_info, DeltaSeq,warmup_train, filename, model, deg, p=p, q=q, forecaster=forecaster,
                             stringinput=stringinput)
     # test the model
     train_or_test = "test"
-    Output = MSE_QL(preprocess, OptimalDelta, warmup_test, train_or_test, model, deg,forecaster, p,q)
+    Output = MSE_QL(preprocess_info, OptimalDelta, warmup_test, train_or_test, model, deg,forecaster, p,q)
     MSE_test = Output[0]
     QL_test = Output[1]
     print('MSE_test is ' + str(MSE_test))
@@ -196,15 +198,15 @@ def MSE_QL_SE_Test(preprocess,DeltaSeq,warmup_test, filename, model, deg=None, f
     prediction = Output[2]
     observed = Output[3]
 
-    df_test = Obtain_Traing_Test(preprocess, OptimalDelta, forecaster, p,q)[1]
+    df_test = Obtain_Traing_Test(preprocess_info, OptimalDelta, forecaster, p,q)[1]
     """ return a plot of the squared error"""
     SE(observed, prediction, df_test.Date[warmup_test-2:])
     if forecaster == 1 or 2:
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model)+'_Squared Error_Logistic Regression'
     # save the figs
-    if forecaster == 3:
+    elif forecaster == 3:
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + '_Squared Error_Logistic Regression p=' + str(p)
-    if forecaster == 4:
+    elif forecaster == 4:
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + '_Squared Error_Logistic Regression p=' + \
                 str(p) + ' q='+str(q)
 
