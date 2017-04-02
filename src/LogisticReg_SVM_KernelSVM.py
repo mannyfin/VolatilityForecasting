@@ -14,10 +14,9 @@ def Obtain_Traing_Test(df, Delta, forecaster, p=None,q=None):
     :param Delta: Delta value which is a candidate of the optimized Delta
     :param forecaster: forecaster = 1,2,3 or 4
     :param p: p is a parameter in forecaster 3 and forecaster 4 
+    :param q: q is a parameter in forecaster 4
     :return: the training and test sample
     """
-    df['label'] = 0
-
     # labeling
     # values1 = abs(df.vol_now - df.vol_past * (1 + Delta))
     # values2 = abs(df.vol_now - df.vol_past * (1 - Delta))
@@ -26,7 +25,8 @@ def Obtain_Traing_Test(df, Delta, forecaster, p=None,q=None):
     # df.loc[~condition, 'label'] = -1
 
     if forecaster==1:
-        df = fc.forecaster_classifier(df,fxn=fc.volonly,params={'delta': Delta,'vol_name':'vol_past'})
+        params = {'delta': Delta, 'vol_name': 'vol_past'}
+        df = fc.forecaster_classifier(df,fxn=fc.volonly,params=params)
 
     elif forecaster==2:
         df = fc.forecaster_classifier(df, fxn=fc.volandret, params={'delta': Delta,
@@ -60,6 +60,9 @@ def PredictVol(preprocess, Delta, warmup, train_or_test, model, deg=None, foreca
     :param train_or_test: a string of "train" or "test"
     :param model: model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
     :param deg: degree of the Kernel SVM when kernel="poly"
+    :param forecaster: forecaster = 1,2,3 or 4
+    :param p: p is a parameter in forecaster 3 and forecaster 4 
+    :param q: q is a parameter in forecaster 4
     :return: all predicted volatilities
     """
     if train_or_test == "train":
@@ -99,6 +102,11 @@ def MSE_QL(preprocess, Delta,warmup, train_or_test, model, deg=None, forecaster=
     :param Delta: Delta value which is a candidate of the optimized Delta
     :param warmup: the number of observations as a warm-up period for the model, which is 400 in our case
     :param train_or_test: a string of "train" or "test"
+    :param model: model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
+    :param deg: degree of the Kernel SVM when kernel="poly"
+    :param forecaster: forecaster = 1,2,3 or 4
+    :param p: p is a parameter in forecaster 3 and forecaster 4 
+    :param q: q is a parameter in forecaster 4
     :return: the MSE and QL to measure the prediction performance
     """
     # model fitting and making predictions
@@ -117,6 +125,11 @@ def Optimize(preprocess, DeltaSeq,warmup, filename, model, deg=None, forecaster=
     :param preprocess: the data frame created in main.py by returnvoldf.py
     :param DeltaSeq: a sequence of Delta values
     :param warmup: the number of observations as a warm-up period for the model, which is 400 in our case
+    :param model: model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
+    :param deg: degree of the Kernel SVM when kernel="poly"
+    :param forecaster: forecaster = 1,2,3 or 4
+    :param p: p is a parameter in forecaster 3 and forecaster 4 
+    :param q: q is a parameter in forecaster 4
     :return: the optimized Delta
     """
     MSEs = []
@@ -137,18 +150,29 @@ def Optimize(preprocess, DeltaSeq,warmup, filename, model, deg=None, forecaster=
 
 
 # measure the prediction performance in the test sample
-def MSE_QL_SE_Test(preprocess,warmup, filename, model, deg=None, forecaster=None, p=None,q=None):
-    DeltaSeq = np.exp(np.linspace(-10, -2, num=100))
-    OptimalDelta = Optimize(preprocess, DeltaSeq,warmup, filename, model, deg)
+def MSE_QL_SE_Test(preprocess,DeltaSeq,warmup_test, filename, model, deg=None, forecaster=None, p=None,q=None):
+    """
+    :param preprocess: the data frame created in main.py by returnvoldf.py
+    :param DeltaSeq: a sequence of Delta values
+    :param warmup: the number of observations as a warm-up period for the model, which is 400 in our case
+    :param model: model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
+    :param deg: degree of the Kernel SVM when kernel="poly"
+    :param forecaster: forecaster = 1,2,3 or 4
+    :param p: p is a parameter in forecaster 3 and forecaster 4 
+    :param q: q is a parameter in forecaster 4
+    :return: 
+    """
+    warmup_train = 400
+    OptimalDelta = Optimize(preprocess, DeltaSeq,warmup_train, filename, model, deg)
 
     train_or_test = "test"
-    Output = MSE_QL(preprocess, OptimalDelta,warmup, train_or_test, model, deg,forecaster, p,q)
+    Output = MSE_QL(preprocess, OptimalDelta,warmup_test, train_or_test, model, deg,forecaster, p,q)
     MSE_test = Output[0]
     QL_test = Output[1]
     prediction  = Output[2]
     observed = Output[3]
 
-    df_test = Obtain_Traing_Test(preprocess, OptimalDelta)[1]
+    df_test = Obtain_Traing_Test(preprocess, OptimalDelta, forecaster, p,q)[1]
     """ return a plot of the squared error"""
     SE(observed, prediction, df_test.Date[warmup-2:])
     plt.title(str(filename) + '_Squared Error_Logistic Regression')
@@ -156,9 +180,13 @@ def MSE_QL_SE_Test(preprocess,warmup, filename, model, deg=None, forecaster=None
 
     return MSE_test, QL_test
 
-#model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
-TestResult_Logit = MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD", model="LogisticRegression",forecaster=4, p=3,q=2)
-TestResult_SVM = MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD", model="SVM",forecaster=4, p=3,q=2)
-TestResult_KernelSVM_poly = MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD", model="KernelSVM_poly", deg=3,forecaster=4, p=3,q=2)
-TestResult_KernelSVM_rbf = MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD", model="KernelSVM_rbf",forecaster=4, p=3,q=2)
-TestResult_KernelSVM_sigmoid = MSE_QL_SE_Test(preprocess,warmup=100, filename="AUDUSD", model="KernelSVM_sigmoid",forecaster=4, p=3,q=2)
+    # DeltaSeq = np.exp(np.linspace(-10, -2, num=100))
+    #
+    # TestResult_Logit = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=100, filename="AUDUSD", model="LogisticRegression",forecaster=1)
+    # TestResult_SVM = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup=100, filename="AUDUSD", model="SVM", forecaster=4, p=3, q=2)
+    # TestResult_KernelSVM_poly = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename="AUDUSD", model="KernelSVM_poly", deg=3,
+    #                                            forecaster=4, p=3, q=2)
+    # TestResult_KernelSVM_rbf = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename="AUDUSD", model="KernelSVM_rbf",
+    #                                           forecaster=4, p=3, q=2)
+    # TestResult_KernelSVM_sigmoid = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename="AUDUSD", model="KernelSVM_sigmoid",
+    #                                               forecaster=4, p=3, q=2)
