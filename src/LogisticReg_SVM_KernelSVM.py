@@ -23,32 +23,33 @@ def Obtain_Traing_Test(df, Delta, forecaster, p=None,q=None):
     # condition = values1 < values2
     # df.loc[condition, 'label'] = 1
     # df.loc[~condition, 'label'] = -1
-
+    dfabc = df[:]
     if forecaster==1:
         params = {'delta': Delta, 'vol_name': 'vol_past'}
-        df = fc.forecaster_classifier(df,fxn=fc.volonly,params=params)
+        dfabc = fc.forecaster_classifier(dfabc,fxn=fc.volonly,params=params)
 
     elif forecaster==2:
-        df = fc.forecaster_classifier(df, fxn=fc.volandret, params={'delta': Delta,
+        dfabc = fc.forecaster_classifier(dfabc, fxn=fc.volandret, params={'delta': Delta,
                                                                 'vol_name': 'vol_past',
                                                                 'ret_name': 'ret_past'})
     elif forecaster==3:
-        df = fc.forecaster_classifier(df, fxn=fc.volonly, params={'delta': Delta,
+        dfabc = fc.forecaster_classifier(dfabc, fxn=fc.volonly, params={'delta': Delta,
                                                                     'vol_name': 'vol_past',
                                                                     'p': p})
 
     elif forecaster==4:
-        df = fc.forecaster_classifier(df, fxn=fc.volandret, params={'delta': Delta,
+        dfabc = fc.forecaster_classifier(dfabc, fxn=fc.volandret, params={'delta': Delta,
                                                                     'vol_name': 'vol_past',
                                                                     'p': p,
                                                                     'q':q, 'ret_name':'ret_past'})
 
     # seperate data into training and test samples
     condition2 = df.V == 1
-    df_training = df.loc[condition2]
+    df_training = dfabc.loc[condition2]
     df_training = df_training.reset_index()
-    df_test = df.loc[~condition2]
+    df_test = dfabc.loc[~condition2]
     df_test = df_test.reset_index()
+    del dfabc
     return df_training, df_test
 
 # volatility prediction for training/test sample
