@@ -15,7 +15,7 @@ from garch_pq_model import GarchModel as gm
 import numpy as np
 import pandas as pd
 from function_runs import *
-
+import os
 from LogisticReg_SVM_KernelSVM import *
 
 from VAR_new import *
@@ -87,10 +87,14 @@ for count, name in enumerate(filenames):
     for forecaster = 4, p=3,5,10 and q=3,5,10, try different deg for KernalSVM poly     # try deg = 2,3, 4, 5.
     
     For weekly data, reduce warmup in MSE_QL_SE_Test from 400 to another, and warmup_test from 100 to another value
-    passed daily or weekly into file
+    passed daily or weekly into file, warmup weekly = 80, 30 for test set
     """
-    TestResult_Logit = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=100, filename=name, model="LogisticRegression",
-                                      forecaster=1, p=None, q=None, stringinput='Daily')
+    if not os.path.exists('Daily'):
+        os.mkdir('Daily')
+
+    os.chdir('Daily')
+    # TestResult_Logit = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=100, filename=name, model="LogisticRegression",
+    #                                   forecaster=1, p=None, q=None, stringinput='Daily')
     TestResult_SVM = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename=name, model="SVM",
                                     forecaster=4, p=3, q=2, stringinput='Daily')
     TestResult_KernelSVM_poly = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename=name, model="KernelSVM_poly", deg=3,
@@ -99,7 +103,7 @@ for count, name in enumerate(filenames):
                                               forecaster=4, p=3, q=2, stringinput='Daily')
     TestResult_KernelSVM_sigmoid = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename=name, model="KernelSVM_sigmoid",
                                                   forecaster=4, p=3, q=2, stringinput='Daily')
-
+    os.chdir('..')
 
     # weeklyret_zeroes = pd.concat([weeklyret_zeroes, weekly_ret_zeroes['Return_Time']], axis=1)
     # weeklyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)

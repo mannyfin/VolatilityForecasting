@@ -12,8 +12,7 @@ class PerformanceMeasure(object):
 
     def mean_se(self, observed, prediction):
 
-
-
+        # i comment out the print lines for speed
         if isinstance(observed, pd.core.frame.DataFrame) & isinstance(prediction, pd.core.frame.DataFrame):
             self.MSE = np.mean(np.square(np.subtract(observed, prediction)))
             mse_sum = pd.Series(sum(self.MSE), index=['SumMSE'])
@@ -21,11 +20,11 @@ class PerformanceMeasure(object):
 
             # this line converts to df and transposes from cols to rows
             self.MSE = pd.DataFrame(self.MSE).T
-            print("MSE is: \n" + str(self.MSE))
+            # print("MSE is: \n" + str(self.MSE))
         else:
             self.MSE = mse(observed, prediction)
             self.MSE = self.MSE
-            print("MSE is: " + str(self.MSE))
+            # print("MSE is: " + str(self.MSE))
 
         return self.MSE
 
@@ -42,7 +41,7 @@ class PerformanceMeasure(object):
             value = observed.ravel() / prediction.ravel()
             ones = np.ones(len(observed))
             self.QL = (1 / len(observed)) * (np.sum(value - np.log(value) - ones))
-            print("QL is: " + str(self.QL))
+            # print("QL is: " + str(self.QL))
         elif isinstance(observed,pd.core.frame.DataFrame) & isinstance(prediction,pd.core.frame.DataFrame):
             # the line below will only work if the data is not a dataframe
             value = np.divide(observed,prediction)
@@ -54,7 +53,7 @@ class PerformanceMeasure(object):
             # this line converts to df and transposes from cols to rows
             self.QL = pd.DataFrame(self.QL).T
 
-            print("QL is: \n" + str(self.QL))
+            # print("QL is: \n" + str(self.QL))
 
         # print("QL is: " + str(self.QL))
         return self.QL
