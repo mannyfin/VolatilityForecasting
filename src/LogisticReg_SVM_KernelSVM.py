@@ -220,14 +220,3 @@ def MSE_QL_SE_Test(preprocess_info,DeltaSeq,warmup_test, filename, model, deg=No
     # plt.show()
     plt.close()
     return MSE_test, QL_test
-
-    # DeltaSeq = np.exp(np.linspace(-10, -2, num=100))
-    #
-    # TestResult_Logit = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=100, filename="AUDUSD", model="LogisticRegression",forecaster=1)
-    # TestResult_SVM = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup=100, filename="AUDUSD", model="SVM", forecaster=4, p=3, q=2)
-    # TestResult_KernelSVM_poly = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename="AUDUSD", model="KernelSVM_poly", deg=3,
-    #                                            forecaster=4, p=3, q=2)
-    # TestResult_KernelSVM_rbf = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename="AUDUSD", model="KernelSVM_rbf",
-    #                                           forecaster=4, p=3, q=2)
-    # TestResult_KernelSVM_sigmoid = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename="AUDUSD", model="KernelSVM_sigmoid",
-    #                                               forecaster=4, p=3, q=2)
