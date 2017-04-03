@@ -24,7 +24,7 @@ from returnvoldf import retvoldf
 import matplotlib.backends.backend_pdf
 print("hi")
 #filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-filenames = ['AUDUSD.csv']
+filenames = ['CADUSD.csv']
 
 v = pd.read_csv('v.csv')
 v.columns = ['Date', 'value']
@@ -79,7 +79,7 @@ for count, name in enumerate(filenames):
     preprocess_w = retvoldf(weekly_ret,weekly_vol_result,v)
 
     # model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
-    DeltaSeq = np.exp(np.linspace(-10, -2, num=5))
+    DeltaSeq = np.exp(np.linspace(-10, -2, num=20))
     """
     for forecaster = 1, no p and q, try different deg for KernalSVM poly     # try deg = 2,3, 4, 5
     for forecaster = 2, no p and q, try different deg for KernalSVM poly     # try deg = 2,3, 4, 5
@@ -93,11 +93,21 @@ for count, name in enumerate(filenames):
         os.mkdir('Daily')
 
     os.chdir('Daily')
-    # TestResult_Logit = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=100, filename=name, model="LogisticRegression",
-    #                                   forecaster=1, p=None, q=None, stringinput='Daily')
+    TestResult_Logit = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=100, filename=name, model="LogisticRegression",
+                                      forecaster=4, p=3, q=2, stringinput='Daily')
     TestResult_SVM = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename=name, model="SVM",
                                     forecaster=4, p=3, q=2, stringinput='Daily')
-    TestResult_KernelSVM_poly = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename=name, model="KernelSVM_poly", deg=3,
+    TestResult_KernelSVM_poly_deg_2 = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename=name,
+                                                     model="KernelSVM_poly", deg=2,
+                                                     forecaster=4, p=3, q=2, stringinput='Daily')
+    TestResult_KernelSVM_poly_deg_3 = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=100, filename=name,
+                                               model="KernelSVM_poly", deg=3,
+                                               forecaster=4, p=3, q=2, stringinput='Daily')
+    TestResult_KernelSVM_poly_deg_4 = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=100, filename=name,
+                                               model="KernelSVM_poly", deg=4,
+                                               forecaster=4, p=3, q=2, stringinput='Daily')
+    TestResult_KernelSVM_poly_deg_5 = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=100, filename=name,
+                                               model="KernelSVM_poly", deg=5,
                                                forecaster=4, p=3, q=2, stringinput='Daily')
     TestResult_KernelSVM_rbf = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename=name, model="KernelSVM_rbf",
                                               forecaster=4, p=3, q=2, stringinput='Daily')
