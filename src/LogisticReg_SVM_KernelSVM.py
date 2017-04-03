@@ -137,6 +137,8 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
     """
     MSEs = []
     Delta_values_seq = []
+    if p_seq is None: p_seq = [None]
+    if q_seq is None: q_seq = [None]
     p_values_seq = []
     q_values_seq = []
     train_or_test = "train"
@@ -216,8 +218,9 @@ def MSE_QL_SE_Test(preprocess_info,DeltaSeq,warmup_test, filename, model, deg=No
     prediction = Output[2]
     observed = Output[3]
 
-    df_test = Obtain_Traing_Test(preprocess_info, OptimalDelta, forecaster, p,q)[1]
+    df_test = Obtain_Traing_Test(preprocess_info, OptimalDelta, forecaster, Optimal_p,Optimal_q)[1]
     """ return a plot of the squared error"""
+    df_test["Date"] = df_test.index
     SE(observed, prediction, df_test.Date[warmup_test-2:])
     if forecaster == 1 or 2:
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model)+'_Squared Error_Logistic Regression'
