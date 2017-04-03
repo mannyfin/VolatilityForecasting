@@ -23,7 +23,7 @@ def Obtain_Traing_Test(df, Delta, forecaster, p=None,q=None):
     # condition = values1 < values2
     # df.loc[condition, 'label'] = 1
     # df.loc[~condition, 'label'] = -1
-    dfabc = df[:]
+    dfabc = df.copy()
     if forecaster==1:
         params = {'delta': Delta, 'vol_name': 'vol_past'}
         dfabc = fc.forecaster_classifier(dfabc,fxn=fc.volonly,params=params)
