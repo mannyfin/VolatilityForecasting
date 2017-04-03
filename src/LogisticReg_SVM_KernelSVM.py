@@ -87,7 +87,7 @@ def PredictVol(preprocess_predict, Delta, warmup, train_or_test, model, deg=None
     PredictedVols = []
     for i in range(np.shape(df_whole)[0]-warmup+2):
         # model fitting and making predictions
-        df = df_whole[:warmup-2+i]
+        df = df_whole[i:warmup-2+i]
         Model.fit(np.array(df.vol_now).reshape(len(df.vol_now),1), np.array(df.label))
         predicted_y_t = Model.predict(df.vol_future.iloc[-1])
         vol_future_pred = df.vol_future.iloc[-1] *(1+predicted_y_t*Delta)
@@ -185,7 +185,11 @@ def MSE_QL_SE_Test(preprocess_info,DeltaSeq,warmup_test, filename, model, deg=No
     :param q: q is a parameter in forecaster 4
     :return: 
     """
-    warmup_train = 400
+    if stringinput == 'Daily':
+        warmup_train = 100 # for daily
+    elif stringinput == 'Weekly':
+        warmup_train = 50 # for weekly
+
     # train the model
     OptimalDelta = Optimize(preprocess_info, DeltaSeq,warmup_train, filename, model, deg, p=p, q=q, forecaster=forecaster,
                             stringinput=stringinput)
