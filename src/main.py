@@ -92,26 +92,29 @@ for count, name in enumerate(filenames):
     if not os.path.exists('Daily'):
         os.mkdir('Daily')
 
+    warmup_period_for_daily = 100 # size of the rolling window for daily data
+    warmup_period_for_weekly = 50 # size of the rolling window for weekly data
+
     os.chdir('Daily')
-    TestResult_Logit = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=100, filename=name, model="LogisticRegression",
+    TestResult_Logit = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=warmup_period_for_daily, filename=name, model="LogisticRegression",
                                       forecaster=4, p=3, q=2, stringinput='Daily')
-    TestResult_SVM = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename=name, model="SVM",
+    TestResult_SVM = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=warmup_period_for_daily, filename=name, model="SVM",
                                     forecaster=4, p=3, q=2, stringinput='Daily')
-    TestResult_KernelSVM_poly_deg_2 = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename=name,
+    TestResult_KernelSVM_poly_deg_2 = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=warmup_period_for_daily, filename=name,
                                                      model="KernelSVM_poly", deg=2,
                                                      forecaster=4, p=3, q=2, stringinput='Daily')
-    TestResult_KernelSVM_poly_deg_3 = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=100, filename=name,
+    TestResult_KernelSVM_poly_deg_3 = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=warmup_period_for_daily, filename=name,
                                                model="KernelSVM_poly", deg=3,
                                                forecaster=4, p=3, q=2, stringinput='Daily')
-    TestResult_KernelSVM_poly_deg_4 = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=100, filename=name,
+    TestResult_KernelSVM_poly_deg_4 = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=warmup_period_for_daily, filename=name,
                                                model="KernelSVM_poly", deg=4,
                                                forecaster=4, p=3, q=2, stringinput='Daily')
-    TestResult_KernelSVM_poly_deg_5 = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=100, filename=name,
+    TestResult_KernelSVM_poly_deg_5 = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=warmup_period_for_daily, filename=name,
                                                model="KernelSVM_poly", deg=5,
                                                forecaster=4, p=3, q=2, stringinput='Daily')
-    TestResult_KernelSVM_rbf = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename=name, model="KernelSVM_rbf",
+    TestResult_KernelSVM_rbf = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=warmup_period_for_daily, filename=name, model="KernelSVM_rbf",
                                               forecaster=4, p=3, q=2, stringinput='Daily')
-    TestResult_KernelSVM_sigmoid = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=100, filename=name, model="KernelSVM_sigmoid",
+    TestResult_KernelSVM_sigmoid = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=warmup_period_for_daily, filename=name, model="KernelSVM_sigmoid",
                                                   forecaster=4, p=3, q=2, stringinput='Daily')
     os.chdir('..')
 
