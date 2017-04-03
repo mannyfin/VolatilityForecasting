@@ -123,7 +123,7 @@ def MSE_QL(preprocess_data_input, Delta,warmup, train_or_test, model, deg=None, 
 
 
 # optimize in the training sample
-def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, forecaster=None, p=None,q=None, stringinput=None):
+def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, forecaster=None, p_seq=None,q_seq=None, stringinput=None):
     """
     :param preprocess: the data frame created in main.py by returnvoldf.py
     :param DeltaSeq: a sequence of Delta values
@@ -131,19 +131,29 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
     :param model: model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
     :param deg: degree of the Kernel SVM when kernel="poly"
     :param forecaster: forecaster = 1,2,3 or 4
-    :param p: p is a parameter in forecaster 3 and forecaster 4 
-    :param q: q is a parameter in forecaster 4
+    :param p_seq: p_seq contains the possible values of the parameter p in forecaster 3 and forecaster 4
+    :param q_seq: q_seq contains the possible values of the parameter q in forecaster 4
     :return: the optimized Delta
     """
     MSEs = []
+    Delta_values_seq = []
+    p_values_seq = []
+    q_values_seq = []
     train_or_test = "train"
     for i in range(len(DeltaSeq)):
-        MSEOutput = MSE_QL(preprocess_data, DeltaSeq[i], warmup, train_or_test, model, deg, forecaster, p,q)[0]
-        MSEs.append(MSEOutput)
+        for j in range(len(p_seq)):
+            for k in range(len(q_seq)):
+                MSEOutput = MSE_QL(preprocess_data, DeltaSeq[i], warmup, train_or_test, model, deg, forecaster, p_seq[j],q_seq[k])[0]
+                MSEs.append(MSEOutput)
+                Delta_values_seq.append(DeltaSeq[i])
+                p_values_seq.append(p_seq[j])
+                q_values_seq.append(q_seq[k])
     # find the index of the minimum MSE
     minIndex = MSEs.index(min(MSEs))
-    OptimalDelta = DeltaSeq[minIndex]
-    # TODO Find the index of min p and q based on line 142
+    OptimalDelta = Delta_values_seq[minIndex]
+    optimal_p = p_values_seq[minIndex]
+    optimal_q = q_values_seq[minIndex]
+
     # TODO do the stuff in the comments below
     """
     # plot of MSE vs log Delta
@@ -169,11 +179,11 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
     plt.savefig(title+'.png')
     # plt.show()
     plt.close()
-    return OptimalDelta
+    return OptimalDelta,optimal_p,optimal_q
 
 
 # measure the prediction performance in the test sample
-def MSE_QL_SE_Test(preprocess_info,DeltaSeq,warmup_test, filename, model, deg=None, forecaster=None, p=None,q=None,stringinput=None):
+def MSE_QL_SE_Test(preprocess_info,DeltaSeq,warmup_test, filename, model, deg=None, forecaster=None, p_seq=None,q_seq=None,stringinput=None):
     """
     :param preprocess: the data frame created in main.py by returnvoldf.py
     :param DeltaSeq: a sequence of Delta values
@@ -181,8 +191,8 @@ def MSE_QL_SE_Test(preprocess_info,DeltaSeq,warmup_test, filename, model, deg=No
     :param model: model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
     :param deg: degree of the Kernel SVM when kernel="poly"
     :param forecaster: forecaster = 1,2,3 or 4
-    :param p: p is a parameter in forecaster 3 and forecaster 4 
-    :param q: q is a parameter in forecaster 4
+    :param p_seq: p_seq contains the possible values of the parameter p in forecaster 3 and forecaster 4
+    :param q_seq: q_seq contains the possible values of the parameter q in forecaster 4
     :return: 
     """
     if stringinput == 'Daily':
@@ -191,11 +201,14 @@ def MSE_QL_SE_Test(preprocess_info,DeltaSeq,warmup_test, filename, model, deg=No
         warmup_train = 50 # for weekly
 
     # train the model
-    OptimalDelta = Optimize(preprocess_info, DeltaSeq,warmup_train, filename, model, deg, p=p, q=q, forecaster=forecaster,
+    OptimizationOutput = Optimize(preprocess_info, DeltaSeq,warmup_train, filename, model, deg, p_seq=p_seq, q_seq=q_seq, forecaster=forecaster,
                             stringinput=stringinput)
+    OptimalDelta = OptimizationOutput[0]
+    Optimal_p = OptimizationOutput[1]
+    Optimal_q = OptimizationOutput[2]
     # test the model
     train_or_test = "test"
-    Output = MSE_QL(preprocess_info, OptimalDelta, warmup_test, train_or_test, model, deg,forecaster, p,q)
+    Output = MSE_QL(preprocess_info, OptimalDelta, warmup_test, train_or_test, model, deg,forecaster, Optimal_p,Optimal_q)
     MSE_test = Output[0]
     QL_test = Output[1]
     print('MSE_test is ' + str(MSE_test))
