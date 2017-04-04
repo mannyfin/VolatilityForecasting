@@ -45,7 +45,7 @@ def Obtain_Traing_Test(df, Delta, forecaster, p=None,q=None):
                                                                     'q':q, 'ret_name':'ret_past'})
 
     elif forecaster==5:
-        dfabc['vol_ret_past'] = df['vol_past']*df['ret_past']
+        dfabc['vol_ret_past'] = dfabc['vol_past']*dfabc['ret_past']
         dfabc = fc.forecaster_classifier(dfabc, fxn=fc.volandret, params={'delta': Delta,
                                                                     'vol_name': 'vol_past','ret_name':'vol_ret_past'})
 
