@@ -223,12 +223,12 @@ def MSE_QL_SE_Test(preprocess_info,DeltaSeq,warmup_test, filename, model, deg=No
     df_test["Date"] = df_test.index
     SE(observed, prediction, df_test.Date[warmup_test-2:])
     if forecaster == 1 or 2:
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model)+'_Squared Error_Logistic Regression'
+        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model)+'_Squared Error'
     # save the figs
     elif forecaster == 3:
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + '_Squared Error_Logistic Regression p=' + str(p)
+        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + '_Squared Error p=' + str(p)
     elif forecaster == 4:
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + '_Squared Error_Logistic Regression p=' + \
+        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + '_Squared Error p=' + \
                 str(p) + ' q='+str(q)
 
     plt.title(title)
