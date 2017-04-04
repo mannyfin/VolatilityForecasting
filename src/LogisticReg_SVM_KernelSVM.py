@@ -163,7 +163,7 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
     optimal_p = p_values_seq[minIndex]
     optimal_q = q_values_seq[minIndex]
 
-    if forecaster == 1 or forecaster == 2:
+    if forecaster == 1 or forecaster == 2 or forecaster == 5:
         fig = plt.figure(figsize=(15, 10))
         plt.plot(np.log(DeltaSeq), MSEs)
         plt.xlabel('log(Delta)')
@@ -253,7 +253,7 @@ def MSE_QL_SE_Test(preprocess_data,DeltaSeq,warmup_test, filename, model, deg=No
     # df_test["Date"] = df_test.index
     ax=SE(observed, prediction, df_test.Date[warmup_test-2:])
     title=[]
-    if forecaster == 1 or forecaster == 2:
+    if forecaster == 1 or forecaster == 2 or forecaster == 5:
         if deg is None:
             title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster)+ '_Squared Error'
         else:
