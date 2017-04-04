@@ -245,7 +245,7 @@ def MSE_QL_SE_Test(preprocess_data,DeltaSeq,warmup_test, filename, model, deg=No
     # df_test["Date"] = df_test.index
     SE(observed, prediction, df_test.Date[warmup_test-2:])
     title=[]
-    if forecaster == 1 or 2:
+    if forecaster == 1 or forecaster == 2:
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) +'_Squared Error'
     # save the figs
     elif forecaster == 3:
@@ -257,5 +257,5 @@ def MSE_QL_SE_Test(preprocess_data,DeltaSeq,warmup_test, filename, model, deg=No
     plt.title(title)
     plt.savefig(title+'.png')
     # plt.show()
-    # plt.close()
+    plt.close()
     return MSE_test, QL_test
