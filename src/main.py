@@ -25,11 +25,11 @@ import matplotlib.backends.backend_pdf
 print("hi")
 # filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
 filenames = ['CADUSD.csv']
-
+os.chdir('Data')
 v = pd.read_csv('v.csv')
 v.columns = ['Date', 'value']
 v = v.set_index('Date')
-
+os.chdir('..')
 dailyvol_zeroes = pd.DataFrame()
 weeklyvol_zeroes = pd.DataFrame()
 monthlyvol_zeroes = pd.DataFrame()

@@ -10,14 +10,15 @@ def read_in_files(file_names):
     # change working directory to where the files are located
     # startdir = os.chdir(os.path.join(os.getenv('userprofile'), 'Desktop\\FIN580\\Homework1'))
     try: 
-        os.chdir(os.path.join(os.getenv('userprofile'), 'Desktop/FIN580/Homework1/VolatilityForecasting/src'))
+        os.chdir(os.path.join(os.getenv('userprofile'), 'Desktop/FIN580/Homework1/VolatilityForecasting/src/Data'))
     except:
         try:
             os.chdir(os.getcwd())
         except:
-            raise Error("No possible directory found")
+            raise ValueError("No possible directory found")
 
     file1 = pd.read_csv(file_names)
+    os.chdir('..')
     # file1 = pd.read_csv(file_names, parse_dates=[['Date', 'Time']])
 
     df = pd.DataFrame(file1)
