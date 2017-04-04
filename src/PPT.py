@@ -6,7 +6,8 @@ import os
 def Output_to_PPT(filename):
     # filename = "GBPUSD"
     # modify the path by changing the file name
-    search_dir ='C:\\Users\\YYJ\\Desktop\\FIN580\\Homework1\\VolatilityForecasting\\src\\'+filename+'\\'
+    search_dir = os.path.join(os.getenv('userprofile'), 'Desktop/FIN580/Homework1/VolatilityForecasting/src/') \
+                 + str(filename)
     os.chdir(search_dir)
 
     files_all_type = filter(os.path.isfile, os.listdir(search_dir))
@@ -24,6 +25,7 @@ def Output_to_PPT(filename):
         slide = prs.slides.add_slide(blank_slide_layout)
         left = Inches(0.8)
         height = Inches(5.5)
+        top = Inches(0.8)
         pic = slide.shapes.add_picture(img_path, left, top, height=height)
 
     prs.save(filename+'.pptx')
