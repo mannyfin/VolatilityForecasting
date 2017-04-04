@@ -16,10 +16,6 @@ def Output_to_PPT(filename):
             files_specific_type.append(os.path.join(search_dir, file))  # add path to each file
         files_specific_type.sort(key=lambda x: os.path.getmtime(x))
 
-
-    # onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
-    # onlyfiles.sort(key=lambda x: os.path.getmtime(x))
-
     prs = Presentation()
     blank_slide_layout = prs.slide_layouts[6]
 
