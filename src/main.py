@@ -167,11 +167,13 @@ for count, name in enumerate(filenames):
     df_logistic_SVM_KernelSVM_weekly = pd.DataFrame(df_output_collction_weekly,
                                                     columns=['Model Type','Test Sample_MSE_Weekly', 'Test Sample_QL_Weekly'])
 
-    df_logistic_SVM_KernelSVM_daily.to_csv(name+'df_logistic_SVM_KernelSVM_daily.csv')
-    df_logistic_SVM_KernelSVM_daily.to_csv(name+'df_logistic_SVM_KernelSVM_weekly.csv')
     for filename in filenames:
         filename_new = filename.replace(".csv", "")
         Output_to_PPT(filename_new)
+
+    df_logistic_SVM_KernelSVM_daily.to_csv(name+'df_logistic_SVM_KernelSVM_daily.csv')
+    df_logistic_SVM_KernelSVM_daily.to_csv(name+'df_logistic_SVM_KernelSVM_weekly.csv')
+
 
     # # for code testing purpose
     # DeltaSeq = np.exp(np.linspace(-10, -2, num=20))
