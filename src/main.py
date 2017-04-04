@@ -19,12 +19,14 @@ from LogisticReg_SVM_KernelSVM import *
 
 from VAR_new import *
 from returnvoldf import retvoldf
+from PPT import *
+
 
 import matplotlib.backends.backend_pdf
 
 print("hi")
 # filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv'] #, 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-filenames = ['GBPUSD.csv', 'JPYUSD.csv']
+filenames = ['GBPUSD.csv', 'JPYUSD.csv','SEKUSD.csv']
 os.chdir('Data')
 v = pd.read_csv('v.csv')
 v.columns = ['Date', 'value']
@@ -107,7 +109,7 @@ for count, name in enumerate(filenames):
     QL_Test_Outputs_daily = []
     MSE_Test_Outputs_weekly = []
     QL_Test_Outputs_weekly = []
-    for k in range(4, 5):
+    for k in range(1, 5):
         for i in range(len(ModelTypes)):
             if k < 3:
                 input_p_seq = None
@@ -167,6 +169,9 @@ for count, name in enumerate(filenames):
 
     df_logistic_SVM_KernelSVM_daily.to_csv(name+'df_logistic_SVM_KernelSVM_daily.csv')
     df_logistic_SVM_KernelSVM_daily.to_csv(name+'df_logistic_SVM_KernelSVM_weekly.csv')
+    for filename in filenames:
+        filename_new = filename.replace(".csv", "")
+        Output_to_PPT(filename_new)
 
     # # for code testing purpose
     # DeltaSeq = np.exp(np.linspace(-10, -2, num=20))
