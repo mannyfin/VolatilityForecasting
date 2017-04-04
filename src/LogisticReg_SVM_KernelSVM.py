@@ -186,11 +186,14 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
         ax.set_zlabel('MSE')
 
     elif forecaster == 4:
+        # create the figure, add a 3d axis, set the viewing angle
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
-        sp = ax.scatter(data[:, 0], data[:, 1], data[:, 2], s=20, c=data[:, 3])
-        plt.colorbar(sp)
-
+        ax.view_init(45, 60)
+        ax.scatter(np.log(Delta_values_seq), p_values_seq, q_values_seq,cmap=plt.hot())
+        ax.set_xlabel('log(Delta)')
+        ax.set_ylabel('p')
+        ax.set_zlabel('q')
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster'+str(forecaster) + ' MSE against log(Delta), p and q'
 
     plt.title(title)
