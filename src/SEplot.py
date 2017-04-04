@@ -43,7 +43,7 @@ def se_plot(y, y_fit, dates=None, function_method=None, mode=None):
         SE=SE.join(dates.Date)
         SE=SE.set_index('Date')
 
-        SE.plot(kind='line', figsize=(15, 10)).legend(loc='center left', bbox_to_anchor=(1, 0.5))
+        ax = SE.plot(kind='line', figsize=(15, 10)).legend(loc='center left', bbox_to_anchor=(1, 0.5))
         # SE.plot(kind='line').legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
     else:
@@ -55,16 +55,16 @@ def se_plot(y, y_fit, dates=None, function_method=None, mode=None):
         ts2['Date'] = pd.DataFrame(date_c.Date)
         # TODO FIX THIS COUNTER ISSUE
         # se_plot.counter = 1
-        plt.figure(se_plot.counter, figsize=(12,7))
-
+        # plt.figure(se_plot.counter, figsize=(12,7))
+        ax = ts2.plot(x='Date', y='SE', figsize=(12, 7))
         # dates = dates.reset_index()
         # dates = dates.Date
-
-        plt.gcf()
-        plt.plot(ts2['Date'].dropna(), ts2['SE'], label=function_method)
+        #
+        # plt.gcf()
+        # plt.plot(ts2['Date'].dropna(), ts2['SE'], label=function_method)
 
     plt.xlabel("Years")
     if mode is None: plt.ylabel("ln(SE)")
     else: plt.ylabel("MSE") 
 
-
+    return ax

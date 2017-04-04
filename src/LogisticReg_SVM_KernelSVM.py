@@ -244,7 +244,7 @@ def MSE_QL_SE_Test(preprocess_data,DeltaSeq,warmup_test, filename, model, deg=No
     df_test = Obtain_Traing_Test(preprocess_data, OptimalDelta, forecaster, Optimal_p,Optimal_q)[1]
     """ return a plot of the squared error"""
     # df_test["Date"] = df_test.index
-    SE(observed, prediction, df_test.Date[warmup_test-2:])
+    ax=SE(observed, prediction, df_test.Date[warmup_test-2:])
     title=[]
     if forecaster == 1 or forecaster == 2:
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) +'_Squared Error'
@@ -255,8 +255,10 @@ def MSE_QL_SE_Test(preprocess_data,DeltaSeq,warmup_test, filename, model, deg=No
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + '_Squared Error p=' + \
                 str(Optimal_p) + ' q='+str(Optimal_q)
 
+    ax.set_ylabel('MSE')
     plt.title(title)
-    plt.savefig(title+'.png')
     # plt.show()
+    plt.savefig(title+'.png')
+
     plt.close()
     return MSE_test, QL_test
