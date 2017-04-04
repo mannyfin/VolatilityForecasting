@@ -205,7 +205,7 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
         ax.set_ylabel('p')
         ax.set_zlabel('q')
         if deg is None:
-            title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) + \
+            title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster)  \
                     + ' MSE against log(Delta), p and q'
         else:
             title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' deg_' + str(deg) + ' forecaster' \
