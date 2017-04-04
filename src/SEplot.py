@@ -43,7 +43,8 @@ def se_plot(y, y_fit, dates=None, function_method=None, mode=None):
         SE=SE.join(dates.Date)
         SE=SE.set_index('Date')
 
-        SE.plot(kind='line', figsize=(12, 7)).legend(loc='center left', bbox_to_anchor=(1, 0.5))
+        # SE.plot(kind='line', figsize=(12, 7)).legend(loc='center left', bbox_to_anchor=(1, 0.5))
+        SE.plot(kind='line').legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
     else:
         SE = (y_fit.ravel() - y.ravel()) ** 2
