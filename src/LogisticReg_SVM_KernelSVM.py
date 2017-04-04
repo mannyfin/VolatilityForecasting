@@ -170,31 +170,32 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
     # plt.ylabel('MSE')
 
     if forecaster == 1 or forecaster == 2:
+        fig = plt.figure(figsize=(15, 10))
         plt.plot(np.log(DeltaSeq), MSEs)
         plt.xlabel('log(Delta)')
         plt.ylabel('MSE')
         #TODO: "MSE" is showing half. Make it complete
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster)+ ' MSE against log(Delta)'
+        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' MSE against log(Delta)'
 
     elif forecaster == 3:
-        fig = plt.figure()
+        fig = plt.figure(figsize=(15, 10))
         ax = plt.axes(projection='3d')
         ax.scatter(np.log(Delta_values_seq), p_values_seq, MSEs, '-b')
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) + ' MSE against log(Delta) and p'
+        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model)  + ' MSE against log(Delta) and p'
         ax.set_xlabel('log(Delta)')
         ax.set_ylabel('p')
         ax.set_zlabel('MSE')
 
     elif forecaster == 4:
         # create the figure, add a 3d axis, set the viewing angle
-        fig = plt.figure()
+        fig = plt.figure(figsize=(15, 10))
         ax = fig.add_subplot(111, projection='3d')
         ax.view_init(45, 60)
         ax.scatter(np.log(Delta_values_seq), p_values_seq, q_values_seq,cmap=plt.hot())
         ax.set_xlabel('log(Delta)')
         ax.set_ylabel('p')
         ax.set_zlabel('q')
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster'+str(forecaster) + ' MSE against log(Delta), p and q'
+        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' MSE against log(Delta), p and q'
 
     plt.title(title)
     # save the figs
@@ -217,10 +218,11 @@ def MSE_QL_SE_Test(preprocess_data,DeltaSeq,warmup_test, filename, model, deg=No
     :param q_seq: q_seq contains the possible values of the parameter q in forecaster 4
     :return: 
     """
+    warmup_train=[]
     if stringinput == 'Daily':
-        warmup_train = 100 # for daily
+        warmup_train = 100  # for daily
     elif stringinput == 'Weekly':
-        warmup_train = 50 # for weekly
+        warmup_train = 50  # for weekly
 
     # train the model
     OptimizationOutput = Optimize(preprocess_data, DeltaSeq,warmup_train, filename, model, deg, p_seq=p_seq, q_seq=q_seq,
@@ -240,16 +242,17 @@ def MSE_QL_SE_Test(preprocess_data,DeltaSeq,warmup_test, filename, model, deg=No
 
     df_test = Obtain_Traing_Test(preprocess_data, OptimalDelta, forecaster, Optimal_p,Optimal_q)[1]
     """ return a plot of the squared error"""
-    df_test["Date"] = df_test.index
+    # df_test["Date"] = df_test.index
     SE(observed, prediction, df_test.Date[warmup_test-2:])
+    title=[]
     if forecaster == 1 or 2:
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) +'_Squared Error'
+        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) +'_Squared Error'
     # save the figs
     elif forecaster == 3:
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) + '_Squared Error p=' + str(p)
+        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + '_Squared Error p=' + str(Optimal_p)
     elif forecaster == 4:
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) + '_Squared Error p=' + \
-                str(p) + ' q='+str(q)
+        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + '_Squared Error p=' + \
+                str(Optimal_p) + ' q='+str(Optimal_q)
 
     plt.title(title)
     plt.savefig(title+'.png')
