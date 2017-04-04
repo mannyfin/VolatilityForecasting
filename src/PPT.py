@@ -1,7 +1,7 @@
 from pptx import Presentation # pip install python-pptx
 from pptx.util import Inches
-from os import listdir
-from os.path import isfile, join
+import os
+
 
 def Output_to_PPT(filename):
     # filename = "GBPUSD"

@@ -19,14 +19,17 @@ from LogisticReg_SVM_KernelSVM import *
 
 from VAR_new import *
 from returnvoldf import retvoldf
+# please install python-pptx with pip install python-pptx
 from PPT import *
 
 
 import matplotlib.backends.backend_pdf
 
 print("hi")
-# filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv'] #, 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-filenames = ['JPYUSD.csv','SEKUSD.csv']
+# filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+filenames = ['CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+# filenames = ['JPYUSD.csv','SEKUSD.csv']
 os.chdir('Data')
 v = pd.read_csv('v.csv')
 v.columns = ['Date', 'value']
