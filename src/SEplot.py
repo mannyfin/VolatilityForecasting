@@ -43,8 +43,8 @@ def se_plot(y, y_fit, dates=None, function_method=None, mode=None):
         SE=SE.join(dates.Date)
         SE=SE.set_index('Date')
 
-        # SE.plot(kind='line', figsize=(12, 7)).legend(loc='center left', bbox_to_anchor=(1, 0.5))
-        SE.plot(kind='line').legend(loc='center left', bbox_to_anchor=(1, 0.5))
+        SE.plot(kind='line', figsize=(15, 10)).legend(loc='center left', bbox_to_anchor=(1, 0.5))
+        # SE.plot(kind='line').legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
     else:
         SE = (y_fit.ravel() - y.ravel()) ** 2
@@ -54,11 +54,11 @@ def se_plot(y, y_fit, dates=None, function_method=None, mode=None):
         date_c = date_c.reset_index()
         ts2['Date'] = pd.DataFrame(date_c.Date)
         # TODO FIX THIS COUNTER ISSUE
-        se_plot.counter = 1
+        # se_plot.counter = 1
         plt.figure(se_plot.counter, figsize=(12,7))
 
-        dates = dates.reset_index()
-        dates = dates.Date
+        # dates = dates.reset_index()
+        # dates = dates.Date
 
         plt.gcf()
         plt.plot(ts2['Date'].dropna(), ts2['SE'], label=function_method)

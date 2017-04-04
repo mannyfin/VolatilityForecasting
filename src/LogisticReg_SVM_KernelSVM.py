@@ -177,7 +177,7 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster)+ ' MSE against log(Delta)'
 
     elif forecaster == 3:
-        fig = plt.figure()
+        fig = plt.figure(figsize=(12, 7))
         ax = plt.axes(projection='3d')
         ax.scatter(np.log(Delta_values_seq), p_values_seq, MSEs, '-b')
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) + ' MSE against log(Delta) and p'
@@ -221,7 +221,7 @@ def MSE_QL_SE_Test(preprocess_data,DeltaSeq,warmup_test, filename, model, deg=No
 
     # train the model
     OptimizationOutput = Optimize(preprocess_data, DeltaSeq,warmup_train, filename, model, deg, p_seq=p_seq, q_seq=q_seq,
-                                  forecaster=forecaster,stringinput=stringinput)
+                                  forecaster=forecaster, stringinput=stringinput)
     OptimalDelta = OptimizationOutput[0]
     Optimal_p = OptimizationOutput[1]
     Optimal_q = OptimizationOutput[2]
@@ -237,7 +237,7 @@ def MSE_QL_SE_Test(preprocess_data,DeltaSeq,warmup_test, filename, model, deg=No
 
     df_test = Obtain_Traing_Test(preprocess_data, OptimalDelta, forecaster, Optimal_p,Optimal_q)[1]
     """ return a plot of the squared error"""
-    df_test["Date"] = df_test.index
+    # df_test["Date"] = df_test.index
     SE(observed, prediction, df_test.Date[warmup_test-2:])
     if forecaster == 1 or 2:
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) +'_Squared Error'
