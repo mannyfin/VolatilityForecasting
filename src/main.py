@@ -91,19 +91,14 @@ for count, name in enumerate(filenames):
     For weekly data, reduce warmup in MSE_QL_SE_Test from 400 to another, and warmup_test from 100 to another value
     passed daily or weekly into file, warmup weekly = 80, 30 for test set
     """
-    if not os.path.exists('Daily'):
-        os.mkdir('Daily')
+    if not os.path.exists(name):
+        os.mkdir(name)
 
     warmup_period_for_daily = 100  # size of the rolling window for daily data
     warmup_period_for_weekly = 50  # size of the rolling window for weekly data
 
-    os.chdir('Daily')
+    os.chdir(name)
 
-    DeltaSeq = np.exp(np.linspace(-10, -2, num=2))
-    TestResult_KernelSVM_sigmoid_forecaster4 = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=warmup_period_for_daily,
-                                                              filename=name, model="KernelSVM_sigmoid", deg=None,
-                                                              forecaster=3, p_seq=p_seq, q_seq=None,
-                                                              stringinput='Daily')
     ModelTypes = ["LogisticRegression", "SVM", "KernelSVM_poly", "KernelSVM_poly",
                   "KernelSVM_poly", "KernelSVM_poly", "KernelSVM_rbf", "KernelSVM_sigmoid"]
     deg = [None, None, 2, 3, 4, 5, None, None]
@@ -173,12 +168,12 @@ for count, name in enumerate(filenames):
     df_logistic_SVM_KernelSVM_daily.to_csv(name+'df_logistic_SVM_KernelSVM_daily.csv')
     df_logistic_SVM_KernelSVM_daily.to_csv(name+'df_logistic_SVM_KernelSVM_weekly.csv')
 
-    # for code testing purpose
-    DeltaSeq = np.exp(np.linspace(-10, -2, num=2))
-    TestResult_KernelSVM_sigmoid_forecaster4 = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=warmup_period_for_daily,
-                                                              filename=name, model="KernelSVM_sigmoid", deg=None,
-                                                  forecaster=3, p_seq=p_seq, q_seq=None, stringinput='Daily')
-
+    # # for code testing purpose
+    # DeltaSeq = np.exp(np.linspace(-10, -2, num=20))
+    # TestResult_KernelSVM_sigmoid_forecaster4 = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=warmup_period_for_daily,
+    #                                                           filename=name, model="KernelSVM_sigmoid", deg=None,
+    #                                               forecaster=3, p_seq=p_seq, q_seq=None, stringinput='Daily')
+    #
 
     os.chdir('..')
 
