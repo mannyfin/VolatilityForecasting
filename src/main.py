@@ -129,7 +129,7 @@ for count, name in enumerate(filenames):
             Results_daily = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=warmup_period_for_daily, filename=name,
                                            model=ModelTypes[i], deg=deg[i], forecaster=k, p_seq=input_p_seq,
                                            q_seq=input_q_seq,stringinput='Daily')
-            Results_weekly = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=warmup_period_for_daily, filename=name,
+            Results_weekly = MSE_QL_SE_Test(preprocess_w, DeltaSeq, warmup_test=warmup_period_for_daily, filename=name,
                                             model=ModelTypes[i], deg=deg[i], forecaster=k, p_seq=input_p_seq,
                                             q_seq=input_q_seq,stringinput='Weekly')
 
