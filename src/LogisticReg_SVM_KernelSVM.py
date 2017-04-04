@@ -191,8 +191,8 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
     plt.title(title)
     # save the figs
     plt.savefig(title+'.png')
-    plt.show()
-    plt.close()
+    # plt.show()
+    # plt.close()
     return OptimalDelta,optimal_p,optimal_q
 
 
@@ -215,8 +215,8 @@ def MSE_QL_SE_Test(preprocess_info,DeltaSeq,warmup_test, filename, model, deg=No
         warmup_train = 50 # for weekly
 
     # train the model
-    OptimizationOutput = Optimize(preprocess_info, DeltaSeq,warmup_train, filename, model, deg, p_seq=p_seq, q_seq=q_seq, forecaster=forecaster,
-                            stringinput=stringinput)
+    OptimizationOutput = Optimize(preprocess_info, DeltaSeq,warmup_train, filename, model, deg, p_seq=p_seq, q_seq=q_seq,
+                                  forecaster=forecaster,stringinput=stringinput)
     OptimalDelta = OptimizationOutput[0]
     Optimal_p = OptimizationOutput[1]
     Optimal_q = OptimizationOutput[2]
@@ -235,16 +235,16 @@ def MSE_QL_SE_Test(preprocess_info,DeltaSeq,warmup_test, filename, model, deg=No
     df_test["Date"] = df_test.index
     SE(observed, prediction, df_test.Date[warmup_test-2:])
     if forecaster == 1 or 2:
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model)+'_Squared Error'
+        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) +'_Squared Error'
     # save the figs
     elif forecaster == 3:
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + '_Squared Error p=' + str(p)
+        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) + '_Squared Error p=' + str(p)
     elif forecaster == 4:
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + '_Squared Error p=' + \
+        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) + '_Squared Error p=' + \
                 str(p) + ' q='+str(q)
 
     plt.title(title)
     plt.savefig(title+'.png')
     # plt.show()
-    plt.close()
+    # plt.close()
     return MSE_test, QL_test
