@@ -158,17 +158,6 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
     optimal_p = p_values_seq[minIndex]
     optimal_q = q_values_seq[minIndex]
 
-    # TODO do the stuff in the comments below
-    """
-    # plot of MSE vs log Delta
-    # make different plots depending on different forecaster method. i.e. for forecaster=1 or 2 plot mse vs log(delta)
-    # for forecaster = 3, plot mse vs log(delta) vs p
-    # for forecaster = 4, plot mse vs log(delta) vs p vs q
-    """
-    # plt.plot(np.log(DeltaSeq),MSEs)
-    # plt.xlabel('log(Delta)')
-    # plt.ylabel('MSE')
-
     if forecaster == 1 or forecaster == 2:
         fig = plt.figure(figsize=(15, 10))
         plt.plot(np.log(DeltaSeq), MSEs)
