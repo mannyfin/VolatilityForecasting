@@ -186,6 +186,11 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
         ax.set_zlabel('MSE')
 
     elif forecaster == 4:
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        sp = ax.scatter(data[:, 0], data[:, 1], data[:, 2], s=20, c=data[:, 3])
+        plt.colorbar(sp)
+
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster'+str(forecaster) + ' MSE against log(Delta), p and q'
 
     plt.title(title)
@@ -197,7 +202,7 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
 
 
 # measure the prediction performance in the test sample
-def MSE_QL_SE_Test(preprocess_info,DeltaSeq,warmup_test, filename, model, deg=None, forecaster=None, p_seq=None,q_seq=None,stringinput=None):
+def MSE_QL_SE_Test(preprocess_data,DeltaSeq,warmup_test, filename, model, deg=None, forecaster=None, p_seq=None,q_seq=None,stringinput=None):
     """
     :param preprocess: the data frame created in main.py by returnvoldf.py
     :param DeltaSeq: a sequence of Delta values
@@ -215,14 +220,14 @@ def MSE_QL_SE_Test(preprocess_info,DeltaSeq,warmup_test, filename, model, deg=No
         warmup_train = 50 # for weekly
 
     # train the model
-    OptimizationOutput = Optimize(preprocess_info, DeltaSeq,warmup_train, filename, model, deg, p_seq=p_seq, q_seq=q_seq,
+    OptimizationOutput = Optimize(preprocess_data, DeltaSeq,warmup_train, filename, model, deg, p_seq=p_seq, q_seq=q_seq,
                                   forecaster=forecaster,stringinput=stringinput)
     OptimalDelta = OptimizationOutput[0]
     Optimal_p = OptimizationOutput[1]
     Optimal_q = OptimizationOutput[2]
     # test the model
     train_or_test = "test"
-    Output = MSE_QL(preprocess_info, OptimalDelta, warmup_test, train_or_test, model, deg,forecaster, Optimal_p,Optimal_q)
+    Output = MSE_QL(preprocess_data, OptimalDelta, warmup_test, train_or_test, model, deg,forecaster, Optimal_p,Optimal_q)
     MSE_test = Output[0]
     QL_test = Output[1]
     print('MSE_test is ' + str(MSE_test))
@@ -230,7 +235,7 @@ def MSE_QL_SE_Test(preprocess_info,DeltaSeq,warmup_test, filename, model, deg=No
     prediction = Output[2]
     observed = Output[3]
 
-    df_test = Obtain_Traing_Test(preprocess_info, OptimalDelta, forecaster, Optimal_p,Optimal_q)[1]
+    df_test = Obtain_Traing_Test(preprocess_data, OptimalDelta, forecaster, Optimal_p,Optimal_q)[1]
     """ return a plot of the squared error"""
     df_test["Date"] = df_test.index
     SE(observed, prediction, df_test.Date[warmup_test-2:])
