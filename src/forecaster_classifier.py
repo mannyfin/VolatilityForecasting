@@ -9,7 +9,6 @@ def forecaster_classifier(df_out,drop=False,**kwargs):
 	:return: the df with value label
 	"""
 
-	# TODO fix bug here for SVM. the len of df changes
 	for vs,kvs,name in zip(['p','q'],['vol_past','ret_past'],['vol_name','ret_name']):
 		if vs in kwargs['params'].keys():
 			v = int(kwargs['params'][vs])

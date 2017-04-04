@@ -44,6 +44,11 @@ def Obtain_Traing_Test(df, Delta, forecaster, p=None,q=None):
                                                                     'p': p,
                                                                     'q':q, 'ret_name':'ret_past'})
 
+    elif forecaster==5:
+        dfabc['vol_ret_past'] = dfabc['vol_past']*dfabc['ret_past']
+        dfabc = fc.forecaster_classifier(dfabc, fxn=fc.volandret, params={'delta': Delta,
+                                                                    'vol_name': 'vol_past','ret_name':'vol_ret_past'})
+
     # seperate data into training and test samples
     condition2 = df.V == 1
     df_training = dfabc.loc[condition2]
@@ -158,18 +163,7 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
     optimal_p = p_values_seq[minIndex]
     optimal_q = q_values_seq[minIndex]
 
-    # TODO do the stuff in the comments below
-    """
-    # plot of MSE vs log Delta
-    # make different plots depending on different forecaster method. i.e. for forecaster=1 or 2 plot mse vs log(delta)
-    # for forecaster = 3, plot mse vs log(delta) vs p
-    # for forecaster = 4, plot mse vs log(delta) vs p vs q
-    """
-    # plt.plot(np.log(DeltaSeq),MSEs)
-    # plt.xlabel('log(Delta)')
-    # plt.ylabel('MSE')
-
-    if forecaster == 1 or forecaster == 2:
+    if forecaster == 1 or forecaster == 2 or forecaster == 5:
         fig = plt.figure(figsize=(15, 10))
         plt.plot(np.log(DeltaSeq), MSEs)
         plt.xlabel('log(Delta)')
@@ -259,7 +253,7 @@ def MSE_QL_SE_Test(preprocess_data,DeltaSeq,warmup_test, filename, model, deg=No
     # df_test["Date"] = df_test.index
     ax=SE(observed, prediction, df_test.Date[warmup_test-2:])
     title=[]
-    if forecaster == 1 or forecaster == 2:
+    if forecaster == 1 or forecaster == 2 or forecaster == 5:
         if deg is None:
             title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster)+ '_Squared Error'
         else:
