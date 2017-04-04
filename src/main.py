@@ -23,8 +23,8 @@ from returnvoldf import retvoldf
 import matplotlib.backends.backend_pdf
 
 print("hi")
-# filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-filenames = ['CADUSD.csv']
+filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv'] #, 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+# filenames = ['CADUSD.csv']
 os.chdir('Data')
 v = pd.read_csv('v.csv')
 v.columns = ['Date', 'value']

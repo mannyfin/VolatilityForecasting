@@ -174,16 +174,23 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
         plt.plot(np.log(DeltaSeq), MSEs)
         plt.xlabel('log(Delta)')
         plt.ylabel('MSE')
-        #TODO: "MSE" is showing half. Make it complete
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) + \
-                ' MSE against log(Delta)'
+        if deg is None:
+            title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) + \
+                    ' MSE against log(Delta)'
+        else:
+            title = str(filename) + ' ' + str(stringinput) + ' ' + str(model)+' deg_' + str(deg) + ' forecaster' \
+                    + str(forecaster) + ' MSE against log(Delta)'
 
     elif forecaster == 3:
         fig = plt.figure(figsize=(15, 10))
         ax = plt.axes(projection='3d')
         ax.scatter(np.log(Delta_values_seq), p_values_seq, MSEs, '-b')
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) + \
-                ' MSE against log(Delta) and p'
+        if deg is None:
+            title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) + \
+                    ' MSE against log(Delta) and p'
+        else:
+            title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' deg_' + str(deg) + ' forecaster' \
+                    + str(forecaster) + ' MSE against log(Delta) and p'
         ax.set_xlabel('log(Delta)')
         ax.set_ylabel('p')
         ax.set_zlabel('MSE')
@@ -197,8 +204,12 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
         ax.set_xlabel('log(Delta)')
         ax.set_ylabel('p')
         ax.set_zlabel('q')
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) + \
-                ' forecaster' + str(forecaster) + ' MSE against log(Delta), p and q'
+        if deg is None:
+            title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) + \
+                    + ' MSE against log(Delta), p and q'
+        else:
+            title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' deg_' + str(deg) + ' forecaster' \
+                    + str(forecaster) + ' MSE against log(Delta), p and q'
 
     plt.title(title)
     # save the figs
@@ -249,13 +260,26 @@ def MSE_QL_SE_Test(preprocess_data,DeltaSeq,warmup_test, filename, model, deg=No
     ax=SE(observed, prediction, df_test.Date[warmup_test-2:])
     title=[]
     if forecaster == 1 or forecaster == 2:
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster)+ '_Squared Error'
+        if deg is None:
+            title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster)+ '_Squared Error'
+        else:
+            title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' deg_' + str(deg) + ' forecaster' \
+                    + str(forecaster) + '_Squared Error'
     # save the figs
     elif forecaster == 3:
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) + '_Squared Error p=' + str(Optimal_p)
+        if deg is None:
+            title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) \
+                    + '_Squared Error p=' + str(Optimal_p)
+        else:
+            title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' deg_' + str(deg) + ' forecaster' \
+                    + str(forecaster) + '_Squared Error p=' + str(Optimal_p)
     elif forecaster == 4:
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) + '_Squared Error p=' + \
-                str(Optimal_p) + ' q='+str(Optimal_q)
+        if deg is None:
+            title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) \
+                    + '_Squared Error p=' + str(Optimal_p) + ' q='+str(Optimal_q)
+        else:
+            title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' deg_' + str(deg) + ' forecaster' \
+                    + str(forecaster) + '_Squared Error p=' + str(Optimal_p) + ' q='+str(Optimal_q)
 
 
     plt.title(title)
