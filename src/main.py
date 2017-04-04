@@ -28,9 +28,9 @@ import matplotlib.backends.backend_pdf
 print("hi")
 # filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
 
-# filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
 
-filenames = ['EURUSD.csv'] #, 'NOKUSD.csv']
+# filenames = ['EURUSD.csv'] #, 'NOKUSD.csv']
 
 os.chdir('Data')
 v = pd.read_csv('v.csv')
@@ -115,7 +115,7 @@ for count, name in enumerate(filenames):
     MSE_Test_Outputs_weekly = []
     QL_Test_Outputs_weekly = []
     # for k in range(1, 5):
-    for k in range(5, 6):
+    for k in range(1,6):
         for i in range(len(ModelTypes)):
             if k < 3 or k==5:
                 input_p_seq = None
@@ -150,26 +150,20 @@ for count, name in enumerate(filenames):
     ModelName7 = name+"_KernelSVM_rbf_forecaster1"
     ModelName8 = name+"_KernelSVM_sigmoid_forecaster1"
 
-    # ModelNames = [ModelName1, ModelName2, ModelName3, ModelName4, ModelName5, ModelName6, ModelName7,ModelName8,
-    #               ModelName1.replace("1", "2"), ModelName2.replace("1", "2"), ModelName3.replace("1", "2"),
-    #               ModelName4.replace("1", "2"),
-    #               ModelName5.replace("1", "2"), ModelName6.replace("1", "2"), ModelName7.replace("1", "2"),
-    #               ModelName8.replace("1", "2"),
-    #               ModelName1.replace("1", "3"), ModelName2.replace("1", "3"), ModelName3.replace("1", "3"),
-    #               ModelName4.replace("1", "3"),
-    #               ModelName5.replace("1", "3"), ModelName6.replace("1", "3"), ModelName7.replace("1", "3"),
-    #               ModelName8.replace("1", "3"),
-    #               ModelName1.replace("1", "4"), ModelName2.replace("1", "4"), ModelName3.replace("1", "4"),
-    #               ModelName4.replace("1", "4"),
-    #               ModelName5.replace("1", "4"), ModelName6.replace("1", "4"), ModelName7.replace("1", "4"),
-    #               ModelName8.replace("1", "4"),
-    #               ModelName1.replace("1", "5"), ModelName2.replace("1", "5"), ModelName3.replace("1", "5"),
-    #               ModelName4.replace("1", "5"),
-    #               ModelName5.replace("1", "5"), ModelName6.replace("1", "5"), ModelName7.replace("1", "5"),
-    #               ModelName8.replace("1", "5")]
-
-
-    ModelNames = [ModelName1.replace("1", "5"), ModelName2.replace("1", "5"), ModelName3.replace("1", "5"),
+    ModelNames = [ModelName1, ModelName2, ModelName3, ModelName4, ModelName5, ModelName6, ModelName7,ModelName8,
+                  ModelName1.replace("1", "2"), ModelName2.replace("1", "2"), ModelName3.replace("1", "2"),
+                  ModelName4.replace("1", "2"),
+                  ModelName5.replace("1", "2"), ModelName6.replace("1", "2"), ModelName7.replace("1", "2"),
+                  ModelName8.replace("1", "2"),
+                  ModelName1.replace("1", "3"), ModelName2.replace("1", "3"), ModelName3.replace("1", "3"),
+                  ModelName4.replace("1", "3"),
+                  ModelName5.replace("1", "3"), ModelName6.replace("1", "3"), ModelName7.replace("1", "3"),
+                  ModelName8.replace("1", "3"),
+                  ModelName1.replace("1", "4"), ModelName2.replace("1", "4"), ModelName3.replace("1", "4"),
+                  ModelName4.replace("1", "4"),
+                  ModelName5.replace("1", "4"), ModelName6.replace("1", "4"), ModelName7.replace("1", "4"),
+                  ModelName8.replace("1", "4"),
+                  ModelName1.replace("1", "5"), ModelName2.replace("1", "5"), ModelName3.replace("1", "5"),
                   ModelName4.replace("1", "5"),
                   ModelName5.replace("1", "5"), ModelName6.replace("1", "5"), ModelName7.replace("1", "5"),
                   ModelName8.replace("1", "5")]
@@ -181,40 +175,20 @@ for count, name in enumerate(filenames):
                                   'Test Sample_MSE_Weekly': MSE_Test_Outputs_weekly,
                                   'Test Sample_QL_Weekly': QL_Test_Outputs_weekly}
 
-    # df_output_collction_daily_forescater5 = {'Model Type': ModelNames,
-    #                              'Test Sample_MSE_Daily': MSE_Test_Outputs_daily,
-    #                              'Test Sample_QL_Daily': QL_Test_Outputs_daily}
-    # df_output_collction_weekly_forescater5 = {'Model Type': ModelNames,
-    #                               'Test Sample_MSE_Weekly': MSE_Test_Outputs_weekly,
-    #                               'Test Sample_QL_Weekly': QL_Test_Outputs_weekly}
 
     df_logistic_SVM_KernelSVM_daily = pd.DataFrame(df_output_collction_daily,
                                                    columns=['Model Type','Test Sample_MSE_Daily', 'Test Sample_QL_Daily'])
     df_logistic_SVM_KernelSVM_weekly = pd.DataFrame(df_output_collction_weekly,
                                                     columns=['Model Type','Test Sample_MSE_Weekly', 'Test Sample_QL_Weekly'])
 
-    # df_logistic_SVM_KernelSVM_daily_forescater5 = pd.DataFrame(df_output_collction_daily_forescater5,
-    #                                                columns=['Model Type','Test Sample_MSE_Daily', 'Test Sample_QL_Daily'])
-    # df_logistic_SVM_KernelSVM_weekly_forescater5 = pd.DataFrame(df_output_collction_weekly_forescater5,
-    #                                                 columns=['Model Type','Test Sample_MSE_Weekly', 'Test Sample_QL_Weekly'])
 
     df_logistic_SVM_KernelSVM_daily.to_csv(name+'df_logistic_SVM_KernelSVM_daily.csv')
     df_logistic_SVM_KernelSVM_weekly.to_csv(name+'df_logistic_SVM_KernelSVM_weekly.csv')
-
-    # df_logistic_SVM_KernelSVM_daily_forescater5.to_csv(name+'df_logistic_SVM_KernelSVM_daily_forescater5.csv')
-    # df_logistic_SVM_KernelSVM_weekly_forescater5.to_csv(name+'df_logistic_SVM_KernelSVM_weekly_forescater5.csv')
 
 
     for filename in filenames:
         filename_new = filename.replace(".csv", "")
         Output_to_PPT(filename_new)
-
-    # # for code testing purpose
-    # DeltaSeq = np.exp(np.linspace(-10, -2, num=20))
-    # TestResult_KernelSVM_sigmoid_forecaster4 = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=warmup_period_for_daily,
-    #                                                           filename=name, model="KernelSVM_sigmoid", deg=None,
-    #                                               forecaster=3, p_seq=p_seq, q_seq=None, stringinput='Daily')
-    #
 
     os.chdir('..')
 
