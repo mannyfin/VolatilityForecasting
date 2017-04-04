@@ -56,7 +56,7 @@ def se_plot(y, y_fit, dates=None, function_method=None, mode=None):
         # TODO FIX THIS COUNTER ISSUE
         # se_plot.counter = 1
         # plt.figure(se_plot.counter, figsize=(12,7))
-        ax = ts2.plot(x='Date', y='ln(SE)', figsize=(12, 7))
+        ax = ts2.plot(x='Date', y='ln(SE)', figsize=(13, 8))
         ax.set_ylabel('ln(SE)')
         # dates = dates.reset_index()
         # dates = dates.Date
