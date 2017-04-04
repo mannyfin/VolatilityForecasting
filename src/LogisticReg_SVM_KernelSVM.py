@@ -179,7 +179,7 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
     elif forecaster == 3:
         fig = plt.figure()
         ax = plt.axes(projection='3d')
-        ax.scatter(Delta_values_seq, p_values_seq, MSEs, '-b')
+        ax.scatter(np.log(Delta_values_seq), p_values_seq, MSEs, '-b')
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' MSE against log(Delta) and p'
         ax.set_xlabel('log(Delta)')
         ax.set_ylabel('p')
