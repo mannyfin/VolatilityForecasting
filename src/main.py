@@ -78,7 +78,7 @@ for count, name in enumerate(filenames):
     preprocess_w = retvoldf(weekly_ret, weekly_vol_result, v)
 
     # model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
-    DeltaSeq = np.exp(np.linspace(-15, -2, num=2))
+    DeltaSeq = np.exp(np.linspace(-10, -2, num=20))
     p_seq = np.array([3, 5, 10])
     q_seq = np.array([3, 5, 10])
     """
