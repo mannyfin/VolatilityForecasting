@@ -169,7 +169,7 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
     # plt.xlabel('log(Delta)')
     # plt.ylabel('MSE')
 
-    if forecaster == 1 or 2:
+    if forecaster == 1 or forecaster == 2:
         plt.plot(np.log(DeltaSeq), MSEs)
         plt.xlabel('log(Delta)')
         plt.ylabel('MSE')
