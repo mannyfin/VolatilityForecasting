@@ -44,6 +44,11 @@ def Obtain_Traing_Test(df, Delta, forecaster, p=None,q=None):
                                                                     'p': p,
                                                                     'q':q, 'ret_name':'ret_past'})
 
+    elif forecaster==5:
+        dfabc['vol_ret_past'] = df['vol_past']*df['ret_past']
+        dfabc = fc.forecaster_classifier(dfabc, fxn=fc.volandret, params={'delta': Delta,
+                                                                    'vol_name': 'vol_past','ret_name':'vol_ret_past'})
+
     # seperate data into training and test samples
     condition2 = df.V == 1
     df_training = dfabc.loc[condition2]
