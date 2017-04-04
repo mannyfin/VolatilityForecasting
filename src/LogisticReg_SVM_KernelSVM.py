@@ -4,6 +4,7 @@ from Performance_Measure import *
 from SEplot import se_plot as SE
 import pandas as pd
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 import forecaster_classifier as fc
 from sklearn.svm import SVC as SVC
 
@@ -139,6 +140,7 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
     Delta_values_seq = []
     if p_seq is None: p_seq = [None]
     if q_seq is None: q_seq = [None]
+
     p_values_seq = []
     q_values_seq = []
     train_or_test = "train"
@@ -163,24 +165,33 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
     # for forecaster = 3, plot mse vs log(delta) vs p
     # for forecaster = 4, plot mse vs log(delta) vs p vs q
     """
-    plt.plot(np.log(Delta_values_seq),MSEs)
-    plt.xlabel('log(Delta)')
-    plt.ylabel('MSE')
-    # TODO: "MSE" is showing half. Make it complete.
+    # plt.plot(np.log(DeltaSeq),MSEs)
+    # plt.xlabel('log(Delta)')
+    # plt.ylabel('MSE')
 
     if forecaster == 1 or 2:
+        plt.plot(np.log(DeltaSeq), MSEs)
+        plt.xlabel('log(Delta)')
+        plt.ylabel('MSE')
+        #TODO: "MSE" is showing half. Make it complete
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' MSE against log(Delta)'
 
-    if forecaster == 3:
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' MSE against log(Delta) p=' + str(p)
-    if forecaster == 4:
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' MSE against log(Delta) p=' \
-                + str(p) + ' q=' + str(q)
+    elif forecaster == 3:
+        fig = plt.figure()
+        ax = plt.axes(projection='3d')
+        ax.scatter(Delta_values_seq, p_values_seq, MSEs, '-b')
+        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' MSE against log(Delta) and p'
+        ax.set_xlabel('log(Delta)')
+        ax.set_ylabel('p')
+        ax.set_zlabel('MSE')
+
+    elif forecaster == 4:
+        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' MSE against log(Delta), p and q'
 
     plt.title(title)
     # save the figs
     plt.savefig(title+'.png')
-    # plt.show()
+    plt.show()
     plt.close()
     return OptimalDelta,optimal_p,optimal_q
 
