@@ -5,6 +5,7 @@ from SEplot import se_plot as SE
 import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
 import forecaster_classifier as fc
 from sklearn.svm import SVC as SVC
 
@@ -177,7 +178,9 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster)+ ' MSE against log(Delta)'
 
     elif forecaster == 3:
+
         fig = plt.figure(figsize=(12, 7))
+
         ax = plt.axes(projection='3d')
         ax.scatter(np.log(Delta_values_seq), p_values_seq, MSEs, '-b')
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) + ' MSE against log(Delta) and p'
@@ -186,11 +189,14 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
         ax.set_zlabel('MSE')
 
     elif forecaster == 4:
+        # create the figure, add a 3d axis, set the viewing angle
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
-        sp = ax.scatter(data[:, 0], data[:, 1], data[:, 2], s=20, c=data[:, 3])
-        plt.colorbar(sp)
-
+        ax.view_init(45, 60)
+        ax.plot_surface(np.log(Delta_values_seq), p_values_seq, q_values_seq, facecolors=cm.Oranges(MSEs))
+        ax.set_xlabel('log(Delta)')
+        ax.set_ylabel('p')
+        ax.set_zlabel('q')
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster'+str(forecaster) + ' MSE against log(Delta), p and q'
 
     plt.title(title)
