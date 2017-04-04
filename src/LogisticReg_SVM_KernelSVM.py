@@ -174,19 +174,19 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
         plt.xlabel('log(Delta)')
         plt.ylabel('MSE')
         #TODO: "MSE" is showing half. Make it complete
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' MSE against log(Delta)'
+        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster)+ ' MSE against log(Delta)'
 
     elif forecaster == 3:
         fig = plt.figure()
         ax = plt.axes(projection='3d')
         ax.scatter(np.log(Delta_values_seq), p_values_seq, MSEs, '-b')
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' MSE against log(Delta) and p'
+        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster' + str(forecaster) + ' MSE against log(Delta) and p'
         ax.set_xlabel('log(Delta)')
         ax.set_ylabel('p')
         ax.set_zlabel('MSE')
 
     elif forecaster == 4:
-        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' MSE against log(Delta), p and q'
+        title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + ' forecaster'+str(forecaster) + ' MSE against log(Delta), p and q'
 
     plt.title(title)
     # save the figs
