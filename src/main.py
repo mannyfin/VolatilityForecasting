@@ -23,8 +23,8 @@ from returnvoldf import retvoldf
 import matplotlib.backends.backend_pdf
 
 print("hi")
-filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv'] #, 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-# filenames = ['CADUSD.csv']
+# filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv'] #, 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+filenames = ['GBPUSD.csv', 'JPYUSD.csv']
 os.chdir('Data')
 v = pd.read_csv('v.csv')
 v.columns = ['Date', 'value']
@@ -107,7 +107,7 @@ for count, name in enumerate(filenames):
     QL_Test_Outputs_daily = []
     MSE_Test_Outputs_weekly = []
     QL_Test_Outputs_weekly = []
-    for k in range(1, 5):
+    for k in range(4, 5):
         for i in range(len(ModelTypes)):
             if k < 3:
                 input_p_seq = None
