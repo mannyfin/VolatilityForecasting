@@ -27,7 +27,7 @@ def Obtain_Traing_Test(df, Delta, forecaster, p=None,q=None):
     dfabc = df.copy()
     if forecaster==1:
         params = {'delta': Delta, 'vol_name': 'vol_past'}
-        dfabc = fc.forecaster_classifier(dfabc,fxn=fc.volonly,params=params)
+        dfabc = fc.forecaster_classifier(dfabc,fxn=fc.volonly, params=params)
 
     elif forecaster==2:
         dfabc = fc.forecaster_classifier(dfabc, fxn=fc.volandret, params={'delta': Delta,
