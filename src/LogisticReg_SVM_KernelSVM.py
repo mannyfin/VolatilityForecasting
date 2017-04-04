@@ -200,7 +200,7 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
         fig = plt.figure(figsize=(15, 10))
         ax = fig.add_subplot(111, projection='3d')
         ax.view_init(45, 60)
-        ax.scatter(np.log(Delta_values_seq), p_values_seq, q_values_seq, cmap=plt.hot())
+        ax.scatter(np.log(Delta_values_seq), p_values_seq, q_values_seq, c=MSEs,cmap=plt.hot())
         ax.set_xlabel('log(Delta)')
         ax.set_ylabel('p')
         ax.set_zlabel('q')
