@@ -79,6 +79,7 @@ for count, name in enumerate(filenames):
 
     # model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
     DeltaSeq = np.exp(np.linspace(-10, -2, num=20))
+    # DeltaSeq = np.exp(np.linspace(-10, -2, num=20))
     p_seq = np.array([3, 5, 10])
     q_seq = np.array([3, 5, 10])
     """
@@ -131,39 +132,43 @@ for count, name in enumerate(filenames):
             QL_Test_Outputs_weekly.append(Results_weekly[1])
 
     # making a table
-    ModelName1 = "TestResult_Logit_forecaster1"
-    ModelName2 = "TestResult_SVM_forecaster1"
-    ModelName3 = "TestResult_KernelSVM_poly_deg_2_forecaster1"
-    ModelName4 = "TestResult_KernelSVM_poly_deg_3_forecaster1"
-    ModelName5 = "TestResult_KernelSVM_poly_deg_4_forecaster1"
-    ModelName6 = "TestResult_KernelSVM_poly_deg_5_forecaster1"
-    ModelName7 = "TestResult_KernelSVM_rbf_forecaster1"
-    ModelName8 = "TestResult_KernelSVM_sigmoid_forecaster1"
+    ModelName1 = name+"_Logit_forecaster1"
+    ModelName2 = name+"_SVM_forecaster1"
+    ModelName3 = name+"_KernelSVM_poly_deg_2_forecaster1"
+    ModelName4 = name+"_KernelSVM_poly_deg_3_forecaster1"
+    ModelName5 = name+"_KernelSVM_poly_deg_4_forecaster1"
+    ModelName6 = name+"_KernelSVM_poly_deg_5_forecaster1"
+    ModelName7 = name+"_KernelSVM_rbf_forecaster1"
+    ModelName8 = name+"_KernelSVM_sigmoid_forecaster1"
 
-    ModelNames = np.array(ModelName1, ModelName2, ModelName3, ModelName4, ModelName5, ModelName6, ModelName7,
-                          ModelName8,
-                          ModelName1.replace("1", "2"), ModelName2.replace("1", "2"), ModelName3.replace("1", "2"),
-                          ModelName4.replace("1", "2"),
-                          ModelName5.replace("1", "2"), ModelName6.replace("1", "2"), ModelName7.replace("1", "2"),
-                          ModelName8.replace("1", "2"),
-                          ModelName1.replace("1", "3"), ModelName2.replace("1", "3"), ModelName3.replace("1", "3"),
-                          ModelName4.replace("1", "3"),
-                          ModelName5.replace("1", "3"), ModelName6.replace("1", "3"), ModelName7.replace("1", "3"),
-                          ModelName8.replace("1", "3"),
-                          ModelName1.replace("1", "4"), ModelName2.replace("1", "4"), ModelName3.replace("1", "4"),
-                          ModelName4.replace("1", "4"),
-                          ModelName5.replace("1", "4"), ModelName6.replace("1", "4"), ModelName7.replace("1", "4"),
-                          ModelName8.replace("1", "4"))
+    ModelNames = [ModelName1, ModelName2, ModelName3, ModelName4, ModelName5, ModelName6, ModelName7,ModelName8,
+                  ModelName1.replace("1", "2"), ModelName2.replace("1", "2"), ModelName3.replace("1", "2"),
+                  ModelName4.replace("1", "2"),
+                  ModelName5.replace("1", "2"), ModelName6.replace("1", "2"), ModelName7.replace("1", "2"),
+                  ModelName8.replace("1", "2"),
+                  ModelName1.replace("1", "3"), ModelName2.replace("1", "3"), ModelName3.replace("1", "3"),
+                  ModelName4.replace("1", "3"),
+                  ModelName5.replace("1", "3"), ModelName6.replace("1", "3"), ModelName7.replace("1", "3"),
+                  ModelName8.replace("1", "3"),
+                  ModelName1.replace("1", "4"), ModelName2.replace("1", "4"), ModelName3.replace("1", "4"),
+                  ModelName4.replace("1", "4"),
+                  ModelName5.replace("1", "4"), ModelName6.replace("1", "4"), ModelName7.replace("1", "4"),
+                  ModelName8.replace("1", "4")]
     df_output_collction_daily = {'Model Type': ModelNames,
-                                 'MSE_Daily': MSE_Test_Outputs_daily,
-                                 'QL_Daily': QL_Test_Outputs_daily}
+                                 'Test Sample_MSE_Daily': MSE_Test_Outputs_daily,
+                                 'Test Sample_QL_Daily': QL_Test_Outputs_daily}
     df_output_collction_weekly = {'Model Type': ModelNames,
-                                  'MSE_Weekly': MSE_Test_Outputs_weekly,
-                                  'QL_Weekly': QL_Test_Outputs_weekly}
-    pd.DataFrame(df_output_collction_daily)
-    pd.DataFrame(df_output_collction_weekly)
+                                  'Test Sample_MSE_Weekly': MSE_Test_Outputs_weekly,
+                                  'Test Sample_QL_Weekly': QL_Test_Outputs_weekly}
+    df_logistic_SVM_KernelSVM_daily = pd.DataFrame(df_output_collction_daily,
+                                                   columns=['Model Type','Test Sample_MSE_Daily', 'Test Sample_QL_Daily'])
+    df_logistic_SVM_KernelSVM_weekly = pd.DataFrame(df_output_collction_weekly,
+                                                    columns=['Model Type','Test Sample_MSE_Weekly', 'Test Sample_QL_Weekly'])
 
-# for code testing purpose
+    df_logistic_SVM_KernelSVM_daily.to_csv(name+'df_logistic_SVM_KernelSVM_daily.csv')
+    df_logistic_SVM_KernelSVM_daily.to_csv(name+'df_logistic_SVM_KernelSVM_weekly.csv')
+
+    # for code testing purpose
     TestResult_KernelSVM_sigmoid_forecaster4 = MSE_QL_SE_Test(preprocess, DeltaSeq,warmup_test=warmup_period_for_daily, filename=name, model="KernelSVM_sigmoid",
                                                   forecaster=4, p_seq=p_seq, q_seq=q_seq, stringinput='Daily')
 

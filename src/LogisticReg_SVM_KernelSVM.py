@@ -163,7 +163,7 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
     # for forecaster = 3, plot mse vs log(delta) vs p
     # for forecaster = 4, plot mse vs log(delta) vs p vs q
     """
-    plt.plot(np.log(DeltaSeq),MSEs)
+    plt.plot(np.log(Delta_values_seq),MSEs)
     plt.xlabel('log(Delta)')
     plt.ylabel('MSE')
     # TODO: "MSE" is showing half. Make it complete.
