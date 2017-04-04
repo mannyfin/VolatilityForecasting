@@ -48,15 +48,16 @@ def se_plot(y, y_fit, dates=None, function_method=None, mode=None):
 
     else:
         SE = (y_fit.ravel() - y.ravel()) ** 2
-        if mode is None: ts2 = pd.DataFrame({'SE': np.ravel(np.log(SE.astype('float64')))})
-        else: ts2 = pd.DataFrame({'SE':np.ravel(SE)})
+        if mode is None: ts2 = pd.DataFrame({'ln(SE)': np.ravel(np.log(SE.astype('float64')))})
+        else: ts2 = pd.DataFrame({'ln(SE)':np.ravel(SE)})
         date_c = dates.copy()
         date_c = date_c.reset_index()
         ts2['Date'] = pd.DataFrame(date_c.Date)
         # TODO FIX THIS COUNTER ISSUE
         # se_plot.counter = 1
         # plt.figure(se_plot.counter, figsize=(12,7))
-        ax = ts2.plot(x='Date', y='SE', figsize=(12, 7))
+        ax = ts2.plot(x='Date', y='ln(SE)', figsize=(12, 7))
+        ax.set_ylabel('ln(SE)')
         # dates = dates.reset_index()
         # dates = dates.Date
         #

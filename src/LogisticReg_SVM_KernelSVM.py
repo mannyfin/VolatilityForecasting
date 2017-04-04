@@ -255,7 +255,7 @@ def MSE_QL_SE_Test(preprocess_data,DeltaSeq,warmup_test, filename, model, deg=No
         title = str(filename) + ' ' + str(stringinput) + ' ' + str(model) + '_Squared Error p=' + \
                 str(Optimal_p) + ' q='+str(Optimal_q)
 
-    ax.set_ylabel('MSE')
+
     plt.title(title)
     # plt.show()
     plt.savefig(title+'.png')
