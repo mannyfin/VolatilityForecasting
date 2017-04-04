@@ -26,7 +26,7 @@ import matplotlib.backends.backend_pdf
 
 print("hi")
 # filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv'] #, 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-filenames = ['GBPUSD.csv', 'JPYUSD.csv','SEKUSD.csv']
+filenames = ['JPYUSD.csv','SEKUSD.csv']
 os.chdir('Data')
 v = pd.read_csv('v.csv')
 v.columns = ['Date', 'value']
@@ -167,13 +167,13 @@ for count, name in enumerate(filenames):
     df_logistic_SVM_KernelSVM_weekly = pd.DataFrame(df_output_collction_weekly,
                                                     columns=['Model Type','Test Sample_MSE_Weekly', 'Test Sample_QL_Weekly'])
 
-    for filename in filenames:
-        filename_new = filename.replace(".csv", "")
-        Output_to_PPT(filename_new)
-
     df_logistic_SVM_KernelSVM_daily.to_csv(name+'df_logistic_SVM_KernelSVM_daily.csv')
     df_logistic_SVM_KernelSVM_daily.to_csv(name+'df_logistic_SVM_KernelSVM_weekly.csv')
 
+
+    for filename in filenames:
+        filename_new = filename.replace(".csv", "")
+        Output_to_PPT(filename_new)
 
     # # for code testing purpose
     # DeltaSeq = np.exp(np.linspace(-10, -2, num=20))
