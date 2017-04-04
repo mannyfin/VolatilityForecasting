@@ -119,18 +119,19 @@ for count, name in enumerate(filenames):
         for i in range(len(ModelTypes)):
             if k < 3 or k==5:
                 input_p_seq = None
-            elif k >= 3 or k!=5:
+            # elif k >= 3 or k!=5:
+            elif k==3 or k==4:
                 input_p_seq = p_seq
 
             if k < 4 or k==5:
                 input_q_seq = None
             elif k ==4:
                 input_q_seq = q_seq
-
+            #
             Results_daily = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=warmup_period_for_daily, filename=name,
                                            model=ModelTypes[i], deg=deg[i], forecaster=k, p_seq=input_p_seq,
                                            q_seq=input_q_seq,stringinput='Daily')
-            Results_weekly = MSE_QL_SE_Test(preprocess_w, DeltaSeq, warmup_test=warmup_period_for_daily, filename=name,
+            Results_weekly = MSE_QL_SE_Test(preprocess_w, DeltaSeq, warmup_test=warmup_period_for_weekly, filename=name,
                                             model=ModelTypes[i], deg=deg[i], forecaster=k, p_seq=input_p_seq,
                                             q_seq=input_q_seq,stringinput='Weekly')
 
@@ -173,35 +174,35 @@ for count, name in enumerate(filenames):
                   ModelName5.replace("1", "5"), ModelName6.replace("1", "5"), ModelName7.replace("1", "5"),
                   ModelName8.replace("1", "5")]
 
-    # df_output_collction_daily = {'Model Type': ModelNames,
-    #                              'Test Sample_MSE_Daily': MSE_Test_Outputs_daily,
-    #                              'Test Sample_QL_Daily': QL_Test_Outputs_daily}
-    # df_output_collction_weekly = {'Model Type': ModelNames,
-    #                               'Test Sample_MSE_Weekly': MSE_Test_Outputs_weekly,
-    #                               'Test Sample_QL_Weekly': QL_Test_Outputs_weekly}
-
-    df_output_collction_daily_forescater5 = {'Model Type': ModelNames,
+    df_output_collction_daily = {'Model Type': ModelNames,
                                  'Test Sample_MSE_Daily': MSE_Test_Outputs_daily,
                                  'Test Sample_QL_Daily': QL_Test_Outputs_daily}
-    df_output_collction_weekly_forescater5 = {'Model Type': ModelNames,
+    df_output_collction_weekly = {'Model Type': ModelNames,
                                   'Test Sample_MSE_Weekly': MSE_Test_Outputs_weekly,
                                   'Test Sample_QL_Weekly': QL_Test_Outputs_weekly}
 
-    # df_logistic_SVM_KernelSVM_daily = pd.DataFrame(df_output_collction_daily,
-    #                                                columns=['Model Type','Test Sample_MSE_Daily', 'Test Sample_QL_Daily'])
-    # df_logistic_SVM_KernelSVM_weekly = pd.DataFrame(df_output_collction_weekly,
-    #                                                 columns=['Model Type','Test Sample_MSE_Weekly', 'Test Sample_QL_Weekly'])
+    # df_output_collction_daily_forescater5 = {'Model Type': ModelNames,
+    #                              'Test Sample_MSE_Daily': MSE_Test_Outputs_daily,
+    #                              'Test Sample_QL_Daily': QL_Test_Outputs_daily}
+    # df_output_collction_weekly_forescater5 = {'Model Type': ModelNames,
+    #                               'Test Sample_MSE_Weekly': MSE_Test_Outputs_weekly,
+    #                               'Test Sample_QL_Weekly': QL_Test_Outputs_weekly}
 
-    df_logistic_SVM_KernelSVM_daily_forescater5 = pd.DataFrame(df_output_collction_daily_forescater5,
+    df_logistic_SVM_KernelSVM_daily = pd.DataFrame(df_output_collction_daily,
                                                    columns=['Model Type','Test Sample_MSE_Daily', 'Test Sample_QL_Daily'])
-    df_logistic_SVM_KernelSVM_weekly_forescater5 = pd.DataFrame(df_output_collction_weekly_forescater5,
+    df_logistic_SVM_KernelSVM_weekly = pd.DataFrame(df_output_collction_weekly,
                                                     columns=['Model Type','Test Sample_MSE_Weekly', 'Test Sample_QL_Weekly'])
 
-    # df_logistic_SVM_KernelSVM_daily.to_csv(name+'df_logistic_SVM_KernelSVM_daily.csv')
-    # df_logistic_SVM_KernelSVM_daily.to_csv(name+'df_logistic_SVM_KernelSVM_weekly.csv')
-    #
-    df_logistic_SVM_KernelSVM_daily_forescater5.to_csv(name+'df_logistic_SVM_KernelSVM_daily_forescater5.csv')
-    df_logistic_SVM_KernelSVM_weekly_forescater5.to_csv(name+'df_logistic_SVM_KernelSVM_weekly_forescater5.csv')
+    # df_logistic_SVM_KernelSVM_daily_forescater5 = pd.DataFrame(df_output_collction_daily_forescater5,
+    #                                                columns=['Model Type','Test Sample_MSE_Daily', 'Test Sample_QL_Daily'])
+    # df_logistic_SVM_KernelSVM_weekly_forescater5 = pd.DataFrame(df_output_collction_weekly_forescater5,
+    #                                                 columns=['Model Type','Test Sample_MSE_Weekly', 'Test Sample_QL_Weekly'])
+
+    df_logistic_SVM_KernelSVM_daily.to_csv(name+'df_logistic_SVM_KernelSVM_daily.csv')
+    df_logistic_SVM_KernelSVM_weekly.to_csv(name+'df_logistic_SVM_KernelSVM_weekly.csv')
+
+    # df_logistic_SVM_KernelSVM_daily_forescater5.to_csv(name+'df_logistic_SVM_KernelSVM_daily_forescater5.csv')
+    # df_logistic_SVM_KernelSVM_weekly_forescater5.to_csv(name+'df_logistic_SVM_KernelSVM_weekly_forescater5.csv')
 
 
     for filename in filenames:
