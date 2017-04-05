@@ -28,7 +28,7 @@ import matplotlib.backends.backend_pdf
 print("hi")
 # filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
 
-filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+filenames = ['JPYUSD.csv'] #, 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
 
 # filenames = ['EURUSD.csv'] #, 'NOKUSD.csv']
 
