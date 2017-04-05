@@ -186,7 +186,7 @@ def multip(name):
     df_logistic_SVM_KernelSVM_weekly.to_csv(name+'df_logistic_SVM_KernelSVM_weekly.csv')
 
 
-    for filename in filenames:
+    for filename in names:
         filename_new = filename.replace(".csv", "")
         Output_to_PPT(filename_new)
 
