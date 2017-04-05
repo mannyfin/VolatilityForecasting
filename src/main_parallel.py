@@ -200,11 +200,13 @@ def multip(name):
 
 if __name__ == '__main__':
 
-    p = multiprocessing.Pool(processes = multiprocessing.cpu_count()-1)
+    p = Pool(processes = len(names))
     start = time.time()
-    for file in names:
-        p.apply_async(multip, [file])
-        # p.start()
+    async_result = p.map_async(multip, names)
+    # for file in names:
+    #     # p.apply_async(multip, [file])
+    #     p.map(multip, [file])
+    #     # p.start()
     p.close()
     p.join()
     print("Complete")
