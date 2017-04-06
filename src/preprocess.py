@@ -18,5 +18,7 @@ def preprocess_data(ret, vol, v):
     preprocess['label'] = (preprocess.Volatility_Time > preprocess.Volatility_Time.shift(1)).astype(int)
     # does not give setting with copy warning
     preprocess.loc[preprocess.label == 0, 'label'] = -1
+    test_sample = preprocess[preprocess.value == 0]
+    train_sample = preprocess[preprocess.value == 1]
 
-    return preprocess[1:]
+    return preprocess[1:], test_sample, train_sample

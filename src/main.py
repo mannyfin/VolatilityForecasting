@@ -77,8 +77,8 @@ for count, name in enumerate(filenames):
 
     "returnvoldf"
     "We want to test daily and weekly data"
-    preprocess = preprocess_data(daily_ret, daily_vol_result, v)
-    preprocess_w = preprocess_data(weekly_ret, weekly_vol_result, v)
+    preprocess_daily, test_sample_daily, train_sample_daily = preprocess_data(daily_ret, daily_vol_result, v)
+    preprocess_weekly,test_sample_weekly, train_sample_weekly = preprocess_data(weekly_ret, weekly_vol_result, v)
 
     # model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
     DeltaSeq = np.exp(np.linspace(-10, -2, num=20))
