@@ -18,7 +18,7 @@ import os
 from LogisticReg_SVM_KernelSVM import *
 
 from VAR_new import *
-from returnvoldf import retvoldf
+from preprocess import preprocess_data
 # please install python-pptx with pip install python-pptx
 from PPT import *
 
@@ -77,8 +77,8 @@ for count, name in enumerate(filenames):
 
     "returnvoldf"
     "We want to test daily and weekly data"
-    preprocess = retvoldf(daily_ret, daily_vol_result, v)
-    preprocess_w = retvoldf(weekly_ret, weekly_vol_result, v)
+    preprocess = preprocess_data(daily_ret, daily_vol_result, v)
+    preprocess_w = preprocess_data(weekly_ret, weekly_vol_result, v)
 
     # model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
     DeltaSeq = np.exp(np.linspace(-10, -2, num=20))

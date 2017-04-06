@@ -61,7 +61,7 @@ def Obtain_Traing_Test(df, Delta, forecaster, p=None,q=None):
 # volatility prediction for training/test sample
 def PredictVol(preprocess_predict, Delta, warmup, train_or_test, model, deg=None, forecaster=None, p=None,q=None):
     """
-    :param preprocess: the data frame created in main.py by returnvoldf.py
+    :param preprocess: the data frame created in main.py by preprocess.py
     :param Delta: Delta value which is a candidate of the optimized Delta
     :param warmup: the number of observations as a warm-up period for the model, which is 400 in our case
     :param train_or_test: a string of "train" or "test"
@@ -106,7 +106,7 @@ def PredictVol(preprocess_predict, Delta, warmup, train_or_test, model, deg=None
 # Calculating MSE and QL for training/test sample
 def MSE_QL(preprocess_data_input, Delta,warmup, train_or_test, model, deg=None, forecaster=None, p=None,q=None):
     """
-    :param preprocess: the data frame created in main.py by returnvoldf.py
+    :param preprocess: the data frame created in main.py by preprocess.py
     :param Delta: Delta value which is a candidate of the optimized Delta
     :param warmup: the number of observations as a warm-up period for the model, which is 400 in our case
     :param train_or_test: a string of "train" or "test"
@@ -131,7 +131,7 @@ def MSE_QL(preprocess_data_input, Delta,warmup, train_or_test, model, deg=None, 
 # optimize in the training sample
 def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, forecaster=None, p_seq=None,q_seq=None, stringinput=None):
     """
-    :param preprocess: the data frame created in main.py by returnvoldf.py
+    :param preprocess: the data frame created in main.py by preprocess.py
     :param DeltaSeq: a sequence of Delta values
     :param warmup: the number of observations as a warm-up period for the model, which is 400 in our case
     :param model: model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
@@ -216,7 +216,7 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
 # measure the prediction performance in the test sample
 def MSE_QL_SE_Test(preprocess_data,DeltaSeq,warmup_test, filename, model, deg=None, forecaster=None, p_seq=None,q_seq=None,stringinput=None):
     """
-    :param preprocess: the data frame created in main.py by returnvoldf.py
+    :param preprocess: the data frame created in main.py by preprocess.py
     :param DeltaSeq: a sequence of Delta values
     :param warmup: the number of observations as a warm-up period for the model, which is 400 in our case
     :param model: model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
