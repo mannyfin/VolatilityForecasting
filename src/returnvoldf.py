@@ -13,7 +13,7 @@ def retvoldf(ret, vol, v):
     # this line below creates a DataFrame obj that intersects the dates from vol and v.csv. It then arranges the vols in
     # a time based fashion
     combined = pd.concat([vol.Date[:-1], ret.Return_Time[:-1], vol.Volatility_Time.iloc[:-1]
-                         , vol.Volatility_Time.iloc.shift(-1)], axis=1).dropna().set_index('Date')
+                         , vol.Volatility_Time.shift(-1)], axis=1).dropna().set_index('Date')
     preprocess = v.join(combined, how='inner')
     preprocess.columns = ['V', 'ret_now',  'vol_now', 'vol_future']
     # make label column
