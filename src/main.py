@@ -18,6 +18,7 @@ import os
 from LogisticReg_SVM_KernelSVM import *
 
 from VAR_new import *
+from returnvoldf import retvoldf
 from preprocess import preprocess_data
 # please install python-pptx with pip install python-pptx
 from PPT import *
@@ -77,6 +78,8 @@ for count, name in enumerate(filenames):
 
     "returnvoldf"
     "We want to test daily and weekly data"
+
+    preprocess_daily = retvoldf(daily_ret, daily_vol_result, v)
     preprocess_daily, test_sample_daily, train_sample_daily = preprocess_data(daily_ret, daily_vol_result, v)
     preprocess_weekly,test_sample_weekly, train_sample_weekly = preprocess_data(weekly_ret, weekly_vol_result, v)
 
