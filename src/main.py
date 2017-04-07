@@ -22,8 +22,8 @@ from VAR_new import *
 
 import matplotlib.backends.backend_pdf
 print("hi")
-# filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
-filenames = ['SEKUSD.csv','CADUSD.csv',  'CHFUSD.csv',]
+filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+# filenames = ['SEKUSD.csv','CADUSD.csv',  'CHFUSD.csv',]
 
 dailyvol_zeroes= pd.DataFrame()
 weeklyvol_zeroes= pd.DataFrame()
@@ -184,8 +184,8 @@ daily_ret_combined.reset_index(drop=True, inplace=True)
 # use this below
 fc = FunctionCalls()
 # xmat = pd.DataFrame([sum([daily_vol_combined[currency].loc[i+p-1:i:-1].as_matrix().tolist() for currency in daily_vol_combined.keys()],[]) for i in range(len(daily_vol_combined)-p)])
-# VAR_test = fc.function_runs(dates=dates, filename='Combined Curr.', stringinput='Daily', warmup=909, input_data=np.log(daily_vol_combined), var_q=[1, 2, 3])
-VAR_test = fc.function_runs(dates=dates, filename='Combined Curr.', stringinput='Daily', warmup=909, input_data=np.log(daily_vol_combined), var_q=[1, 2, 3])
+# VAR_test = fc.function_runs(dates=dates, filename='Combined Curr.', stringinput='Daily', warmup=909, input_data=np.log(daily_vol_combined), var_lag=[1, 2, 3])
+VAR_test = fc.function_runs(dates=dates, filename='Combined Curr.', stringinput='Daily', warmup=909, input_data=np.log(daily_vol_combined), var_lag=[5])
 
 
 # """Output multiple plots into a pdf file"""

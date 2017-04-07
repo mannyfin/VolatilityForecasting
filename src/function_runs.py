@@ -20,7 +20,7 @@ class FunctionCalls(object):
     def __init__(self):
         pass
 
-    def function_runs(self,dates=None, filename=None, stringinput=None, warmup=None,input_data=None, tnplus1=None, lr=None, arch=None, garchpq=None, k_nn=None, var_q=None, LASSO=False):
+    def function_runs(self,dates=None, filename=None, stringinput=None, warmup=None,input_data=None, tnplus1=None, lr=None, arch=None, garchpq=None, k_nn=None, var_lag=None, LASSO=False):
         output = list()
 
         """tnplus1"""
@@ -119,10 +119,10 @@ class FunctionCalls(object):
         """VAR """
         try:
             # 4 is the num of args to pass into the fcn
-            if var_q is None:
+            if var_lag is None:
                 print("Not running VAR")
-            elif len(var_q) >= 1 & isinstance(var_q, list):
-                for count, elem in enumerate(var_q):
+            elif len(var_lag) >= 1 & isinstance(var_lag, list):
+                for count, elem in enumerate(var_lag):
                     # KNNmethod = KNN(vol_data=input_data, k=elem, warmup=warmup, filename=filename, Timedt=stringinput)
                     VAR_q = VAR(p=elem, combined_vol=input_data, warmup_period=warmup)\
                                 .VAR_calc(Timedt=stringinput, dates=dates, filename=filename)
