@@ -5,65 +5,76 @@ from SEplot import se_plot as SE
 import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-import forecaster_classifier as fc
 from sklearn.svm import SVC as SVC
 
 # adding labels and obtaining the training and the test samples for a given Delta value
-def Obtain_Traing_Test(df, Delta, forecaster, p=None,q=None):
+def Obtain_Traing_Test(df, Delta, p=None,q=None):
+# def Obtain_Traing_Test(df, Delta, forecaster, p=None,q=None):
     """
     :param df: columns including Date, V(seperating training and test samples), ret_past, vol_past, vol_now, vol_future
     :param Delta: Delta value which is a candidate of the optimized Delta
-    :param forecaster: forecaster = 1,2,3 or 4
+    :param forecaster: forecaster = 1,2,3, 4, 5
     :param p: p is a parameter in forecaster 3 and forecaster 4 
     :param q: q is a parameter in forecaster 4
     :return: the training and test sample
     """
     # labeling
-    # values1 = abs(df.vol_now - df.vol_past * (1 + Delta))
-    # values2 = abs(df.vol_now - df.vol_past * (1 - Delta))
-    # condition = values1 < values2
-    # df.loc[condition, 'label'] = 1
-    # df.loc[~condition, 'label'] = -1
+    values1 = abs(df.vol_now - df.vol_past * (1 + Delta))
+    values2 = abs(df.vol_now - df.vol_past * (1 - Delta))
+    condition = values1 < values2
+    df.loc[condition, 'label'] = 1
+    df.loc[~condition, 'label'] = -1
     dfabc = df.copy()
-    if forecaster==1:
-        params = {'delta': Delta, 'vol_name': 'vol_past'}
-        dfabc = fc.forecaster_classifier(dfabc,fxn=fc.volonly, params=params)
 
-    elif forecaster==2:
-        dfabc = fc.forecaster_classifier(dfabc, fxn=fc.volandret, params={'delta': Delta,
-                                                                'vol_name': 'vol_past',
-                                                                'ret_name': 'ret_past'})
-    elif forecaster==3:
-        dfabc = fc.forecaster_classifier(dfabc, fxn=fc.volonly, params={'delta': Delta,
-                                                                    'vol_name': 'vol_past',
-                                                                    'p': p})
+    # if forecaster==1:
+    #     params = {'delta': Delta, 'vol_name': 'vol_past'}
+    #     dfabc = fc.forecaster_classifier(dfabc,fxn=fc.volonly, params=params)
+    #
+    # elif forecaster==2:
+    #     dfabc = fc.forecaster_classifier(dfabc, fxn=fc.volandret, params={'delta': Delta,
+    #                                                             'vol_name': 'vol_past',
+    #                                                             'ret_name': 'ret_past'})
+    # elif forecaster==3:
+    #     dfabc = fc.forecaster_classifier(dfabc, fxn=fc.volonly, params={'delta': Delta,
+    #                                                                 'vol_name': 'vol_past',
+    #                                                                 'p': p})
+    #
+    # elif forecaster==4:
+    #     dfabc = fc.forecaster_classifier(dfabc, fxn=fc.volandret, params={'delta': Delta,
+    #                                                                 'vol_name': 'vol_past',
+    #                                                                 'p': p,
+    #                                                                 'q':q, 'ret_name':'ret_past'})
+    #
+    # elif forecaster==5:
+    #     dfabc['vol_ret_past'] = dfabc['vol_past']*dfabc['ret_past']
+    #     dfabc = fc.forecaster_classifier(dfabc, fxn=fc.volandret, params={'delta': Delta,
+    #                                                                 'vol_name': 'vol_past','ret_name':'vol_ret_past'})
+    if p!=None:
+        mean_ret = dfabc["ret_past"].rolling(3).mean()
 
-    elif forecaster==4:
-        dfabc = fc.forecaster_classifier(dfabc, fxn=fc.volandret, params={'delta': Delta,
-                                                                    'vol_name': 'vol_past',
-                                                                    'p': p,
-                                                                    'q':q, 'ret_name':'ret_past'})
 
-    elif forecaster==5:
-        dfabc['vol_ret_past'] = dfabc['vol_past']*dfabc['ret_past']
-        dfabc = fc.forecaster_classifier(dfabc, fxn=fc.volandret, params={'delta': Delta,
-                                                                    'vol_name': 'vol_past','ret_name':'vol_ret_past'})
+        preprocess['ret_multiply_vol_past'] = pd.Series(preprocess.ret_past * preprocess.vol_past,
+                                                index=preprocess.index)
 
-    # seperate data into training and test samples
-    condition2 = df.V == 1
-    df_training = dfabc.loc[condition2]
+# seperate data into training and test samples
+    condition = dfabc.V == 1
+    df_training = dfabc.loc[condition]
     df_training = df_training.reset_index()
-    df_test = dfabc.loc[~condition2]
+    df_test = dfabc.loc[~condition]
     df_test = df_test.reset_index()
+
+    mean_ret = preprocess["ret_past"].rolling(3).mean()
+
+
     del dfabc
     return df_training, df_test
 
 # volatility prediction for training/test sample
-def PredictVol(preprocess_predict, Delta, warmup, train_or_test, model, deg=None, forecaster=None, p=None,q=None):
+def PredictVol(preprocess_predict, Delta, train_or_test, model, deg=None, p=None,q=None):
+# def PredictVol(preprocess_predict, Delta, warmup, train_or_test, model, deg=None, forecaster=None, p=None,q=None):
     """
     :param preprocess: the data frame created in main.py by returnvoldf.py
     :param Delta: Delta value which is a candidate of the optimized Delta
-    :param warmup: the number of observations as a warm-up period for the model, which is 400 in our case
     :param train_or_test: a string of "train" or "test"
     :param model: model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
     :param deg: degree of the Kernel SVM when kernel="poly"
@@ -73,9 +84,11 @@ def PredictVol(preprocess_predict, Delta, warmup, train_or_test, model, deg=None
     :return: all predicted volatilities
     """
     if train_or_test == "train":
-        df_whole = Obtain_Traing_Test(preprocess_predict, Delta, forecaster, p,q)[0]
+        df = Obtain_Traing_Test(preprocess_predict, Delta, p=None,q=None)[0]
+        # df = Obtain_Traing_Test(preprocess_predict, Delta, forecaster, p,q)[0]
     elif train_or_test == "test":
-        df_whole = Obtain_Traing_Test(preprocess_predict, Delta, forecaster, p,q)[1]
+        df = Obtain_Traing_Test(preprocess_predict, Delta, p=None,q=None)[1]
+        # df = Obtain_Traing_Test(preprocess_predict, Delta, forecaster, p,q)[1]
 
     # specify the type of the model
     if model =="LogisticRegression":
@@ -91,24 +104,25 @@ def PredictVol(preprocess_predict, Delta, warmup, train_or_test, model, deg=None
 
 
     PredictedVols = []
-    for i in range(np.shape(df_whole)[0]-warmup+2):
+    # for i in range(np.shape(df_whole)[0]-warmup+2):
         # model fitting and making predictions
-        df = df_whole[i:warmup-2+i]
-        Model.fit(np.array(df.vol_now).reshape(len(df.vol_now),1), np.array(df.label))
-        predicted_y_t = Model.predict(df.vol_future.iloc[-1])
-        vol_future_pred = df.vol_future.iloc[-1] *(1+predicted_y_t*Delta)
-        PredictedVols.append(vol_future_pred[0])
+        # df = df_whole[i:warmup-2+i]
+    Model.fit(np.array(df.vol_now).reshape(len(df.vol_now),1), np.array(df.label))
+    predicted_y_t = Model.predict(df.vol_future.iloc)
+    vol_future_pred = df.vol_future.iloc *(1+predicted_y_t*Delta)
+    # PredictedVols.append(vol_future_pred[0])
 
-    vol_future_observed = df_whole.vol_future[warmup-2:]
-    return pd.Series(PredictedVols), pd.Series(vol_future_observed)
+    vol_future_observed = df.vol_future
+    # vol_future_observed = df.vol_future[warmup-2:]
+    return pd.Series(vol_future_pred), pd.Series(vol_future_observed)
 
 
 # Calculating MSE and QL for training/test sample
-def MSE_QL(preprocess_data_input, Delta,warmup, train_or_test, model, deg=None, forecaster=None, p=None,q=None):
+def MSE_QL(preprocess_data_input, Delta, train_or_test, model, deg=None, forecaster=None, p=None,q=None):
+# def MSE_QL(preprocess_data_input, Delta,warmup, train_or_test, model, deg=None, forecaster=None, p=None,q=None):
     """
     :param preprocess: the data frame created in main.py by returnvoldf.py
     :param Delta: Delta value which is a candidate of the optimized Delta
-    :param warmup: the number of observations as a warm-up period for the model, which is 400 in our case
     :param train_or_test: a string of "train" or "test"
     :param model: model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
     :param deg: degree of the Kernel SVM when kernel="poly"
@@ -119,7 +133,8 @@ def MSE_QL(preprocess_data_input, Delta,warmup, train_or_test, model, deg=None, 
     """
     # model fitting and making predictions
     Performance_ = PerformanceMeasure()
-    PredictedVols = PredictVol(preprocess_data_input, Delta, warmup, train_or_test, model, deg, forecaster, p,q)
+    PredictedVols = PredictVol(preprocess_data_input, Delta, train_or_test, model, deg, forecaster, p,q)
+    # PredictedVols = PredictVol(preprocess_data_input, Delta, warmup, train_or_test, model, deg, forecaster, p,q)
     prediction = PredictedVols[0]
     observed  = PredictedVols[1]
 
@@ -129,11 +144,11 @@ def MSE_QL(preprocess_data_input, Delta,warmup, train_or_test, model, deg=None, 
 
 
 # optimize in the training sample
-def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, forecaster=None, p_seq=None,q_seq=None, stringinput=None):
+def Optimize(preprocess_data, DeltaSeq, filename, model, deg=None, forecaster=None, p_seq=None,q_seq=None, stringinput=None):
+# def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, forecaster=None, p_seq=None,q_seq=None, stringinput=None):
     """
     :param preprocess: the data frame created in main.py by returnvoldf.py
     :param DeltaSeq: a sequence of Delta values
-    :param warmup: the number of observations as a warm-up period for the model, which is 400 in our case
     :param model: model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
     :param deg: degree of the Kernel SVM when kernel="poly"
     :param forecaster: forecaster = 1,2,3 or 4
@@ -152,7 +167,8 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
     for i in range(len(DeltaSeq)):
         for j in range(len(p_seq)):
             for k in range(len(q_seq)):
-                MSEOutput = MSE_QL(preprocess_data, DeltaSeq[i], warmup, train_or_test, model, deg, forecaster, p_seq[j],q_seq[k])[0]
+                MSEOutput = MSE_QL(preprocess_data, DeltaSeq[i], train_or_test, model, deg, forecaster, p_seq[j],q_seq[k])[0]
+                # MSEOutput = MSE_QL(preprocess_data, DeltaSeq[i], warmup, train_or_test, model, deg, forecaster, p_seq[j],q_seq[k])[0]
                 MSEs.append(MSEOutput)
                 Delta_values_seq.append(DeltaSeq[i])
                 p_values_seq.append(p_seq[j])
@@ -214,11 +230,11 @@ def Optimize(preprocess_data, DeltaSeq,warmup, filename, model, deg=None, foreca
 
 
 # measure the prediction performance in the test sample
-def MSE_QL_SE_Test(preprocess_data,DeltaSeq,warmup_test, filename, model, deg=None, forecaster=None, p_seq=None,q_seq=None,stringinput=None):
+def MSE_QL_SE_Test(preprocess_data,DeltaSeq, filename, model, deg=None, forecaster=None, p_seq=None,q_seq=None,stringinput=None):
+# def MSE_QL_SE_Test(preprocess_data,DeltaSeq,warmup_test, filename, model, deg=None, forecaster=None, p_seq=None,q_seq=None,stringinput=None):
     """
     :param preprocess: the data frame created in main.py by returnvoldf.py
     :param DeltaSeq: a sequence of Delta values
-    :param warmup: the number of observations as a warm-up period for the model, which is 400 in our case
     :param model: model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
     :param deg: degree of the Kernel SVM when kernel="poly"
     :param forecaster: forecaster = 1,2,3 or 4
@@ -226,21 +242,26 @@ def MSE_QL_SE_Test(preprocess_data,DeltaSeq,warmup_test, filename, model, deg=No
     :param q_seq: q_seq contains the possible values of the parameter q in forecaster 4
     :return: 
     """
-    warmup_train=[]
-    if stringinput == 'Daily':
-        warmup_train = 100  # for daily
-    elif stringinput == 'Weekly':
-        warmup_train = 50  # for weekly
+    # if stringinput == 'Daily':
+    #     warmup_train = 100  # for daily
+    # elif stringinput == 'Weekly':
+    #     warmup_train = 50  # for weekly
 
     # train the model
-    OptimizationOutput = Optimize(preprocess_data, DeltaSeq,warmup_train, filename, model, deg, p_seq=p_seq, q_seq=q_seq,
+    OptimizationOutput = Optimize(preprocess_data, DeltaSeq, filename, model, deg, p_seq=p_seq, q_seq=q_seq,
                                   forecaster=forecaster,stringinput=stringinput)
+
+
+    # OptimizationOutput = Optimize(preprocess_data, DeltaSeq, warmup_train, filename, model, deg, p_seq=p_seq, q_seq=q_seq,
+    #                           forecaster=forecaster, stringinput=stringinput)
+
     OptimalDelta = OptimizationOutput[0]
     Optimal_p = OptimizationOutput[1]
     Optimal_q = OptimizationOutput[2]
     # test the model
     train_or_test = "test"
-    Output = MSE_QL(preprocess_data, OptimalDelta, warmup_test, train_or_test, model, deg,forecaster, Optimal_p,Optimal_q)
+    Output = MSE_QL(preprocess_data, OptimalDelta, train_or_test, model, deg,forecaster, Optimal_p,Optimal_q)
+    # Output = MSE_QL(preprocess_data, OptimalDelta, warmup_test, train_or_test, model, deg,forecaster, Optimal_p,Optimal_q)
     MSE_test = Output[0]
     QL_test = Output[1]
     print('MSE_test is ' + str(MSE_test))
@@ -248,10 +269,12 @@ def MSE_QL_SE_Test(preprocess_data,DeltaSeq,warmup_test, filename, model, deg=No
     prediction = Output[2]
     observed = Output[3]
 
-    df_test = Obtain_Traing_Test(preprocess_data, OptimalDelta, forecaster, Optimal_p,Optimal_q)[1]
+    df_test = Obtain_Traing_Test(preprocess_data, OptimalDelta, p=None,q=None)[1]
+    # df_test = Obtain_Traing_Test(preprocess_data, OptimalDelta, forecaster, Optimal_p,Optimal_q)[1]
     """ return a plot of the squared error"""
     # df_test["Date"] = df_test.index
-    ax=SE(observed, prediction, df_test.Date[warmup_test-2:])
+    ax=SE(observed, prediction, df_test.Date)
+    # ax=SE(observed, prediction, df_test.Date[warmup_test-2:])
     title=[]
     if forecaster == 1 or forecaster == 2 or forecaster == 5:
         if deg is None:
