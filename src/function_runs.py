@@ -126,11 +126,22 @@ class FunctionCalls(object):
                     # KNNmethod = KNN(vol_data=input_data, k=elem, warmup=warmup, filename=filename, Timedt=stringinput)
                     VAR_q = VAR(p=elem, combined_vol=input_data, warmup_period=warmup)\
                                 .VAR_calc(Timedt=stringinput, dates=dates, filename=filename)
-                    import matplotlib.pyplot as plt
-                    plt.show()
+                    # import matplotlib.pyplot as plt
+                    # plt.show()
                     # the line below doesnt work at the moment...
-                    # output = result_to_df_list(list_name=output, method_result=VAR_q,
-                    #                            index_value=['VAR_p='+str(elem)], column_value=['MSE', 'QL'])
+                    test = pd.DataFrame.from_records(VAR_q[0]).transpose()
+                    test.columns = ['MSE']
+                    test=test.rename(index={'SumMSE': 'Sum'})
+                    test1 = pd.DataFrame.from_records(VAR_q[1]).transpose()
+                    test1.columns = ['QL']
+                    test1=test1.rename(index={'SumQL': 'Sum'})
+                    output = pd.concat([test, test1], axis=1)
+                    writer = pd.ExcelWriter('VAR_output p='+str(elem)+'.xlsx')
+                    output.to_excel(writer, 'VAR p =' + str(elem))
+                    writer.save()
+
+                    output = result_to_df_list(list_name=output, method_result=output,
+                                               index_value=['VAR_p='+str(elem)], column_value=['MSE', 'QL'])
 
                     print("Above is VAR for p=" +str(elem)+ " " + str(stringinput))
 
