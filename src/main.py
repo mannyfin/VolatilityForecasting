@@ -22,7 +22,7 @@ from VAR_new import *
 
 import matplotlib.backends.backend_pdf
 print("hi")
-filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
 # filenames = ['SEKUSD.csv','CADUSD.csv',  'CHFUSD.csv',]
 
 dailyvol_zeroes= pd.DataFrame()
