@@ -21,7 +21,7 @@ def retvoldf(ret, vol, v):
     # does not give setting with copy warning
     preprocess.loc[preprocess.label == 0, 'label'] = -1
 
-    test_sample = preprocess[preprocess.value == 0]
-    train_sample = preprocess[preprocess.value == 1]
+    test_sample = preprocess[preprocess.V == 0]
+    train_sample = preprocess[preprocess.V == 1]
 
     return preprocess,test_sample, train_sample

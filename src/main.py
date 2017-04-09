@@ -19,7 +19,6 @@ from LogisticReg_SVM_KernelSVM import *
 
 from VAR_new import *
 from returnvoldf import retvoldf
-from preprocess import preprocess_data
 # please install python-pptx with pip install python-pptx
 from PPT import *
 
@@ -27,7 +26,7 @@ from PPT import *
 
 
 print("hi")
-filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
 
 os.chdir('Data')
 v = pd.read_csv('v.csv')
