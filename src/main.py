@@ -19,6 +19,7 @@ from LogisticReg_SVM_KernelSVM import *
 
 from VAR_new import *
 from returnvoldf import retvoldf
+from preprocess import preprocess_data
 # please install python-pptx with pip install python-pptx
 from PPT import *
 
@@ -26,9 +27,8 @@ from PPT import *
 
 
 print("hi")
-# No JPYUSD and SEKUSD
-# filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
-filenames = ['AUDUSD.csv']
+filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'JPYUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv', 'SEKUSD.csv']
+
 os.chdir('Data')
 v = pd.read_csv('v.csv')
 v.columns = ['Date', 'value']
@@ -51,7 +51,7 @@ for count, name in enumerate(filenames):
     name = name.split('.')[0]
     namelist.append(name)
     print("Running file: " + str(name))
-    # warmup_period = 400
+    warmup_period = 400
     daily_vol_result, daily_ret, daily_vol_zeroes, daily_ret_zeroes = time_vol_calc(df_single_day)
     weekly_vol_result, weekly_ret, weekly_vol_zeroes, weekly_ret_zeroes = time_vol_calc(df_single_week)
     # monthly_vol_result, monthly_ret, monthly_vol_zeroes, monthly_ret_zeroes = time_vol_calc(df_single_month)
@@ -78,11 +78,10 @@ for count, name in enumerate(filenames):
 
     "returnvoldf"
     "We want to test daily and weekly data"
-    preprocess = retvoldf(daily_ret, daily_vol_result, v)
-    preprocess['ret_multiply_vol_past'] =pd.Series(preprocess.ret_past * preprocess.vol_past, index=preprocess.index)
-    preprocess.ret_past * preprocess.vol_past
-    preprocess_w = retvoldf(weekly_ret, weekly_vol_result, v)
-    preprocess_w['ret_multiply_vol_past'] =pd.Series(preprocess_w.ret_past * preprocess_w.vol_past, index=preprocess.index)
+
+    # preprocess_daily = retvoldf(daily_ret, daily_vol_result, v)
+    preprocess_daily, test_sample_daily, train_sample_daily = retvoldf(daily_ret, daily_vol_result, v)
+    preprocess_weekly,test_sample_weekly, train_sample_weekly = retvoldf(weekly_ret, weekly_vol_result, v)
 
     # model can take inputs "LogisticRegression", "SVM", "KernelSVM_poly" ,"KernelSVM_rbf" or "KernelSVM_sigmoid"
     DeltaSeq = np.exp(np.linspace(-10, -2, num=20))
@@ -101,8 +100,8 @@ for count, name in enumerate(filenames):
     if not os.path.exists(name):
         os.mkdir(name)
 
-    # warmup_period_for_daily = 100  # size of the rolling window for daily data
-    # warmup_period_for_weekly = 50  # size of the rolling window for weekly data
+    warmup_period_for_daily = 100  # size of the rolling window for daily data
+    warmup_period_for_weekly = 50  # size of the rolling window for weekly data
 
     os.chdir(name)
 
@@ -127,20 +126,13 @@ for count, name in enumerate(filenames):
                 input_q_seq = None
             elif k ==4:
                 input_q_seq = q_seq
-
-            Results_daily = MSE_QL_SE_Test(preprocess, DeltaSeq, filename=name,
+            #
+            Results_daily = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=warmup_period_for_daily, filename=name,
                                            model=ModelTypes[i], deg=deg[i], forecaster=k, p_seq=input_p_seq,
                                            q_seq=input_q_seq,stringinput='Daily')
-            Results_weekly = MSE_QL_SE_Test(preprocess_w, DeltaSeq, filename=name,
+            Results_weekly = MSE_QL_SE_Test(preprocess_w, DeltaSeq, warmup_test=warmup_period_for_weekly, filename=name,
                                             model=ModelTypes[i], deg=deg[i], forecaster=k, p_seq=input_p_seq,
                                             q_seq=input_q_seq,stringinput='Weekly')
-
-            # Results_daily = MSE_QL_SE_Test(preprocess, DeltaSeq, warmup_test=warmup_period_for_daily, filename=name,
-            #                                model=ModelTypes[i], deg=deg[i], forecaster=k, p_seq=input_p_seq,
-            #                                q_seq=input_q_seq,stringinput='Daily')
-            # Results_weekly = MSE_QL_SE_Test(preprocess_w, DeltaSeq, warmup_test=warmup_period_for_weekly, filename=name,
-            #                                 model=ModelTypes[i], deg=deg[i], forecaster=k, p_seq=input_p_seq,
-            #                                 q_seq=input_q_seq,stringinput='Weekly')
 
             MSE_Test_Outputs_daily.append(Results_daily[0])
             QL_Test_Outputs_daily.append(Results_daily[1])
