@@ -47,8 +47,8 @@ def se_plot(y, y_fit, dates=None, function_method=None, mode=None):
 
     else:
         SE = (y_fit.ravel() - y.ravel()) ** 2
-        if mode is None: ts2 = pd.DataFrame({'SE': np.ravel(np.log(SE.astype('float64')))})
-        else: ts2 = pd.DataFrame({'SE':np.ravel(SE)})
+        if mode is None: ts2 = pd.DataFrame({'ln(SE)': np.ravel(np.log(SE.astype('float64')))})
+        else: ts2 = pd.DataFrame({'ln(SE)':np.ravel(SE)})
         date_c = dates.copy()
         date_c = date_c.reset_index()
         ts2['Date'] = pd.DataFrame(date_c.Date)
@@ -58,7 +58,7 @@ def se_plot(y, y_fit, dates=None, function_method=None, mode=None):
         dates = dates.Date
 
         plt.gcf()
-        plt.plot(ts2['Date'].dropna(), ts2['SE'], label=function_method)
+        plt.plot(ts2['Date'].dropna(), ts2['ln(SE)'], label=function_method)
 
     plt.xlabel("Years")
     if mode is None: plt.ylabel("ln(SE)")

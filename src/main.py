@@ -1,3 +1,4 @@
+"for HW2.1 main.py is used for running VAR. main"
 
 #  if you dont have this installed then here's how to install the module:
 #  conda install -c https://conda.binstar.org/bashtage arch

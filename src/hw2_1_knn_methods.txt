@@ -1,0 +1,21 @@
+use log RV in all cases
+-MSE, QL for test sample.
+
+method 0; growing window, skip first 100 data		
+		-plot of mse vs k
+		-table of mse vs k, give excel file or csv
+		-all currencies on one ln(SE) plot
+method 1; rolling fixed window. 100 window size
+		-optimize window size. 100 200 300, 400
+		-plot mse vs k
+		-table of mse vs k
+method 2: do it. Standardize t. Try standardizing sigma
+		-plot of mse vs k
+		-table of mse vs k
+method 3: dont do it
+
+method 4: exact as method 2, high is highest price and lowest price for a day
+third; growing window, skip 100 and time penalty
+     3d plot need plot of MSE vs k vs time penalty. We have two parameters k and m
+whatever extension model is applied to log(RV). normalize time
+we have to do standardization

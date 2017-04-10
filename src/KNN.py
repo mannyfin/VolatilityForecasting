@@ -8,14 +8,14 @@ from pandas.tools.plotting import table
 
 
 # choose the method in line 10 under method=[number] for number = 0,1,2,3
-def KNN(vol_data, k=1, warmup=100, filename=None, Timedt=None, method=[3]):
+def KNN(vol_data, k=1, warmup=100, filename=None, Timedt=None, method=[0,1]):
     vol_data_input = vol_data.iloc[:,1]
     dates = pd.Series(vol_data.Date)
 
     # This can be done more efficiently by moving k list directly into k
     #
     knns = [[ks, m, KNNcalc(vol_data=vol_data_input, dates =dates, k=ks, warmup=warmup,filename=filename, Timedt=Timedt, method=m)]
-            for count, m in enumerate(method) for ks in np.linspace(1,20,20)]
+            for count, m in enumerate(method) for ks in np.linspace(1,20,20, dtype=int)]
     # ks=20
     # knns = [[ks, m, KNNcalc(vol_data=vol_data_input, dates =dates, k=ks, warmup=warmup,filename=filename, Timedt=Timedt, method=m)]
     #         for count, m in enumerate(method)]
@@ -163,7 +163,8 @@ def KNNcalc(vol_data, dates=None, k=1, warmup=100, filename=None, Timedt=None, m
 
     # now calculate MSE, QL and so forth
     Performance_ = PerformanceMeasure()
-    if len(m)==1:
+    # if len(m)==1 or iainstance(m,int):
+    if isinstance(m, int):
         MSE = Performance_.mean_se(observed=vol_data.iloc[warmup:], prediction=prediction)
         QL = Performance_.quasi_likelihood(observed=vol_data.iloc[warmup:].astype('float64'), prediction=prediction)
         label = str(filename.replace(".csv", ""))  # + " " + str(Timedt) + " SE (" + str(k) + ") KNN Volatility"
