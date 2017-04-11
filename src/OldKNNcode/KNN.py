@@ -193,3 +193,32 @@ def KNNcalc(vol_data, dates=None, k=1, warmup=100, filename=None, Timedt=None, m
     return MSE, QL
 
     # sanity check:  len(train_set) + len(prediction) == len(vol_data)
+
+
+# Added 4/11/2017
+
+# havent checked the below line for observed...
+# observed = vol_data.iloc[warmup:]
+# print('Moving fixed window size: ' + str(warmup))
+# while iterator < len(observed):
+#     # load in the datapoints
+#     # # growing window
+#     # train_set = vol_data[0:(warmup + iterator)]
+#     # moving window
+#     train_set = vol_data[iterator:(warmup + iterator)]
+#
+#     last_sample = train_set.iloc[- 1]
+#     diff = last_sample - train_set
+#     # absdiff = diff.abs().sort_values()
+#     absdiff = diff.abs().sort_values(by=diff.keys()[0])
+#     kn_index = diff.reindex(absdiff.index)[1:k + 1].index + 1
+#     squared = absdiff[1:k + 1] ** 2
+#     c = 1 / np.sum(1 / squared)
+#     alpha_j = c / squared
+#     # sigma = vol_data[kn_index]
+#     sigma = vol_data.iloc[kn_index]
+#     # prediction = prediction.append(pd.Series([np.dot(alpha_j, sigma)], index=[iterator]))
+#     # the line below for passed DataFrames
+#     prediction = prediction.append(pd.Series([np.dot(alpha_j[alpha_j.keys()[0]], sigma[sigma.keys()[0]])],
+#                                              index=[iterator]))
+#     iterator += 1

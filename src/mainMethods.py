@@ -25,9 +25,7 @@ import matplotlib.backends.backend_pdf
 
 
 
-name = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
-#filenamesx = ['SEKUSD.csv','CADUSD.csv','CHFUSD.csv']
-#filenames = ['NZDUSD.csv']#,'CADUSD.csv']
+name = ['AUDUSD.csv', 'CADUSD.csv'] #,  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
 
 KNN_test = []
 
@@ -47,7 +45,8 @@ test_set_results_list=[]
 
 def multiknn(name):
     KNN_test = []
-
+    MSE_training_all = []
+    QL_training_all = []
     # for filenames in filenamesx:
     dailyvol_zeroes = pd.DataFrame()
     weeklyvol_zeroes = pd.DataFrame()
@@ -82,12 +81,6 @@ def multiknn(name):
 
     dailyret_zeroes.rename(columns={'Return_Time': name}, inplace=True)
 
-    # warmup_period_daily = 400
-    # warmup_period_weekly = 70
-    # warmup_period_monthly = 24
-
-
-
     # does not have zeroes
     daily_vol_combined = dailyvol_zeroes[(dailyvol_zeroes != 0).all(1)]
 
@@ -119,8 +112,8 @@ def multiknn(name):
     fc = FunctionCalls()
     # xmat = pd.DataFrame([sum([daily_vol_combined[currency].loc[i+p-1:i:-1].as_matrix().tolist() for currency in daily_vol_combined.keys()],[]) for i in range(len(daily_vol_combined)-p)])
 
-    testwhat = "KNN"
 
+    # 11/1
     training_sample, test_sample = daily_vol_combined.iloc[0:910].copy(), daily_vol_combined.iloc[910:].copy()
 
     # remove the Date column from the data before passing. Separate it out out
@@ -137,25 +130,45 @@ def multiknn(name):
     os.chdir(name)
     training = True
 
-    options = {'0-test': ('test', 'expanding window'),
-               '0-train': ('train', 'expanding window'),
+    options = {'zero': 'method0',
+               'one': 'method1'
                }
+    # method_choice is used for pickout out specific KNN tests one may wish to run
+    # to run multiple methods, do something like this
+    # method_choice = [options['zero'], options['one']]
 
-    if training:
-        if not os.path.exists(name+'_KNN_Train'):
-            os.mkdir(name+'_KNN_Train')
-        os.chdir(name+'_KNN_Train')
+
+    method_choice = [options['zero'],options['one']]
+    k=3
+
+    # if training:
+    if not os.path.exists(name+'_KNN_Train'):
+        os.mkdir(name+'_KNN_Train')
+    os.chdir(name+'_KNN_Train')
+    if options['zero'] in method_choice:
+        # method 0
         KNN_training = [[fc.function_runs(dates=training_date, filename=str(name)+' Single Knn',
                          stringinput='Daily', warmup=warmup, input_data=training_sample, k_nn=[i], options='0-train')
-                         for i in np.arange(1, 21)] for warmup in [100]]  #  200,500)]
+                         for i in np.arange(1, k+1)] for warmup in [100]]  #  200,500)]
+
         MSE_training = pd.Series([KNN_training[0][i].MSE[name] for i in range(0, len(KNN_training[0]))],
-                                 index=np.linspace(1, 20, 20, dtype=int))
-        # QL_training = pd.Series([KNN_training[0][i].QL.loc['QL'] for i in range(0,len(KNN_training[0]))], index=np.linspace(1,20,20, dtype=int))
+                                 index=np.linspace(1, k, k, dtype=int))
+        #  Organize MSE results from KNN_training
+        MSE_training_all.append(MSE_training)
+
+        #  Organize QL results from KNN_training
         QL_training = pd.Series([KNN_training[0][i].QL[name] for i in range(0, len(KNN_training[0]))],
-                                index=np.linspace(1, 20, 20, dtype=int))
+                                index=np.linspace(1, k, k, dtype=int))
+
+        # QL_training = pd.Series([KNN_training[0][i].QL.loc['QL'] for i in range(0,len(KNN_training[0]))], index=np.linspace(1,20,20, dtype=int))
+        QL_training_all.append(QL_training)
+
+
+        # combine results
         train_k = pd.DataFrame([MSE_training, QL_training], index=['MSE', 'QL']).transpose()
         train_k.index.names = ['k']
 
+        # save output to excel file
         writer = pd.ExcelWriter(str(name)+' KNN_train_output.xlsx')
         train_k.to_excel(writer, 'Train results')
         writer.save()
@@ -172,15 +185,67 @@ def multiknn(name):
         file_results_list.append([name, k_star, MSE_training.min(), QL_training.idxmin(), QL_training.min()])
 
         os.chdir('..')
+
         # test sample
         KNN_test.append(fc.function_runs(dates=test_date, filename=name, stringinput='Daily', warmup=training_sample,
                                          input_data=test_sample, k_nn=[12], options='0-test'))
         test_set_results_list.append([name, 12, KNN_test[0].loc[name][0],KNN_test[0].loc[name][1]])
-    #
+
+    if options['one'] in method_choice:
+        # method 0
+        # KNN_training = [[fc.function_runs(dates=training_date, filename=str(name)+' Single Knn',
+        #                  stringinput='Daily', warmup=warmup, input_data=training_sample.astype('float64'), k_nn=[i], options='0-train')
+        #                  for i in np.arange(1, k+1)] for warmup in [100]]
+
+        #method1
+        KNN_training_1 = [[fc.function_runs(dates=training_date, filename=str(name)+' Single Knn',
+                         stringinput='Daily', warmup=warmup, input_data=training_sample.astype('float64'), k_nn=[i], options='1-train')
+                         for i in np.arange(1, k+1)] for warmup in [100]]  #  200,500)]
+
+        #  Organize MSE results from KNN_training
+        MSE_training = pd.Series([KNN_training_1[0][i].MSE[name] for i in range(0, len(KNN_training[0]))],
+                                 index=np.linspace(1, k, k, dtype=int))
+
+        MSE_training_all.append(MSE_training)
+        #  Organize QL results from KNN_training
+        # QL_training = pd.Series([KNN_training[0][i].QL.loc['QL'] for i in range(0,len(KNN_training[0]))], index=np.linspace(1,20,20, dtype=int))
+        QL_training =  pd.Series([KNN_training[0][i].QL[name] for i in range(0, len(KNN_training[0]))],
+                                index=np.linspace(1, k, k, dtype=int))
+        QL_training.append(QL_training)
+        # combine results
+        train_k = pd.DataFrame([MSE_training, QL_training], index=['MSE', 'QL']).transpose()
+        train_k.index.names = ['k']
+
+        # save output to excel file
+        writer = pd.ExcelWriter(str(name)+' KNN_train_output.xlsx')
+        train_k.to_excel(writer, 'Train results')
+        writer.save()
+
+        # gives the k-value of the lowest MSE
+        k_star = MSE_training.idxmin()
+        plttitle = name+' MSE vs k'
+        ax = MSE_training.plot()
+        ax.set(xlabel='k', ylabel='MSE', title=plttitle, xticks=range(0, 20+1,2))
+        plt.plot(k_star, MSE_training.min(), '*', markersize=10)
+        plt.savefig(plttitle+'.png')
+        plt.close()
+        # append to output
+        file_results_list.append([name, k_star, MSE_training.min(), QL_training.idxmin(), QL_training.min()])
+
+        os.chdir('..')
+
+        # test sample
+        KNN_test.append(fc.function_runs(dates=test_date, filename=name, stringinput='Daily', warmup=training_sample,
+                                         input_data=test_sample, k_nn=[12], options='0-test'))
+        test_set_results_list.append([name, 12, KNN_test[0].loc[name][0], KNN_test[0].loc[name][1]])
+
+
     # else:
     #         KNN_test.append(fc.function_runs(dates=test_date, filename=name, stringinput='Daily', warmup=100, input_data=test_sample, k_nn=[20]))
     # plt.show()
     plt.close()
+    allmethods = pd.DataFrame(MSE_training_all).transpose()
+    allmethods.columns = method_choice
     #
     # if len(KNN_training) != 1:
     #     ks = np.arange(2,10)
@@ -223,6 +288,7 @@ best_knn_training = pd.DataFrame(file_results_list, columns=['File', 'k*_MSE', '
 best_knn_training.to_excel(writer,'Train results')
 test_results = pd.DataFrame(test_set_results_list, columns=['File', 'k', 'MSE', 'QL'])
 test_results.to_excel(writer,'Test results' )
+allmethods.to_excel(writer,'Combined Train results' )
 writer.save()
 # if __name__ == '__main__':
 #
