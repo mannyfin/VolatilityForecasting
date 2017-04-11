@@ -42,7 +42,8 @@ Daily_list = list()
 namelist = list()
 # for count, names in enumerate(filenamesx):
 
-fileMSE_list =[]
+file_results_list =[]
+test_set_results_list=[]
 
 def multiknn(name):
     KNN_test = []
@@ -141,10 +142,10 @@ def multiknn(name):
                }
 
     if training:
-        if not os.path.exists(name+'_KNN_Test'):
-            os.mkdir(name+'_KNN_Test')
-        os.chdir(name+'_KNN_Test')
-        KNN_training = [[fc.function_runs(dates=training_date, filename=str(name)+' Single Knn.',
+        if not os.path.exists(name+'_KNN_Train'):
+            os.mkdir(name+'_KNN_Train')
+        os.chdir(name+'_KNN_Train')
+        KNN_training = [[fc.function_runs(dates=training_date, filename=str(name)+' Single Knn',
                          stringinput='Daily', warmup=warmup, input_data=training_sample, k_nn=[i], options='0-train')
                          for i in np.arange(1, 21)] for warmup in [100]]  #  200,500)]
         MSE_training = pd.Series([KNN_training[0][i].MSE.loc['SumMSE'] for i in range(0,len(KNN_training[0]))], index=np.linspace(1,20,20, dtype=int))
@@ -158,40 +159,43 @@ def multiknn(name):
         plt.savefig(plttitle+'.png')
         plt.close()
         # append to output
-        fileMSE_list.append([name, k_star, MSE_training.min()])
+        file_results_list.append([name, k_star, MSE_training.min(), QL_training.idxmin(), QL_training.min()])
+
+        os.chdir('..')
         # test sample
         KNN_test.append(fc.function_runs(dates=test_date, filename=name, stringinput='Daily', warmup=training_sample,
-                                         input_data=test_sample, k_nn=[k_star],options='0-test'))
-        os.chdir('..')
-    else:
-            KNN_test.append(fc.function_runs(dates=test_date, filename=name, stringinput='Daily', warmup=100, input_data=test_sample, k_nn=[20]))
+                                         input_data=test_sample, k_nn=[12], options='0-test'))
+        test_set_results_list.append([name, k_star, KNN_test[0].loc[name][0],KNN_test[0].loc[name][1]])
+    #
+    # else:
+    #         KNN_test.append(fc.function_runs(dates=test_date, filename=name, stringinput='Daily', warmup=100, input_data=test_sample, k_nn=[20]))
     # plt.show()
     plt.close()
-
-    if len(KNN_training) != 1:
-        ks = np.arange(2,10)
-
-        # were indented....
-        warmups = np.arange(50,200,50)
-
-        k,w = np.meshgrid(ks,warmups)
-        SEkw = np.array([ [ KNN_training[warmup][i-2]['MSE'][0] for i in np.arange(2,10) ] for warmup in np.arange(len(np.arange(50,200,50)))])
-        k,w = np.meshgrid(ks,warmups)
-
-        from mpl_toolkits.mplot3d import Axes3D
-        from matplotlib import cm
-        matplotlib.style.use('ggplot')
-
-        fig = plt.figure()
-        ax = fig.gca(projection='3d')
-        sur=ax.plot_surface(k,w,SEkw,cmap=cm.coolwarm,linewidth=0,antialiased=False,rstride=1, cstride=1)
-        fig.colorbar(sur,shrink=0.5, aspect=5)
-
-        ax.set_xlabel('k')
-        ax.set_ylabel('warmup')
-        ax.set_zlabel('SE')
-        plt.title(str(names[0]))
-        plt.show()
+    #
+    # if len(KNN_training) != 1:
+    #     ks = np.arange(2,10)
+    #
+    #     # were indented....
+    #     warmups = np.arange(50,200,50)
+    #
+    #     k,w = np.meshgrid(ks,warmups)
+    #     SEkw = np.array([ [ KNN_training[warmup][i-2]['MSE'][0] for i in np.arange(2,10) ] for warmup in np.arange(len(np.arange(50,200,50)))])
+    #     k,w = np.meshgrid(ks,warmups)
+    #
+    #     from mpl_toolkits.mplot3d import Axes3D
+    #     from matplotlib import cm
+    #     matplotlib.style.use('ggplot')
+    #
+    #     fig = plt.figure()
+    #     ax = fig.gca(projection='3d')
+    #     sur=ax.plot_surface(k,w,SEkw,cmap=cm.coolwarm,linewidth=0,antialiased=False,rstride=1, cstride=1)
+    #     fig.colorbar(sur,shrink=0.5, aspect=5)
+    #
+    #     ax.set_xlabel('k')
+    #     ax.set_ylabel('warmup')
+    #     ax.set_zlabel('SE')
+    #     plt.title(str(names[0]))
+    #     plt.show()
 
     os.chdir('..')
 
@@ -204,6 +208,10 @@ def multiknn(name):
 #
 for names in name:
     multiknn(names)
+best_knn_training = pd.DataFrame(file_results_list, columns=['File', 'k*_MSE', 'MSE', 'k*_QL', 'QL'])
+best_knn_training.to_excel(pd.ExcelWriter('KNNoutput.xlsx'),'Train results')
+test_results = pd.DataFrame(test_set_results_list, columns=['File', 'k', 'MSE', 'QL'])
+test_results.to_excel(pd.ExcelWriter('KNNoutput.xlsx'),'Test results' )
 
 # if __name__ == '__main__':
 #

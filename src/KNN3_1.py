@@ -72,7 +72,7 @@ def KNNcalc(method_number, vol_data, dates=None, k=1, warmup=400, filename=None,
     try:
         # for training, warmup is just an integer, for testing warmup is a df
         # if method_number == '0-train':
-        prediction = knn_type(method_type=optionsdict(method_number)[0], window_type=optionsdict(method_number)[1],
+        observed, prediction = knn_type(method_type=optionsdict(method_number)[0], window_type=optionsdict(method_number)[1],
                                   vol_data=vol_data, warmup=warmup, k=k)
 
         # elif method_number == '0-test':
@@ -113,11 +113,12 @@ def KNNcalc(method_number, vol_data, dates=None, k=1, warmup=400, filename=None,
         TypeError('Not a pd.Series or pd.DataFrame')
         ValueError("bad values")
 
-    observed = vol_data.iloc[warmup:]
+
     prediction = cc(observed, prediction)
     # now calculate MSE, QL and so forth
     Performance_ = PerformanceMeasure()
-    MSE = Performance_.mean_se(observed=vol_data.iloc[warmup:], prediction=prediction).transpose()
+    # MSE = Performance_.mean_se(observed=vol_data.iloc[warmup:], prediction=prediction).transpose()
+    MSE = Performance_.mean_se(observed=observed, prediction=prediction).transpose()
     # MSE.rename(index={0: 'MSE'})
     MSE.columns = ['MSE']
 
@@ -126,7 +127,13 @@ def KNNcalc(method_number, vol_data, dates=None, k=1, warmup=400, filename=None,
     label = str(filename) + " " + str(Timedt) + " ln(SE) (" + str(k) + ") KNN Volatility"
     print(label)
     """ return a plot of the Squared error"""
-    SE(vol_data.iloc[warmup:], prediction, dates.iloc[warmup:], function_method=label)
+
+    if type(warmup)==int:
+        # training case
+        SE(observed, prediction, dates.iloc[warmup:], function_method=label)
+    else:
+        SE(observed, prediction, dates, function_method=label)
+
     plttitle = str(filename) + ' k = ' + str(k)
     plt.title(str(filename) + ' k = ' + str(k))
     plt.savefig(plttitle + '.png')
