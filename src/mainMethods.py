@@ -208,11 +208,12 @@ def multiknn(name):
 #
 for names in name:
     multiknn(names)
+writer=pd.ExcelWriter('KNNoutput.xlsx')
 best_knn_training = pd.DataFrame(file_results_list, columns=['File', 'k*_MSE', 'MSE', 'k*_QL', 'QL'])
-best_knn_training.to_excel(pd.ExcelWriter('KNNoutput.xlsx'),'Train results')
+best_knn_training.to_excel(writer,'Train results')
 test_results = pd.DataFrame(test_set_results_list, columns=['File', 'k', 'MSE', 'QL'])
-test_results.to_excel(pd.ExcelWriter('KNNoutput.xlsx'),'Test results' )
-
+test_results.to_excel(writer,'Test results' )
+writer.save()
 # if __name__ == '__main__':
 #
 #     # p = Pool(processes = len(names))
