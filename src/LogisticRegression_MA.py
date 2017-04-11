@@ -163,7 +163,7 @@ def test_performance_LR_MA(train_sample, test_sample, forecaster,numCV,time,name
     p = Optimized_Parameters[0]
     q = Optimized_Parameters[1]
     test_sample_new  = Predict_y_delta_star_training_MA(test_sample,forecaster,p,q)[3]
-    training_output = Predict_y_delta_star_training_MA(train_sample, forecaster, p, q=None)
+    training_output = Predict_y_delta_star_training_MA(train_sample, forecaster, p, q)
     delta_tilta_star = training_output[1]
     fitted_model_training = training_output[2]
 
