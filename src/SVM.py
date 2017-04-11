@@ -224,7 +224,7 @@ def SVM_Optimize_Parameters(train_sample, forecaster, numCV, model, C_seq, time,
         fig = plt.figure(figsize=(15, 10))
         ax = fig.add_subplot(111, projection='3d')
         ax.view_init(45, 60)
-        # hot: sequential black (corresponds to small value)-red-yellow-white (corresponds to large value), to emulate blackbody radiation from an object at increasing temperatures
+        # hot: sequential black (corresponds to small value)-red-yellow-white (corresponds to small value), to emulate blackbody radiation from an object at increasing temperatures
         ax.scatter(np.array(np.repeat(C_seq,9)),np.array(np.repeat(p_seq,3).tolist()*len(C_seq)),np.array(q_seq*(3*len(C_seq))),c=np.array(mean_MSEs),cmap="hot")
         ax.set_xlabel("margin C")
         ax.set_ylabel("p")

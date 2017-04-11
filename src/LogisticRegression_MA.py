@@ -3,6 +3,8 @@ from sklearn.linear_model import LogisticRegression as Logit
 from Performance_Measure import *
 import pandas as pd
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
 
 """
 this Python profile implements Logistic Regression for Forecaster 3 and 4
@@ -116,11 +118,11 @@ def Optimize_Parameters(train_sample, forecaster,numCV,time,name):
         optimal_q = None
 
         fig = plt.figure(figsize=(15, 10))
-        ax = plt.scatter(np.array(p_seq),np.array(mean_MSEs))
+        ax = plt.plot(np.array(p_seq),np.array(mean_MSEs),'-o')
         plt.xlabel("p")
         plt.ylabel("Average MSE")
-        title = name.replace(".csv", "") + " "+ time + " Average MSE of "+str(numCV)+"-fold CV for Forecaster" + str(forecaster)
-        plt.title(title)
+        title = name.replace(".csv", "") + " "+ time + " Average MSE of "+str(numCV)+"-fold CV for Logistic Regression Forecaster" + str(forecaster)
+        plt.title(title+'\n Optimal p = ' + str(optimal_p))
         # plt.show()
         plt.savefig(title+'.png')
     elif forecaster == 4:
@@ -140,8 +142,8 @@ def Optimize_Parameters(train_sample, forecaster,numCV,time,name):
         ax.set_xlabel("p")
         ax.set_ylabel("q")
         ax.set_zlabel("Average MSE")
-        title = name.replace(".csv", "") + " "+ time + " Average MSE of "+str(numCV)+"-fold CV for Forecaster" + str(forecaster)
-        plt.title(title)
+        title = name.replace(".csv", "") + " "+ time + " Average MSE of "+str(numCV)+"-fold CV for Logistic Regression Forecaster" + str(forecaster)
+        plt.title(title+'\n Optimal p = ' + str(optimal_p) + ' Optimal q = ' + str(optimal_q))
         # plt.show()
         plt.savefig(title+'.png')
 
@@ -157,7 +159,7 @@ def test_performance_LR_MA(train_sample, test_sample, forecaster,numCV,time,name
     :param numCV: if numCV is 10, then 10-fold CV is conducted
     :param time: time could be "Daily" or "Weekly"
     :param name: name of the currency pair
-    :return: optimized parameters
+    :return: optimized parameters and prediction performance measure in the test sample
     """
     Optimized_Parameters = Optimize_Parameters(train_sample, forecaster, numCV, time, name)
     p = Optimized_Parameters[0]
@@ -185,5 +187,5 @@ def test_performance_LR_MA(train_sample, test_sample, forecaster,numCV,time,name
                                        predicted_test_sample_vol_future.astype('float64'))
     SE = [(observed_test_sample_vol_future[i] - predicted_test_sample_vol_future[i])**2 for i in range(len(observed_test_sample_vol_future))]
     ln_SE = pd.Series(np.log(SE))
-    return MSE, QL, ln_SE
+    return MSE, QL, ln_SE, p, q
 

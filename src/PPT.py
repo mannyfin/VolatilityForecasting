@@ -6,8 +6,7 @@ import os
 def Output_to_PPT(filename):
     # filename = "GBPUSD"
     # modify the path by changing the file name
-    search_dir = os.path.join(os.getenv('userprofile'), 'Desktop/FIN580/Homework1/VolatilityForecasting/src/') \
-                 + str(filename)
+    search_dir = os.path.join(os.getenv('userprofile'), 'Desktop/FIN580/Homework1/VolatilityForecasting/src/NZDUSD MSE Against C p q_Weekly')
     os.chdir(search_dir)
 
     files_all_type = filter(os.path.isfile, os.listdir(search_dir))

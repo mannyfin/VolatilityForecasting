@@ -11,6 +11,7 @@ this Python profile implements Logistic Regression for Forecaster 1, 2, 5 and 6
 
 def Predict_y_delta_star_training(train_sample, forecaster):
     """
+    for Forecaster 1,2,5 and 6 where moving average is not considered
     :param train_sample: could be train_sample_daily or train_sample_weekly (obtained in main)
     :param forecaster: forecaster could take values 1, 2, 5 or 6
     :return: the predicted y label, delta_star and the fitted model in the training sample

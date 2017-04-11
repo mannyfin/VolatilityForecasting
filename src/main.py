@@ -112,30 +112,45 @@ for count, name in enumerate(filenames):
         SVM_Optimal_p_all_forecaster_one_file = []
         SVM_Optimal_q_all_forecaster_one_file = []
         SVM_Optimal_C_all_forecaster_one_file = []
+        SVM_MSE_collect_one_file = []
+        SVM_QL_collect_one_file = []
+
         for k in range(len(SVM_models)):
             SVM_Optimal_p_all_forecaster_one_file.append(SVM_forecaster1[k][4])
             SVM_Optimal_q_all_forecaster_one_file.append(SVM_forecaster1[k][5])
             SVM_Optimal_C_all_forecaster_one_file.append(SVM_forecaster1[k][3])
+            SVM_MSE_collect_one_file.append(SVM_forecaster1[k][0])
+            SVM_QL_collect_one_file.append(SVM_forecaster1[k][1])
         for k in range(len(SVM_models)):
             SVM_Optimal_p_all_forecaster_one_file.append(SVM_forecaster2[k][4])
             SVM_Optimal_q_all_forecaster_one_file.append(SVM_forecaster2[k][5])
             SVM_Optimal_C_all_forecaster_one_file.append(SVM_forecaster2[k][3])
+            SVM_MSE_collect_one_file.append(SVM_forecaster2[k][0])
+            SVM_QL_collect_one_file.append(SVM_forecaster2[k][1])
         for k in range(len(SVM_models)):
             SVM_Optimal_p_all_forecaster_one_file.append(SVM_forecaster3[k][4])
             SVM_Optimal_q_all_forecaster_one_file.append(SVM_forecaster3[k][5])
             SVM_Optimal_C_all_forecaster_one_file.append(SVM_forecaster3[k][3])
+            SVM_MSE_collect_one_file.append(SVM_forecaster3[k][0])
+            SVM_QL_collect_one_file.append(SVM_forecaster3[k][1])
         for k in range(len(SVM_models)):
             SVM_Optimal_p_all_forecaster_one_file.append(SVM_forecaster4[k][4])
             SVM_Optimal_q_all_forecaster_one_file.append(SVM_forecaster4[k][5])
             SVM_Optimal_C_all_forecaster_one_file.append(SVM_forecaster4[k][3])
+            SVM_MSE_collect_one_file.append(SVM_forecaster4[k][0])
+            SVM_QL_collect_one_file.append(SVM_forecaster4[k][1])
         for k in range(len(SVM_models)):
             SVM_Optimal_p_all_forecaster_one_file.append(SVM_forecaster5[k][4])
             SVM_Optimal_q_all_forecaster_one_file.append(SVM_forecaster5[k][5])
             SVM_Optimal_C_all_forecaster_one_file.append(SVM_forecaster5[k][3])
+            SVM_MSE_collect_one_file.append(SVM_forecaster5[k][0])
+            SVM_QL_collect_one_file.append(SVM_forecaster5[k][1])
         for k in range(len(SVM_models)):
             SVM_Optimal_p_all_forecaster_one_file.append(SVM_forecaster6[k][4])
             SVM_Optimal_q_all_forecaster_one_file.append(SVM_forecaster6[k][5])
             SVM_Optimal_C_all_forecaster_one_file.append(SVM_forecaster6[k][3])
+            SVM_MSE_collect_one_file.append(SVM_forecaster6[k][0])
+            SVM_QL_collect_one_file.append(SVM_forecaster6[k][1])
 
         SVM_Optimal_p_q_all_forecaster_one_file =  pd.concat( [pd.Series(SVM_Optimal_p_all_forecaster_one_file),
                                                               pd.Series(SVM_Optimal_q_all_forecaster_one_file),
@@ -151,6 +166,12 @@ for count, name in enumerate(filenames):
 
         SVM_Optimal_p_q_all_forecaster_one_file.columns = ['Model','Optimal p_'+name,'Optimal q_'+name, 'Optimal margin C_'+name]
         SVM_Optimal_p_q_all_forecaster_one_file.to_csv(name+'Optimal_C_p_q_all_forecaster_all_SVM_'+time + '.csv')
+
+
+        SVM_MSE_QL_df_one_file  = pd.concat( [pd.Series(SVM_MSE_collect_one_file), pd.Series(SVM_QL_collect_one_file)], axis=1)
+        SVM_MSE_QL_df_one_file.insert(0 ,'0',SVM_Model_names)
+        SVM_MSE_QL_df_one_file.columns = ['Model','MSE_'+name, 'QL_'+name]
+        SVM_MSE_QL_df_one_file.to_csv(name+'MSE_QL_SVM_'+time + '.csv')
 
         # generating ln(SE) plots for SVM and Kernel SVM Models
         SVM_ln_SE_all_forecaster_one_file = []
@@ -214,5 +235,8 @@ for count, name in enumerate(filenames):
         plt.title(name+' ln(SE)')
         # plt.show()
         plt.savefig(name + ' ' + time + ' Logistic Regression ln(SE).png')
+
+
+
 
 print("Complete")
