@@ -17,6 +17,7 @@ def retvoldf(ret, vol, v):
     preprocess.columns = ['V', 'ret_now',  'vol_now', 'vol_future']
     # make label column
     preprocess['volxret_now'] = preprocess.vol_now*preprocess.ret_now
+    preprocess['vol_sqr_now'] = preprocess.vol_now*preprocess.vol_now
     preprocess['label'] = (preprocess.vol_future > preprocess.vol_now).astype(int)
     # does not give setting with copy warning
     preprocess.loc[preprocess.label == 0, 'label'] = -1
