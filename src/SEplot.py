@@ -35,15 +35,17 @@ def se_plot(y, y_fit, dates=None, function_method=None, mode=None):
 
     if isinstance(y, pd.core.frame.DataFrame) & isinstance(y_fit, pd.core.frame.DataFrame):
         # this is really logSE
-        SE = np.log(np.square(np.subtract(y, y_fit)))
+        SE = np.log(np.square(np.subtract(y.astype('float64'), y_fit.astype('float64'))))
 
         # this line converts to df and transposes from cols to rows
         SE = pd.DataFrame(SE)
         # adding dates
         SE=SE.join(dates.Date)
         SE=SE.set_index('Date')
-
-        SE.plot(kind='line', figsize=(12, 7)).legend(loc='center left', bbox_to_anchor=(1, 0.5))
+        # plotting and adding legend and axes
+        ax = SE.plot(kind='line', figsize=(12, 7))
+        ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+        ax.set(ylabel='ln(SE)')
 
     else:
         SE = (y_fit.ravel() - y.ravel()) ** 2

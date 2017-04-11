@@ -18,7 +18,7 @@ import pandas as pd
 from KNN import KNN
 from function_runs import *
 
-from VAR_new import *
+from VAR2 import *
 
 
 import matplotlib.backends.backend_pdf

@@ -20,6 +20,7 @@ def result_to_df_list(list_name=list, method_result=tuple, index_value=list, col
         method_result = np.reshape(method_result, [len(index_value), len(column_value)])
         df = pd.DataFrame()
         df = df.append(pd.DataFrame(method_result, index=index_value, columns=column_value))
+
     list_name.append(df)
     return list_name
 

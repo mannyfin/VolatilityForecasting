@@ -24,7 +24,7 @@ class PerformanceMeasure(object):
             print("MSE is: \n" + str(self.MSE))
         else:
             self.MSE = mse(observed, prediction)
-            self.MSE = self.MSE
+            # self.MSE = self.MSE
             print("MSE is: " + str(self.MSE))
 
         return self.MSE
@@ -44,10 +44,10 @@ class PerformanceMeasure(object):
             self.QL = (1 / len(observed)) * (np.sum(value - np.log(value) - ones))
             print("QL is: " + str(self.QL))
         elif isinstance(observed,pd.core.frame.DataFrame) & isinstance(prediction,pd.core.frame.DataFrame):
-            # the line below will only work if the data is not a dataframe
             value = np.divide(observed,prediction)
             ones = np.ones(np.shape(observed))
-            self.QL = (1 / len(observed)) * (np.sum(value - np.log(value) - ones))
+            # self.QL = (1 / len(observed)) * (np.sum(value - np.log(value) - ones))
+            self.QL = (1 / len(observed)) * (np.sum(value - np.log(value.astype('float64')) - ones))
             ql_sum = pd.Series(sum(self.QL), index=['SumQL'])
             self.QL = self.QL.append(ql_sum)
 
@@ -56,6 +56,16 @@ class PerformanceMeasure(object):
 
             print("QL is: \n" + str(self.QL))
 
+        else:
+            # convert prediction to the appropriate data type, either series or dataframe
+            if isinstance(observed,pd.core.frame.DataFrame) is True:
+                prediction = pd.core.frame.DataFrame(prediction)
+
+            #     shouldnt have this issue below, but putting this here just in case
+            elif isinstance(observed, pd.core.series.Series) is True:
+                prediction = pd.core.series.Series(prediction)
+
+            PerformanceMeasure.quasi_likelihood(self, observed=observed, prediction=prediction)
         # print("QL is: " + str(self.QL))
         return self.QL
 

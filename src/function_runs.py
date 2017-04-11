@@ -3,7 +3,7 @@ from linear_regression import *
 from garch_pq_model import GarchModel as gm
 # from KNN import KNN
 import numpy as np
-from KNN import KNN
+from KNN3_1 import KNN
 import pandas as pd
 from res2df_list import *
 from VAR2 import *
@@ -20,13 +20,14 @@ class FunctionCalls(object):
     def __init__(self):
         pass
 
-    def function_runs(self,dates=None, filename=None, stringinput=None, warmup=None,input_data=None, tnplus1=None, lr=None, arch=None, garchpq=None, k_nn=None, var_lag=None, LASSO=False):
+    def function_runs(self, dates=None, filename=None, stringinput=None, warmup=None,input_data=None, tnplus1=None, lr=None, arch=None, garchpq=None, k_nn=None, var_lag=None, LASSO=False, options=None):
         output = list()
 
         """tnplus1"""
         try:
             if tnplus1 is None:
-                print("Not running tnplus1")
+                # print("Not running tnplus1")
+                pass
             elif tnplus1 is not None :
                 tnplus1_method = PastAsPresent.tn_pred_tn_plus_1(data=input_data, filename=filename, stringinput=stringinput)
                 # output['PastAsPresent'] = part1
@@ -44,7 +45,8 @@ class FunctionCalls(object):
         """Linear Regression"""
         try:
             if lr is None:
-                print("Not running linear regression")
+                # print("Not running linear regression")
+                pass
             elif len(lr)>= 1 & isinstance(lr, list):
                 for count, elem in enumerate(lr):
                     LRmethod = LinRegression.lin_reg(data=input_data, n=elem, filename=filename,
@@ -66,7 +68,8 @@ class FunctionCalls(object):
         try:
             #
             if arch is None:
-                print("Not running arch")
+                # print("Not running arch")
+                pass
             elif len(arch) == 3:
                 ARCH = gm.arch_q_mse(data=input_data, Timedt=stringinput, ret=arch[0], q=arch[1], lags=arch[2],
                                      warmup_period=warmup, filename=filename)
@@ -84,7 +87,8 @@ class FunctionCalls(object):
         try:
             # 4 is the num of args to pass into the fcn
             if garchpq is None:
-                print("Not running garch")
+                # print("Not running garch")
+                pass
             elif len(garchpq) == 4:
                 GARCH = gm.garch_pq_mse(data=input_data, Timedt=stringinput, ret=garchpq[0], p=garchpq[1], q=garchpq[2],
                                         lags=garchpq[3], warmup_period=warmup, filename=filename)
@@ -105,7 +109,8 @@ class FunctionCalls(object):
                 print("Not running KNN")
             elif len(k_nn) >= 1 & isinstance(k_nn, list):
                 for count, elem in enumerate(k_nn):
-                    KNNmethod = KNN(vol_data=input_data, k=elem, warmup=warmup, filename=filename, Timedt=stringinput)
+                    KNNmethod = KNN(method_number=options, vol_data=input_data, dates=dates, k=elem, warmup=warmup,
+                                    filename=filename, Timedt=stringinput)
 
                     # output['KNN_'+str(k_nn)] = KNNmethod
 
@@ -120,7 +125,8 @@ class FunctionCalls(object):
         try:
             # 4 is the num of args to pass into the fcn
             if var_lag is None:
-                print("Not running VAR")
+                # print("Not running VAR")
+                pass
             elif len(var_lag) >= 1 & isinstance(var_lag, list):
                 for count, elem in enumerate(var_lag):
                     # KNNmethod = KNN(vol_data=input_data, k=elem, warmup=warmup, filename=filename, Timedt=stringinput)
