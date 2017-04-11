@@ -116,7 +116,7 @@ def Optimize_Parameters(train_sample, forecaster,numCV,time,name):
         optimal_q = None
 
         fig = plt.figure(figsize=(15, 10))
-        ax = plt.plot(np.array(p_seq),np.array(mean_MSEs))
+        ax = plt.scatter(np.array(p_seq),np.array(mean_MSEs))
         plt.xlabel("p")
         plt.ylabel("Average MSE")
         title = name.replace(".csv", "") + " "+ time + " Average MSE of "+str(numCV)+"-fold CV for Forecaster" + str(forecaster)
@@ -136,10 +136,10 @@ def Optimize_Parameters(train_sample, forecaster,numCV,time,name):
 
         fig = plt.figure(figsize=(15, 10))
         ax = plt.axes(projection='3d')
-        ax.scatter(np.array(p_seq),np.array(q_seq),np.array(mean_MSEs), '-b')
-        plt.xlabel("p")
-        plt.xlabel("q")
-        plt.zlabel("Average MSE")
+        ax.scatter(np.array(np.repeat(p_seq,3)),np.array(q_seq*3),np.array(mean_MSEs), '-b')
+        ax.set_xlabel("p")
+        ax.set_ylabel("q")
+        ax.set_zlabel("Average MSE")
         title = name.replace(".csv", "") + " "+ time + " Average MSE of "+str(numCV)+"-fold CV for Forecaster" + str(forecaster)
         plt.title(title)
         # plt.show()
