@@ -126,16 +126,16 @@ def SVM_Validation_Training(train_sample, forecaster, model, C, p=None, q=None):
         predicted_y_train_out_of_sample = fittedModel.predict(np.array(inputdf2).reshape(len(inputdf2), 2))
     elif forecaster == 5:
         inputdf = train_in_sample[['vol_now','ret_now', 'vol_sqr_now']]
-        fittedModel = Model.fit(np.array(inputdf).reshape(len(inputdf),2),
+        fittedModel = Model.fit(np.array(inputdf).reshape(len(inputdf),3),
                                 np.array(train_in_sample.label))
         inputdf2 = train_out_of_sample[['vol_now','ret_now', 'vol_sqr_now']]
-        predicted_y_train_out_of_sample = fittedModel.predict(np.array(inputdf2).reshape(len(inputdf2),2))
+        predicted_y_train_out_of_sample = fittedModel.predict(np.array(inputdf2).reshape(len(inputdf2),3))
     elif forecaster == 6:
         inputdf = train_in_sample[['vol_now',  'ret_now','volxret_now','vol_sqr_now']]
-        fittedModel = Model.fit(np.array(inputdf).reshape(len(inputdf),2),
+        fittedModel = Model.fit(np.array(inputdf).reshape(len(inputdf),4),
                                 np.array(train_in_sample.label))
         inputdf2 = train_out_of_sample[['vol_now',  'ret_now','volxret_now','vol_sqr_now']]
-        predicted_y_train_out_of_sample = fittedModel.predict(np.array(inputdf2).reshape(len(inputdf2),2))
+        predicted_y_train_out_of_sample = fittedModel.predict(np.array(inputdf2).reshape(len(inputdf2),4))
 
     element1 = np.array(train_out_of_sample.vol_now)
     element2 = 1 + benchmark_delta_star * predicted_y_train_out_of_sample
@@ -272,10 +272,10 @@ def SVM_test_performance(train_sample, test_sample, forecaster,numCV,model, C_se
         predicted_y_test = fitted_model_training.predict(np.array(inputdf).reshape(len(inputdf), 2))
     elif forecaster == 5:
         inputdf = test_sample_new[['vol_now','ret_now', 'vol_sqr_now']]
-        predicted_y_test = fitted_model_training.predict(np.array(inputdf).reshape(len(inputdf), 2))
+        predicted_y_test = fitted_model_training.predict(np.array(inputdf).reshape(len(inputdf), 3))
     elif forecaster == 6:
         inputdf = test_sample_new[['vol_now',  'ret_now','volxret_now','vol_sqr_now']]
-        predicted_y_test = fitted_model_training.predict(np.array(inputdf).reshape(len(inputdf), 2))
+        predicted_y_test = fitted_model_training.predict(np.array(inputdf).reshape(len(inputdf), 4))
 
     element1 = np.array(test_sample_new.vol_now)
     element2 = 1 + delta_tilta_star * predicted_y_test
@@ -289,5 +289,5 @@ def SVM_test_performance(train_sample, test_sample, forecaster,numCV,model, C_se
                                        predicted_test_sample_vol_future.astype('float64'))
     SE = [(observed_test_sample_vol_future[i] - predicted_test_sample_vol_future[i])**2 for i in range(len(observed_test_sample_vol_future))]
     ln_SE = pd.Series(np.log(SE))
-    return MSE, QL, ln_SE, p, q, C
+    return MSE, QL, ln_SE, C, p, q
 

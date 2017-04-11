@@ -2,18 +2,10 @@
 #  conda install -c https://conda.binstar.org/bashtage arch
 
 from read_in_files import read_in_files
-from NumDaysWeeksMonths import NumDaysWeeksMonths
 from Volatility import *
-from linear_regression import *
 import matplotlib.pyplot as plt
-from PastAsPresent import *
-# from VAR import *
-from tablegen import tablegen
-# from garch_pq_model import GarchModel as gm
-# from arch_q_model import ArchModelQ as am
 import numpy as np
 import pandas as pd
-from function_runs import *
 import os
 
 # from VAR_new import *
@@ -22,9 +14,7 @@ from returnvoldf import retvoldf
 from PPT import *
 from LogisticRegression import *
 from LogisticRegression_MA import *
-
-
-
+from SVM import *
 
 print("hi")
 filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
@@ -44,6 +34,10 @@ Daily_list = list()
 namelist = list()
 
 LR_ln_SE_collect_df_one_file = pd.DataFrame()
+SVM_ln_SE_collect_df_one_file = pd.DataFrame()
+C_seq = np.arange(0.1,5,1)
+# C_seq = np.arange(0.1,5,0.1)
+SVM_models = ["SVM", "KernelSVM_rbf", "KernelSVM_sigmoid"]
 
 for count, name in enumerate(filenames):
     #  reads in the files and puts them into dataframes, returns a dataframe called df
@@ -93,8 +87,106 @@ for count, name in enumerate(filenames):
         LogisticRegression_forecaster5 = test_performance_LR(train_sample, test_sample, forecaster=5)
         LogisticRegression_forecaster6 = test_performance_LR(train_sample, test_sample, forecaster=6)
 
-        MSE_QL_df_one_file = pd.DataFrame()
-        ln_SE_collect_df_one_file = pd.DataFrame()
+        SVM_forecaster1 = []
+        SVM_forecaster2 = []
+        SVM_forecaster3 = []
+        SVM_forecaster4 = []
+        SVM_forecaster5 = []
+        SVM_forecaster6 = []
+
+        for k in range(len(SVM_models)):
+            SVM_forecaster1.append(SVM_test_performance(train_sample, test_sample, forecaster=1, numCV=20,
+                                                               model=SVM_models[k], C_seq=C_seq, time=time, name=name))
+            SVM_forecaster2.append(SVM_test_performance(train_sample, test_sample, forecaster=2, numCV=20,
+                                                          model=SVM_models[k], C_seq=C_seq, time=time, name=name))
+            SVM_forecaster3.append(SVM_test_performance(train_sample, test_sample, forecaster=3, numCV=20,
+                                                          model=SVM_models[k], C_seq=C_seq, time=time, name=name))
+            SVM_forecaster4.append(SVM_test_performance(train_sample, test_sample, forecaster=4, numCV=20,
+                                                          model=SVM_models[k], C_seq=C_seq, time=time, name=name))
+            SVM_forecaster5.append(SVM_test_performance(train_sample, test_sample, forecaster=5, numCV=20,
+                                                          model=SVM_models[k], C_seq=C_seq, time=time, name=name))
+            SVM_forecaster6.append(SVM_test_performance(train_sample, test_sample, forecaster=6, numCV=20,
+                                                          model=SVM_models[k], C_seq=C_seq, time=time, name=name))
+
+        # output MSE and QL in to csv files for SVM and Kernel SVM Models
+        SVM_Optimal_p_all_forecaster_one_file = []
+        SVM_Optimal_q_all_forecaster_one_file = []
+        SVM_Optimal_C_all_forecaster_one_file = []
+        for k in range(len(SVM_models)):
+            SVM_Optimal_p_all_forecaster_one_file.append(SVM_forecaster1[k][4])
+            SVM_Optimal_q_all_forecaster_one_file.append(SVM_forecaster1[k][5])
+            SVM_Optimal_C_all_forecaster_one_file.append(SVM_forecaster1[k][3])
+        for k in range(len(SVM_models)):
+            SVM_Optimal_p_all_forecaster_one_file.append(SVM_forecaster2[k][4])
+            SVM_Optimal_q_all_forecaster_one_file.append(SVM_forecaster2[k][5])
+            SVM_Optimal_C_all_forecaster_one_file.append(SVM_forecaster2[k][3])
+        for k in range(len(SVM_models)):
+            SVM_Optimal_p_all_forecaster_one_file.append(SVM_forecaster3[k][4])
+            SVM_Optimal_q_all_forecaster_one_file.append(SVM_forecaster3[k][5])
+            SVM_Optimal_C_all_forecaster_one_file.append(SVM_forecaster3[k][3])
+        for k in range(len(SVM_models)):
+            SVM_Optimal_p_all_forecaster_one_file.append(SVM_forecaster4[k][4])
+            SVM_Optimal_q_all_forecaster_one_file.append(SVM_forecaster4[k][5])
+            SVM_Optimal_C_all_forecaster_one_file.append(SVM_forecaster4[k][3])
+        for k in range(len(SVM_models)):
+            SVM_Optimal_p_all_forecaster_one_file.append(SVM_forecaster5[k][4])
+            SVM_Optimal_q_all_forecaster_one_file.append(SVM_forecaster5[k][5])
+            SVM_Optimal_C_all_forecaster_one_file.append(SVM_forecaster5[k][3])
+        for k in range(len(SVM_models)):
+            SVM_Optimal_p_all_forecaster_one_file.append(SVM_forecaster6[k][4])
+            SVM_Optimal_q_all_forecaster_one_file.append(SVM_forecaster6[k][5])
+            SVM_Optimal_C_all_forecaster_one_file.append(SVM_forecaster6[k][3])
+
+        SVM_Optimal_p_q_all_forecaster_one_file =  pd.concat( [pd.Series(SVM_Optimal_p_all_forecaster_one_file),
+                                                              pd.Series(SVM_Optimal_q_all_forecaster_one_file),
+                                                               pd.Series(SVM_Optimal_C_all_forecaster_one_file) ], axis=1)
+        One_Forecaster_titles = [time + ' SVM forecaster1',time + ' KernelSVM_rbf forecaster1',time + ' KernelSVM_sigmoid forecaster1']
+        SVM_Model_names = [ One_Forecaster_titles[0],One_Forecaster_titles[1],One_Forecaster_titles[2],
+                One_Forecaster_titles[0].replace("1", "2"),One_Forecaster_titles[1].replace("1", "2"),One_Forecaster_titles[2].replace("1", "2"),
+                One_Forecaster_titles[0].replace("1", "3"),One_Forecaster_titles[1].replace("1", "3"),One_Forecaster_titles[2].replace("1", "3"),
+                One_Forecaster_titles[0].replace("1", "4"),One_Forecaster_titles[1].replace("1", "4"),One_Forecaster_titles[2].replace("1", "4"),
+                One_Forecaster_titles[0].replace("1", "5"),One_Forecaster_titles[1].replace("1", "5"),One_Forecaster_titles[2].replace("1", "5"),
+                One_Forecaster_titles[0].replace("1", "6"),One_Forecaster_titles[1].replace("1", "6"),One_Forecaster_titles[2].replace("1", "6")]
+        SVM_Optimal_p_q_all_forecaster_one_file.insert(0 ,'0',SVM_Model_names)
+
+        SVM_Optimal_p_q_all_forecaster_one_file.columns = ['Model','Optimal p_'+name,'Optimal q_'+name, 'Optimal margin C_'+name]
+        SVM_Optimal_p_q_all_forecaster_one_file.to_csv(name+'Optimal_C_p_q_all_forecaster_all_SVM_'+time + '.csv')
+
+        # generating ln(SE) plots for SVM and Kernel SVM Models
+        SVM_ln_SE_all_forecaster_one_file = []
+        for k in range(len(SVM_models)):
+            SVM_ln_SE_all_forecaster_one_file.append(SVM_forecaster1[k][2])
+        for k in range(len(SVM_models)):
+            SVM_ln_SE_all_forecaster_one_file.append(SVM_forecaster2[k][2])
+        for k in range(len(SVM_models)):
+            SVM_ln_SE_all_forecaster_one_file.append(SVM_forecaster3[k][2])
+        for k in range(len(SVM_models)):
+            SVM_ln_SE_all_forecaster_one_file.append(SVM_forecaster4[k][2])
+        for k in range(len(SVM_models)):
+            SVM_ln_SE_all_forecaster_one_file.append(SVM_forecaster5[k][2])
+        for k in range(len(SVM_models)):
+            SVM_ln_SE_all_forecaster_one_file.append(SVM_forecaster6[k][2])
+
+        SVM_ln_SE_collect_df_one_file = pd.concat( SVM_ln_SE_all_forecaster_one_file, axis=1)
+        SVM_ln_SE_collect_df_one_file.columns = SVM_Model_names
+        SVM_ln_SE_collect_df_one_file.set_index(test_sample.index)
+        SVM_ln_SE_collect_df_one_file.plot(kind='line', figsize=(15, 10)).legend(loc='lower left')
+        plt.xlabel("Years")
+        plt.ylabel("ln(SE)")
+        plt.title(name+' ln(SE)')
+        # plt.show()
+        plt.savefig(name + ' ' + time + ' SVM and Kernel SVM Models ln(SE).png')
+
+
+        # output MSE and QL in to csv files for logistic regression
+        LR_Optimal_p_forecaster_3_4_one_file = [ LogisticRegression_forecaster3[3],LogisticRegression_forecaster4[3] ]
+        LR_Optimal_q_forecaster_3_4_one_file = [ LogisticRegression_forecaster3[4],LogisticRegression_forecaster4[4] ]
+        LR_Optimal_p_q_forecaster_3_4_one_file =  pd.concat( [pd.Series(LR_Optimal_p_forecaster_3_4_one_file),
+                                                              pd.Series(LR_Optimal_q_forecaster_3_4_one_file)], axis=1)
+
+        LR_Optimal_p_q_forecaster_3_4_one_file.insert(0 ,'0',[time + ' Logistic Regression forecaster3',time + ' Logistic Regression forecaster4'])
+        LR_Optimal_p_q_forecaster_3_4_one_file.columns = ['Model','Optimal p_'+name, 'Optimal q_'+name]
+        LR_Optimal_p_q_forecaster_3_4_one_file.to_csv(name+'Optimal_p_q_forecaster_3_4__logisticRegression_'+time + '.csv')
 
         LR_MSE_collect_one_file = [LogisticRegression_forecaster1[0],LogisticRegression_forecaster2[0],LogisticRegression_forecaster3[0],
                                 LogisticRegression_forecaster4[0],LogisticRegression_forecaster5[0],LogisticRegression_forecaster6[0]]
@@ -105,7 +197,10 @@ for count, name in enumerate(filenames):
                                              time + ' Logistic Regression forecaster3',time + ' Logistic Regression forecaster4',
                                               time + ' Logistic Regression forecaster5',time + ' Logistic Regression forecaster6'])
         LR_MSE_QL_df_one_file.columns = ['Model','MSE_'+name, 'QL_'+name]
+        LR_MSE_QL_df_one_file.to_csv(name+'MSE_QL_logisticRegression_'+time + '.csv')
 
+
+        # generating ln(SE) plots for logistic regression
         LR_ln_SE_collect_df_one_file = pd.concat( [LogisticRegression_forecaster1[2],LogisticRegression_forecaster2[2],
                                                    LogisticRegression_forecaster3[2],LogisticRegression_forecaster4[2],
                                                    LogisticRegression_forecaster5[2],LogisticRegression_forecaster6[2]], axis=1)
@@ -118,9 +213,6 @@ for count, name in enumerate(filenames):
         plt.ylabel("ln(SE)")
         plt.title(name+' ln(SE)')
         # plt.show()
-        plt.savefig(name + ' ' + time + ' ln(SE).png')
-
-        LR_MSE_QL_df_one_file.to_csv(name+'MSE_QL_logisticRegression_'+time + '.csv')
-
+        plt.savefig(name + ' ' + time + ' Logistic Regression ln(SE).png')
 
 print("Complete")
