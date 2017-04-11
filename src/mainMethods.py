@@ -148,8 +148,18 @@ def multiknn(name):
         KNN_training = [[fc.function_runs(dates=training_date, filename=str(name)+' Single Knn',
                          stringinput='Daily', warmup=warmup, input_data=training_sample, k_nn=[i], options='0-train')
                          for i in np.arange(1, 21)] for warmup in [100]]  #  200,500)]
-        MSE_training = pd.Series([KNN_training[0][i].MSE.loc['SumMSE'] for i in range(0,len(KNN_training[0]))], index=np.linspace(1,20,20, dtype=int))
-        QL_training = pd.Series([KNN_training[0][i].QL.loc['SumQL'] for i in range(0,len(KNN_training[0]))], index=np.linspace(1,20,20, dtype=int))
+        MSE_training = pd.Series([KNN_training[0][i].MSE[name] for i in range(0, len(KNN_training[0]))],
+                                 index=np.linspace(1, 20, 20, dtype=int))
+        # QL_training = pd.Series([KNN_training[0][i].QL.loc['QL'] for i in range(0,len(KNN_training[0]))], index=np.linspace(1,20,20, dtype=int))
+        QL_training = pd.Series([KNN_training[0][i].QL[name] for i in range(0, len(KNN_training[0]))],
+                                index=np.linspace(1, 20, 20, dtype=int))
+        train_k = pd.DataFrame([MSE_training, QL_training], index=['MSE', 'QL']).transpose()
+        train_k.index.names = ['k']
+
+        writer = pd.ExcelWriter(str(name)+' KNN_train_output.xlsx')
+        train_k.to_excel(writer, 'Train results')
+        writer.save()
+
         # gives the k-value of the lowest MSE
         k_star = MSE_training.idxmin()
         plttitle = name+' MSE vs k'
@@ -165,7 +175,7 @@ def multiknn(name):
         # test sample
         KNN_test.append(fc.function_runs(dates=test_date, filename=name, stringinput='Daily', warmup=training_sample,
                                          input_data=test_sample, k_nn=[12], options='0-test'))
-        test_set_results_list.append([name, k_star, KNN_test[0].loc[name][0],KNN_test[0].loc[name][1]])
+        test_set_results_list.append([name, 12, KNN_test[0].loc[name][0],KNN_test[0].loc[name][1]])
     #
     # else:
     #         KNN_test.append(fc.function_runs(dates=test_date, filename=name, stringinput='Daily', warmup=100, input_data=test_sample, k_nn=[20]))

@@ -6,18 +6,19 @@ class PerformanceMeasure(object):
     QL = 0
     MSE = 0
 
-    def __init__(self, QL = 0, MSE= 0):
+    def __init__(self, QL = 0, MSE= 0,do_sum=0):
         self.QL = QL
         self.MSE = MSE
-
+        self.do_sum = do_sum
     def mean_se(self, observed, prediction):
 
 
 
         if isinstance(observed, pd.core.frame.DataFrame) & isinstance(prediction, pd.core.frame.DataFrame):
             self.MSE = np.mean(np.square(np.subtract(observed, prediction)))
-            mse_sum = pd.Series(sum(self.MSE), index=['SumMSE'])
-            self.MSE = self.MSE.append(mse_sum)
+            if self.do_sum==1:
+                mse_sum = pd.Series(sum(self.MSE), index=['SumMSE'])
+                self.MSE = self.MSE.append(mse_sum)
 
             # this line converts to df and transposes from cols to rows
             self.MSE = pd.DataFrame(self.MSE).T
@@ -48,8 +49,9 @@ class PerformanceMeasure(object):
             ones = np.ones(np.shape(observed))
             # self.QL = (1 / len(observed)) * (np.sum(value - np.log(value) - ones))
             self.QL = (1 / len(observed)) * (np.sum(value - np.log(value.astype('float64')) - ones))
-            ql_sum = pd.Series(sum(self.QL), index=['SumQL'])
-            self.QL = self.QL.append(ql_sum)
+            if self.do_sum==1:
+                ql_sum = pd.Series(sum(self.QL), index=['SumQL'])
+                self.QL = self.QL.append(ql_sum)
 
             # this line converts to df and transposes from cols to rows
             self.QL = pd.DataFrame(self.QL).T
