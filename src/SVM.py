@@ -15,7 +15,7 @@ def SVM_Predict_y_delta_star_training(train_sample, forecaster, model ,C, p=None
     :param C: margin in the SVM model, needed to be optimized
     :param p: p is a parameter in forecaster 3 and forecaster 4 
     :param q: q is a parameter in forecaster 4    
-    :return: the predicted y label, benchmark_delta_star (the benchmark delta_star) and the fitted model in the training sample
+    :return: the predicted y label, train_delta_star and the fitted model in the training sample
     """
     if model == "SVM":
         Model = SVC(C, kernel='linear')
@@ -71,9 +71,9 @@ def SVM_Predict_y_delta_star_training(train_sample, forecaster, model ,C, p=None
     # element wise multiplication of vol_today and predicted_y_train to get P
     P = np.array([a * b for a, b in zip(vol_today, predicted_y_train)])
     # implement matrix multiplication by using np.dot
-    benchmark_delta_star = np.dot(np.transpose(P), (vol_tmr - vol_today)) / np.dot(np.transpose(P), P)
+    train_delta_star = np.dot(np.transpose(P), (vol_tmr - vol_today)) / np.dot(np.transpose(P), P)
 
-    return predicted_y_train, benchmark_delta_star.flatten()[0], fittedModel, train_sample_new
+    return predicted_y_train, train_delta_star .flatten()[0], fittedModel, train_sample_new
 
 def SVM_Validation_Training(train_sample, forecaster, model, C, p=None, q=None):
     """
@@ -136,9 +136,9 @@ def SVM_Validation_Training(train_sample, forecaster, model, C, p=None, q=None):
         inputdf2 = train_out_of_sample[['vol_now',  'ret_now','volxret_now','vol_sqr_now']]
         predicted_y_train_out_of_sample = fittedModel.predict(np.array(inputdf2).reshape(len(inputdf2),4))
 
-    benchmark_delta_star = SVM_Predict_y_delta_star_training(train_in_sample, forecaster, model ,C, p, q)[1]
+    delta_star = SVM_Predict_y_delta_star_training(train_in_sample, forecaster, model ,C, p, q)[1]
     element1 = np.array(train_out_of_sample.vol_now)
-    element2 = 1 + benchmark_delta_star * predicted_y_train_out_of_sample
+    element2 = 1 + delta_star * predicted_y_train_out_of_sample
     predicted_train_out_of_sample_vol_future = pd.Series([a * b for a, b in zip(element1, element2)])
     observed_train_out_of_sample_vol_future = pd.Series(train_out_of_sample.vol_future)
 
