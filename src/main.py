@@ -35,7 +35,7 @@ namelist = list()
 
 LR_ln_SE_collect_df_one_file = pd.DataFrame()
 SVM_ln_SE_collect_df_one_file = pd.DataFrame()
-# C_seq = np.arange(0.1,5,1)
+# C_seq = np.arange(0.1,2,1)
 C_seq = np.arange(0.1,5,0.1)
 SVM_models = ["SVM", "KernelSVM_rbf", "KernelSVM_sigmoid"]
 
