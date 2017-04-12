@@ -100,9 +100,8 @@ def knn_type(method_type='train', window_type='expanding window', vol_data=None,
             kn_index = diff.reindex(absdiff.index)[1:k + 1].index + 1
 
             # TODO standardize time
-            time_comp = np.array(((last_sample.name - kn_index) / last_sample.name) ** 2)
-
-
+            # time_comp = np.array(((last_sample.name - kn_index) / last_sample.name) ** 2)
+            time_comp = np.array(((last_sample.name - kn_index) / (last_sample.name* np.sqrt(last_sample.name))) ** 2)
 
             squared = np.array(absdiff[1:k + 1] ** 2).reshape(time_comp.shape) + time_comp
             c = 1 / np.sum(1 / squared)
@@ -136,7 +135,11 @@ def knn_type(method_type='train', window_type='expanding window', vol_data=None,
             # load in the datapoints
             # growing window
             # train_set = vol_data[0:(warmup + iterator)]
-            test_set = pd.concat([warmup, vol_data[0:iterator]])
+
+            if iterator == 1:
+                test_set = pd.concat([warmup])
+            else:
+                test_set = pd.concat([warmup, vol_data[0:iterator]])
             # moving window
             # train_set = vol_data[iterator:(warmup+iterator)]
 
@@ -148,9 +151,7 @@ def knn_type(method_type='train', window_type='expanding window', vol_data=None,
 
             # TODO standardize time
             # normalize time
-            time_comp = np.array(((last_sample.name - kn_index) / last_sample.name) ** 2)
-            # standardize time
-            time_comp = (time_comp - np.mean(time_comp)) / np.std(time_comp)
+            time_comp = np.array(((last_sample.name - kn_index) / (last_sample.name* np.sqrt(last_sample.name))) ** 2)
 
             squared = np.array(absdiff[1:k + 1] ** 2).reshape(time_comp.shape) + time_comp
             c = 1 / np.sum(1 / squared)
@@ -235,8 +236,8 @@ def knn_type(method_type='train', window_type='expanding window', vol_data=None,
             # TODO standardize time
             # normalize time
             time_comp = np.array(((last_sample.name - kn_index) / last_sample.name) ** 2)
-            # standardize time
-            time_comp = (time_comp - np.mean(time_comp)) / np.std(time_comp)
+            # # standardize time
+            # time_comp = (time_comp - np.mean(time_comp)) / np.std(time_comp)
 
             squared = np.array(absdiff[1:k + 1] ** 2).reshape(time_comp.shape) + time_comp
             c = 1 / np.sum(1 / squared)

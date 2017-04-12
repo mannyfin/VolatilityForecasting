@@ -45,7 +45,6 @@ class LinRegression:
             b = [A.coef_[i] for i in range(n)]
             c = A.intercept_
 
-            # TODO check that LR is correct..that we are predicting out of sample
             # TODO add functional to choose log instead of hard coding log in the code here
             # # reshape data for prediction
             PredictedLogVol.append(A.predict(LogVol[initial-n : initial].values.reshape(1, -1))[0])

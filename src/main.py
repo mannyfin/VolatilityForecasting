@@ -155,7 +155,7 @@ for count, name in enumerate(filenames):
 print("hi")
 # does not have zeroes
 daily_vol_combined = dailyvol_zeroes[(dailyvol_zeroes != 0).all(1)]
-#  TODO fix dates, because there's an inconsistency.
+
 dates = daily_vol_combined.Date.loc[:, ~daily_vol_combined.Date.columns.duplicated()].reset_index()
 # drop duplicate columns
 daily_vol_combined.drop('Date', axis=1, inplace=True)

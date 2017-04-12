@@ -25,7 +25,8 @@ import matplotlib.backends.backend_pdf
 import prediction_output
 
 
-name = ['AUDUSD.csv', 'CADUSD.csv'] #,  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
+name = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
+# name = ['CADUSD.csv'] #,  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
 
 KNN_test = []
 
@@ -136,18 +137,20 @@ def multiknn(name):
                }
     # method_choice is used for pickout out specific KNN tests one may wish to run
     # to run multiple methods, do something like this
-    # method_choice = [options['zero'], options['one']]
+    method_choice = [options['zero'], options['one']]
 
 
-    method_choice = [options['one']]
-    k=3
+    # method_choice = [options['one']]
+    k=20
 
-    # if training:
-    if not os.path.exists(name+'_KNN_Train'):
-        os.mkdir(name+'_KNN_Train')
+
 
     if options['zero'] in method_choice:
-        os.chdir(name + '_KNN_Train')
+        # if training:
+        if not os.path.exists(name + '_KNN_Train0'):
+            os.mkdir(name + '_KNN_Train0')
+        os.chdir(name + '_KNN_Train0')
+        plt.close()
         # method 0
         KNN_training = [[fc.function_runs(dates=training_date, filename=str(name)+' Single Knn',
                          stringinput='Daily', warmup=warmup, input_data=training_sample, k_nn=[i], options='0-train')
@@ -187,15 +190,22 @@ def multiknn(name):
         file_results_list.append([name, k_star, MSE_training.min(), QL_training.idxmin(), QL_training.min()])
 
         os.chdir('..')
-
+        if not os.path.exists(name + '_KNN_Test0'):
+            os.mkdir(name + '_KNN_Test0')
+        os.chdir(name + '_KNN_Test0')
         # test sample
         KNN_test.append(fc.function_runs(dates=test_date, filename=name, stringinput='Daily', warmup=training_sample,
                                          input_data=test_sample, k_nn=[12], options='0-test'))
 
         all_results_plot.append(pd.read_csv('test_prediction_0-test.csv', index_col='Unnamed: 0', names=['Unnamed: 0',options['zero']]))
         test_set_results_list.append([name, 12, KNN_test[0].loc[name][0],KNN_test[0].loc[name][1]])
+        os.chdir('..')
+
     if options['one'] in method_choice:
-        os.chdir(name + '_KNN_Train')
+        if not os.path.exists(name + '_KNN_Train1'):
+            os.mkdir(name + '_KNN_Train1')
+        os.chdir(name + '_KNN_Train1')
+        plt.close()
 
         # method 0
         # KNN_training = [[fc.function_runs(dates=training_date, filename=str(name)+' Single Knn',
@@ -231,21 +241,22 @@ def multiknn(name):
         plttitle = name+' MSE vs k'
         ax = MSE_training.plot()
         ax.set(xlabel='k', ylabel='MSE', title=plttitle, xticks=range(0, 20+1,2))
-        plt.plot(k_star, MSE_training.min(), '*', markersize=10)
+        ax.plot(k_star.astype(int), MSE_training.min().astype('float64'), '*', markersize=10)
         plt.savefig(plttitle+'.png')
         plt.close()
         # append to output
         file_results_list.append([name, k_star, MSE_training.min(), QL_training.idxmin(), QL_training.min()])
 
         os.chdir('..')
-
+        if not os.path.exists(name + '_KNN_Test1'):
+            os.mkdir(name + '_KNN_Test1')
         # test sample
         KNN_test.append(fc.function_runs(dates=test_date, filename=name, stringinput='Daily', warmup=training_sample,
                                          input_data=test_sample, k_nn=[12], options='1-test'))
 
         all_results_plot.append(pd.read_csv('test_prediction_1-test.csv', index_col='Unnamed: 0', names=['Unnamed: 0',options['one']]))
         test_set_results_list.append([name, 12, KNN_test[0].loc[name][0], KNN_test[0].loc[name][1]])
-
+        os.chdir('..')
 
     # else:
     #         KNN_test.append(fc.function_runs(dates=test_date, filename=name, stringinput='Daily', warmup=100, input_data=test_sample, k_nn=[20]))
@@ -265,6 +276,15 @@ def multiknn(name):
     df_combined_pred = df_combined_pred.set_index('Date')
     ax=df_combined_pred.plot(kind='line', figsize=(12, 7))
     ax.set(ylabel='log(RV)', title=name + ' prediction methods vs observed')
+    plt.savefig(name + ' prediction methods vs observed'+'.png')
+    plt.close()
+
+    lnSE = df_combined_pred.sub(df_combined_pred[name].astype('float64'), axis=0).astype('float64').apply(np.square).apply(np.log)
+    lnSE = lnSE.drop(name, axis=1)
+    ax1 = lnSE.plot(kind='line', figsize=(12, 7))
+    ax1.set(ylabel='ln(SE)', title=name + ' ln(SE)')
+    plt.savefig(name + ' ln(SE)'+'.png')
+    plt.close()
     #
     # if len(KNN_training) != 1:
     #     ks = np.arange(2,10)
@@ -313,9 +333,9 @@ writer.save()
 # if __name__ == '__main__':
 #
 #     # p = Pool(processes = len(names))
-#     p = Pool(processes=len(names))
+#     p = Pool(processes=len(name))
 #     start = time.time()
-#     async_result = p.map_async(multiknn, names)
+#     async_result = p.map_async(multiknn, name)
 #     # for file in names:
 #     #     # p.apply_async(multip, [file])
 #     #     p.map(multip, [file])
