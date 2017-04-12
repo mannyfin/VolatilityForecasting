@@ -88,7 +88,6 @@ def SVM_Validation_Training(train_sample, forecaster, model, C, p=None, q=None):
     """
     output = SVM_Predict_y_delta_star_training(train_sample, forecaster, model ,C, p, q)
     train_sample_new = output[3]
-    benchmark_delta_star = output[1]
 
     index_train_in_sample = np.random.choice(len(train_sample_new), int(len(train_sample_new) * 4 / 5), replace=False)
     index_train_in_sample = np.sort(index_train_in_sample)
@@ -137,6 +136,7 @@ def SVM_Validation_Training(train_sample, forecaster, model, C, p=None, q=None):
         inputdf2 = train_out_of_sample[['vol_now',  'ret_now','volxret_now','vol_sqr_now']]
         predicted_y_train_out_of_sample = fittedModel.predict(np.array(inputdf2).reshape(len(inputdf2),4))
 
+    benchmark_delta_star = SVM_Predict_y_delta_star_training(train_in_sample, forecaster, model ,C, p, q)[1]
     element1 = np.array(train_out_of_sample.vol_now)
     element2 = 1 + benchmark_delta_star * predicted_y_train_out_of_sample
     predicted_train_out_of_sample_vol_future = pd.Series([a * b for a, b in zip(element1, element2)])
