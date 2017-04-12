@@ -70,45 +70,9 @@ def KNNcalc(method_number, vol_data, dates=None, k=1, warmup=400, filename=None,
     prediction = pd.Series()
     iterator = 0
     try:
-        # for training, warmup is just an integer, for testing warmup is a df
-        # if method_number == '0-train':
+
         observed, prediction = knn_type(method_type=optionsdict(method_number)[0], window_type=optionsdict(method_number)[1],
                                   vol_data=vol_data, warmup=warmup, k=k)
-
-        # elif method_number == '0-test':
-        #     prediction = knn_type(method_type='test', window_type='expanding window', vol_data=vol_data,
-        #                           warmup=warmup, k=k)
-
-        # while iterator < (len(vol_data)-warmup):
-        # # use the below for testing
-        # # while iterator < len(vol_data):
-        #     # load in the datapoints
-        #     # growing window
-        #     train_set = vol_data[0:(warmup + iterator)]
-        #
-        #
-        #     # moving window
-        #     # train_set = vol_data[iterator:(warmup+iterator)]
-        #
-        #     last_sample = train_set.iloc[- 1]
-        #     diff = last_sample - train_set
-        #     # absdiff = diff.abs().sort_values()
-        #     absdiff = diff.abs().sort_values(by=diff.keys()[0])
-        #     kn_index = diff.reindex(absdiff.index)[1:k + 1].index + 1
-        #
-        #     squared = absdiff[1:k + 1] ** 2
-        #
-        #     c = 1 / np.sum(1/squared)
-        #     alpha_j = c/squared
-        #     # sigma = vol_data[kn_index]
-        #     sigma = vol_data.iloc[kn_index]
-        #     # prediction = prediction.append(pd.Series([np.dot(alpha_j, sigma)], index=[iterator]))
-        #     # the line below for passed DataFrames
-        #     prediction = prediction.append(pd.Series([np.dot(alpha_j[alpha_j.keys()[0]],sigma[sigma.keys()[0]])],
-        #                                              index=[iterator]))
-        #     iterator += 1
-            # print(prediction)
-        # print(prediction)
     except:
         TypeError('Not a pd.Series or pd.DataFrame')
         ValueError("bad values")
@@ -138,11 +102,9 @@ def KNNcalc(method_number, vol_data, dates=None, k=1, warmup=400, filename=None,
     plt.title(str(filename) + ' k = ' + str(k))
     plt.savefig(plttitle + '.png')
     plt.close()
-    tempfix = pd.concat([MSE, QL], axis=1)
+    combinedMSEQL = pd.concat([MSE, QL], axis=1)
 
     if 'test' in method_number:
         prediction_output(prediction, method_number)
 
-
-    # return MSE, QL
-    return tempfix
+    return combinedMSEQL

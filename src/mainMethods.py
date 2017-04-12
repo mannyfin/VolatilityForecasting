@@ -1,4 +1,5 @@
 
+"use this file to run KNN and KNN with time component. use main.py to run VAR"
 #  if you dont have this installed then here's how to install the module:
 #  conda install -c https://conda.binstar.org/bashtage arch
 
@@ -26,7 +27,6 @@ import prediction_output
 
 
 name = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
-# name = ['CADUSD.csv'] #,  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
 
 KNN_test = []
 
@@ -112,8 +112,6 @@ def multiknn(name):
     p=3
     # use this below
     fc = FunctionCalls()
-    # xmat = pd.DataFrame([sum([daily_vol_combined[currency].loc[i+p-1:i:-1].as_matrix().tolist() for currency in daily_vol_combined.keys()],[]) for i in range(len(daily_vol_combined)-p)])
-
 
     # 11/1
     training_sample, test_sample = daily_vol_combined.iloc[0:910].copy(), daily_vol_combined.iloc[910:].copy()
@@ -142,8 +140,6 @@ def multiknn(name):
 
     # method_choice = [options['one']]
     k=20
-
-
 
     if options['zero'] in method_choice:
         # if training:
@@ -207,11 +203,6 @@ def multiknn(name):
         os.chdir(name + '_KNN_Train1')
         plt.close()
 
-        # method 0
-        # KNN_training = [[fc.function_runs(dates=training_date, filename=str(name)+' Single Knn',
-        #                  stringinput='Daily', warmup=warmup, input_data=training_sample.astype('float64'), k_nn=[i], options='0-train')
-        #                  for i in np.arange(1, k+1)] for warmup in [100]]
-
         #method1
         KNN_training_1 = [[fc.function_runs(dates=training_date, filename=str(name)+' Single Knn',
                          stringinput='Daily', warmup=warmup, input_data=training_sample.astype('float64'), k_nn=[i], options='1-train')
@@ -223,7 +214,6 @@ def multiknn(name):
 
         MSE_training_all.append(MSE_training)
         #  Organize QL results from KNN_training
-        # QL_training = pd.Series([KNN_training[0][i].QL.loc['QL'] for i in range(0,len(KNN_training[0]))], index=np.linspace(1,20,20, dtype=int))
         QL_training =  pd.Series([KNN_training_1[0][i].QL[name] for i in range(0, len(KNN_training_1[0]))],
                                 index=np.linspace(1, k, k, dtype=int))
         QL_training.append(QL_training)
@@ -258,9 +248,6 @@ def multiknn(name):
         test_set_results_list.append([name, 12, KNN_test[0].loc[name][0], KNN_test[0].loc[name][1]])
         os.chdir('..')
 
-    # else:
-    #         KNN_test.append(fc.function_runs(dates=test_date, filename=name, stringinput='Daily', warmup=100, input_data=test_sample, k_nn=[20]))
-    # plt.show()
     plt.close()
     allmethods = pd.DataFrame(MSE_training_all).transpose()
     allmethods.columns = method_choice
@@ -285,41 +272,11 @@ def multiknn(name):
     ax1.set(ylabel='ln(SE)', title=name + ' ln(SE)')
     plt.savefig(name + ' ln(SE)'+'.png')
     plt.close()
-    #
-    # if len(KNN_training) != 1:
-    #     ks = np.arange(2,10)
-    #
-    #     # were indented....
-    #     warmups = np.arange(50,200,50)
-    #
-    #     k,w = np.meshgrid(ks,warmups)
-    #     SEkw = np.array([ [ KNN_training[warmup][i-2]['MSE'][0] for i in np.arange(2,10) ] for warmup in np.arange(len(np.arange(50,200,50)))])
-    #     k,w = np.meshgrid(ks,warmups)
-    #
-    #     from mpl_toolkits.mplot3d import Axes3D
-    #     from matplotlib import cm
-    #     matplotlib.style.use('ggplot')
-    #
-    #     fig = plt.figure()
-    #     ax = fig.gca(projection='3d')
-    #     sur=ax.plot_surface(k,w,SEkw,cmap=cm.coolwarm,linewidth=0,antialiased=False,rstride=1, cstride=1)
-    #     fig.colorbar(sur,shrink=0.5, aspect=5)
-    #
-    #     ax.set_xlabel('k')
-    #     ax.set_ylabel('warmup')
-    #     ax.set_zlabel('SE')
-    #     plt.title(str(names[0]))
-    #     plt.show()
 
     os.chdir('..')
 
-# """Output multiple plots into a pdf file"""
-# pdf = matplotlib.backends.backend_pdf.PdfPages(names+".pdf")
-# for fig in range(1, 3*count+3+1):
-#     pdf.savefig( fig, dpi=1200 )
-# pdf.close()
-#
-#
+
+
 for names in name:
     multiknn(names)
 writer=pd.ExcelWriter('KNNoutput.xlsx')
@@ -330,19 +287,3 @@ test_results.to_excel(writer,'Test results')
 
 writer.save()
 
-# if __name__ == '__main__':
-#
-#     # p = Pool(processes = len(names))
-#     p = Pool(processes=len(name))
-#     start = time.time()
-#     async_result = p.map_async(multiknn, name)
-#     # for file in names:
-#     #     # p.apply_async(multip, [file])
-#     #     p.map(multip, [file])
-#     #     # p.start()
-#     p.close()
-#     p.join()
-#     print("Complete")
-#     end = time.time()
-#     print('total time (s)= ' + str(end-start))
-#     print("Complete")
