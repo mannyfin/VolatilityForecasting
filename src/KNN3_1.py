@@ -6,7 +6,7 @@ from compatibility_check import compatibility_check as cc
 import matplotlib.pyplot as plt
 from KNN_method_type import knn_type
 from optionsdict import *
-import prediction_output
+from prediction_output import *
 
 def KNN(method_number,vol_data, dates=None, k=1, warmup=100, filename=None, Timedt=None):
 
@@ -141,7 +141,7 @@ def KNNcalc(method_number, vol_data, dates=None, k=1, warmup=400, filename=None,
     tempfix = pd.concat([MSE, QL], axis=1)
 
     if 'test' in method_number:
-        prediction_output(prediction)
+        prediction_output(prediction, method_number)
 
 
     # return MSE, QL
