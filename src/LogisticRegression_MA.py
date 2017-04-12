@@ -63,7 +63,6 @@ def Validation_Training(train_sample, forecaster, p, q=None):
     """
     output = Predict_y_delta_star_training_MA(train_sample, forecaster, p, q)
     train_sample_new = output[3]
-    benchmark_delta_star = output[1]
 
     index_train_in_sample = np.random.choice(len(train_sample_new), int(len(train_sample_new) * 4 / 5), replace=False)
     index_train_in_sample = np.sort(index_train_in_sample)
@@ -84,6 +83,7 @@ def Validation_Training(train_sample, forecaster, p, q=None):
         inputdf2 = train_out_of_sample[['E_p', 'E_q']]
         predicted_y_train_out_of_sample = fittedModel.predict(np.array(inputdf2).reshape(len(inputdf2), 2))
 
+    benchmark_delta_star = Predict_y_delta_star_training_MA(train_in_sample, forecaster, p, q)[1]
     element1 = np.array(train_out_of_sample.vol_now)
     element2 = 1 + benchmark_delta_star * predicted_y_train_out_of_sample
     predicted_train_out_of_sample_vol_future = pd.Series([a * b for a, b in zip(element1, element2)])
