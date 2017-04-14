@@ -1,0 +1,10 @@
+accuracy: 0.849579
+accuracy/baseline_label_mean: 0.236226
+accuracy/threshold_0.500000_mean: 0.849579
+auc: 0.868899
+global_step: 200
+labels/actual_label_mean: 0.236226
+labels/prediction_mean: 0.22602
+loss: 0.394589
+precision/positive_threshold_0.500000_mean: 0.76569
+recall/positive_threshold_0.500000_mean: 0.523401

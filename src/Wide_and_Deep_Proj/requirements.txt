@@ -1,0 +1,39 @@
+Windows only:
+
+Make sure you have the latest (nightly) release of tensorflow. As of now it is rc1.1
+
+Tensorflow ONLY supports Python 3.5
+
+To install tensorflow:
+
+For the cpu version of TF use the following in cmd:
+pip3 install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/windows/cpu/tensorflow-1.1.0rc1-cp35-cp35m-win_amd64.whl
+
+And if you have a compatible gpu, and want to run on a gpu (I did) then use the following cmd:
+pip 3install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/windows/gpu/tensorflow_gpu-1.1.0rc1-cp35-cp35m-win_amd64.whl
+
+Just remember that if a TensorFlow operation has both CPU and GPU implementations, the GPU devices will be given priority when the operation is assigned to a device.
+
+Check installation by running the following in a shell:
+
+>>> import tensorflow as tf
+>>> hello = tf.constant('Hello, TensorFlow!')
+>>> sess = tf.Session()
+>>> print(sess.run(hello))
+
+
+If this checks out, then run WideAndDeep.py
+
+I have posted my results in test_results.txt your results should be pretty close.
+
+I have commented the code with a series of numbers (1., 2., 3., 4., ...) to help you find your way around the code.
+I used the tutorial found here to do this: https://www.tensorflow.org/tutorials/wide_and_deep
+
+
+If you get the following error while running on a GPU:
+
+InternalError (see above for traceback): Blas GEMM launch failed : a.shape=(32561, 53), b.shape=(53, 100), m=32561, n=100, k=53
+
+This means that you should close some files/programs because the GPU is getting an out of memory error.
+
+You can change the number of iterations by changing this line in the code (just ctrl-F) :       default=200,
