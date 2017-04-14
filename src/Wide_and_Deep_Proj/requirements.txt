@@ -1,3 +1,10 @@
+I found this article here: http://eugenezhulenev.com/blog/2014/11/14/stock-price-prediction-with-big-data-and-machine-learning/
+I think it would be great if we can implement these features into our model. He does classification here but we can still
+use these features as components for the model.
+
+And this talks about DNN for predicting volatility: https://medium.com/@TalPerry/deep-learning-the-stock-market-df853d139e02
+
+
 Windows only:
 
 Make sure you have the latest (nightly) release of tensorflow. As of now it is rc1.1
