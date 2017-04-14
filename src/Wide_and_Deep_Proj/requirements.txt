@@ -30,6 +30,11 @@ I have commented the code with a series of numbers (1., 2., 3., 4., ...) to help
 I used the tutorial found here to do this: https://www.tensorflow.org/tutorials/wide_and_deep
 
 
+You can view the data used in the simulation here:
+https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.test
+https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data
+
+
 If you get the following error while running on a GPU:
 
 InternalError (see above for traceback): Blas GEMM launch failed : a.shape=(32561, 53), b.shape=(53, 100), m=32561, n=100, k=53
