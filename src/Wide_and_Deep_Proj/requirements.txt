@@ -12,7 +12,8 @@ pip3 install --ignore-installed --upgrade https://storage.googleapis.com/tensorf
 And if you have a compatible gpu, and want to run on a gpu (I did) then use the following cmd:
 pip 3install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/windows/gpu/tensorflow_gpu-1.1.0rc1-cp35-cp35m-win_amd64.whl
 
-Just remember that if a TensorFlow operation has both CPU and GPU implementations, the GPU devices will be given priority when the operation is assigned to a device.
+Just remember that if a TensorFlow operation has both CPU and GPU implementations, the GPU devices will be given
+priority when the operation is assigned to a device.
 
 Check installation by running the following in a shell:
 
