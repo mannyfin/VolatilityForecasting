@@ -241,42 +241,44 @@ if __name__ == "__main__":
   # the three commented lines below are for using a GPU. I found that using 0.8 gave an out of memory error, but 0.7 worked ok
   # it is not strictly necessary...
 
-  config = tf.ConfigProto()
-  config.gpu_options.per_process_gpu_memory_fraction = 0.7
-  session = tf.Session(config=config)
+  # config = tf.ConfigProto()
+  # config.gpu_options.per_process_gpu_memory_fraction = 0.7
+  # session = tf.Session(config=config)
+  with tf.Session() as sess:
+      with tf.device("/cpu:0"):
 
-  t0 = time.time()
-  parser = argparse.ArgumentParser()
-  parser.register("type", "bool", lambda v: v.lower() == "true")
-  parser.add_argument(
-      "--model_dir",
-      type=str,
-      default="",
-      help="Base directory for output models."
-  )
-  parser.add_argument(
-      "--model_type",
-      type=str,
-      default="wide_n_deep",
-      help="Valid model types: {'wide', 'deep', 'wide_n_deep'}."
-  )
-  parser.add_argument(
-      "--train_steps",
-      type=int,
-      default=200,
-      help="Number of training steps."
-  )
-  parser.add_argument(
-      "--train_data",
-      type=str,
-      default="",
-      help="Path to the training data."
-  )
-  parser.add_argument(
-      "--test_data",
-      type=str,
-      default="",
-      help="Path to the test data."
-  )
-  FLAGS, unparsed = parser.parse_known_args()
-  tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+          t0 = time.time()
+          parser = argparse.ArgumentParser()
+          parser.register("type", "bool", lambda v: v.lower() == "true")
+          parser.add_argument(
+              "--model_dir",
+              type=str,
+              default="",
+              help="Base directory for output models."
+          )
+          parser.add_argument(
+              "--model_type",
+              type=str,
+              default="wide_n_deep",
+              help="Valid model types: {'wide', 'deep', 'wide_n_deep'}."
+          )
+          parser.add_argument(
+              "--train_steps",
+              type=int,
+              default=200,
+              help="Number of training steps."
+          )
+          parser.add_argument(
+              "--train_data",
+              type=str,
+              default="",
+              help="Path to the training data."
+          )
+          parser.add_argument(
+              "--test_data",
+              type=str,
+              default="",
+              help="Path to the test data."
+          )
+          FLAGS, unparsed = parser.parse_known_args()
+          tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
