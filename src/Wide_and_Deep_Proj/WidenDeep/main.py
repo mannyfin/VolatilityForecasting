@@ -12,16 +12,42 @@ for filename in filenames:
     namelist.append(name)
     print("Running file: " + str(name))
     time_vol_result, time_ret_result, time_vol_result_zeroes, time_ret_result_zeroes, da_rest = time_vol_calc(df_single_day)
+
     # return categorical
     da_rest['ret_comp'] = da_rest.Return_Time.diff().astype('float64')
     da_rest.ret_comp = da_rest.ret_comp.astype('float64').apply(np.sign).fillna(value=0)
+
     # volatility categorical
     da_rest['vol_comp'] = da_rest.Volatility_Time.diff().astype('float64')
     da_rest.vol_comp = da_rest.vol_comp.astype('float64').apply(np.sign).fillna(value=0)
 
-    # High low spread:
-    da_rest['hl_spr_rat'] = ((da_rest.High - da_rest.Low)/da_rest.Low).astype('float64')
+    # squared volatility:
+    da_rest['sqr_vol'] = ((da_rest.Volatility_Time)**2).astype('float64')
+
+    # High-low spread and High-low spread ratio:
+    da_rest['hl_spread'] = (da_rest.High - da_rest.Low).astype('float64')
+    da_rest['hl_spread_ratio'] = ((da_rest.High - da_rest.Low)/da_rest.Low).astype('float64')
+
+    # Open-close spread:
     da_rest['oc_spread'] = (da_rest.Close - da_rest.Open).astype('float64')
+
+    # squared volatility categorical:
+    da_rest['sqr_vol_comp'] = da_rest.sqr_vol.diff().astype('float64')
+    da_rest.sqr_vol_comp = da_rest.sqr_vol_comp.astype('float64').apply(np.sign).fillna(value=0)
+
+    #  High-low spread and High-low spread ratio categorical
+    da_rest['hl_spread_comp'] = da_rest.hl_spread.diff().astype('float64')
+    da_rest.hl_spread_comp = da_rest.hl_spread_comp.astype('float64').apply(np.sign).fillna(value=0)
+    da_rest['hl_spread_ratio_comp'] = da_rest.hl_spread_ratio.diff().astype('float64')
+    da_rest.hl_spread_ratio_comp = da_rest.hl_spread_ratio_comp.astype('float64').apply(np.sign).fillna(value=0)
+
+    # Open close spread categorical
+    da_rest['oc_spread_comp'] = da_rest.oc_spread.diff().astype('float64')
+    da_rest.oc_spread_comp = da_rest.oc_spread_comp.astype('float64').apply(np.sign).fillna(value=0)
+
+    # delete the first row of the data frame as the first value of each categorical input is 0
+    da_rest_new = da_rest.ix[1:]
+
     print("hi")
 
     # TODO combine da_rest with WideAndDeep.py:
