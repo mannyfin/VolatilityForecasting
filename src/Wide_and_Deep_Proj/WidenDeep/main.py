@@ -13,14 +13,6 @@ for filename in filenames:
     print("Running file: " + str(name))
     time_vol_result, time_ret_result, time_vol_result_zeroes, time_ret_result_zeroes, da_rest = time_vol_calc(df_single_day)
 
-    # return categorical
-    da_rest['ret_comp'] = da_rest.Return_Time.diff().astype('float64')
-    da_rest.ret_comp = da_rest.ret_comp.astype('float64').apply(np.sign).fillna(value=0)
-
-    # volatility categorical
-    da_rest['vol_comp'] = da_rest.Volatility_Time.diff().astype('float64')
-    da_rest.vol_comp = da_rest.vol_comp.astype('float64').apply(np.sign).fillna(value=0)
-
     # squared volatility:
     da_rest['sqr_vol'] = ((da_rest.Volatility_Time)**2).astype('float64')
 
@@ -30,6 +22,14 @@ for filename in filenames:
 
     # Open-close spread:
     da_rest['oc_spread'] = (da_rest.Close - da_rest.Open).astype('float64')
+
+    # return categorical
+    da_rest['ret_comp'] = da_rest.Return_Time.diff().astype('float64')
+    da_rest.ret_comp = da_rest.ret_comp.astype('float64').apply(np.sign).fillna(value=0)
+
+    # volatility categorical
+    da_rest['vol_comp'] = da_rest.Volatility_Time.diff().astype('float64')
+    da_rest.vol_comp = da_rest.vol_comp.astype('float64').apply(np.sign).fillna(value=0)
 
     # squared volatility categorical:
     da_rest['sqr_vol_comp'] = da_rest.sqr_vol.diff().astype('float64')
