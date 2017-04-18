@@ -23,3 +23,6 @@ for filename in filenames:
     da_rest['hl_spr_rat'] = ((da_rest.High - da_rest.Low)/da_rest.Low).astype('float64')
     da_rest['oc_spread'] = (da_rest.Close - da_rest.Open).astype('float64')
     print("hi")
+
+    # TODO combine da_rest with WideAndDeep.py:
+    # TODO look at these functions: i.e. lines 71 to 96 in WideAndDeep.py
