@@ -242,7 +242,7 @@ if __name__ == "__main__":
   # it is not strictly necessary...
 
   config = tf.ConfigProto()
-  config.gpu_options.per_process_gpu_memory_fraction = 0.7
+  config.gpu_options.per_process_gpu_memory_fraction = 0.3
   session = tf.Session(config=config)
 
   t0 = time.time()
