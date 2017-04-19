@@ -52,4 +52,3 @@ for filename in filenames:
 
     # TODO combine da_rest with WideAndDeep.py:
     # TODO look at these functions: i.e. lines 71 to 96 in WideAndDeep.py
-    # TODO remove first row with zero or nans
