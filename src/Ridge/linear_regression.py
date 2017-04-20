@@ -3,8 +3,10 @@ import numpy as np
 from sklearn.linear_model import LinearRegression as lr
 from Performance_Measure import *
 
+
 def lin_reg(data, n, warmup_period):
-# def lin_reg(data, n, filename, stringinput, warmup_period):
+    # TODO: write functions to find the optimal number of regressors n in the training set and collect MSE, QL and ln(SE) in the test set
+    # def lin_reg(data, n, filename, stringinput, warmup_period):
     """
     :param warmup_period uses a fixed window warmup period defined by the var, warmup_period
     :param data could be train_sample or test_sample
@@ -47,3 +49,6 @@ def lin_reg(data, n, warmup_period):
     ln_SE = pd.Series(np.log(SE))
 
     return MSE, QL, ln_SE, b, c
+
+
+
