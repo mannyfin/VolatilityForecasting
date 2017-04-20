@@ -33,7 +33,7 @@ class PastAsPresent(object):
 
         label = str(filename) + " " + str(stringinput) + " Squared Error PastAsPresent (" + str(1) + ") Volatility"
         """ return a plot of the Squared error"""
-        SE(observed, prediction, dates,function_method=label)
+        # SE(observed, prediction, dates,function_method=label)
         SE = [(observed[i] - prediction[i]) ** 2 for i in range(len(observed))]
         ln_SE = pd.Series(np.log(SE))
 
