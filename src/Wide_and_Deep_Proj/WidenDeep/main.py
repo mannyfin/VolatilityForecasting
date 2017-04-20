@@ -31,13 +31,14 @@ for filename in filenames:
     da_rest['vol_comp'] = da_rest.Volatility_Time.diff().astype('float64')
     da_rest.vol_comp = da_rest.vol_comp.astype('float64').apply(np.sign).fillna(value=0)
 
-    # squared volatility categorical:
+    # squared volatility categorical: (AKA variance)
     da_rest['sqr_vol_comp'] = da_rest.sqr_vol.diff().astype('float64')
     da_rest.sqr_vol_comp = da_rest.sqr_vol_comp.astype('float64').apply(np.sign).fillna(value=0)
 
     #  High-low spread and High-low spread ratio categorical
     da_rest['hl_spread_comp'] = da_rest.hl_spread.diff().astype('float64')
     da_rest.hl_spread_comp = da_rest.hl_spread_comp.astype('float64').apply(np.sign).fillna(value=0)
+
     da_rest['hl_spread_ratio_comp'] = da_rest.hl_spread_ratio.diff().astype('float64')
     da_rest.hl_spread_ratio_comp = da_rest.hl_spread_ratio_comp.astype('float64').apply(np.sign).fillna(value=0)
 
