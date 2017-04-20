@@ -98,5 +98,5 @@ def Main(args):
 
 #Main entry point for the program
 if __name__ == "__main__":
-    #Main(sys.argv[1:])
-    p, n = Main(['D:/Documents/Python Scripts/Stocks/yahoostock.csv', '2016-11-02', '2016-12-31', 'D'])
+    #Main(sys.argv[1:]
+    p, n = Main(['C:/Users/manolis/Desktop/FIN580/Homework1/VolatilityForecasting/src/MLP/pythonml-master/pythonml-master/table.csv', '2016-11-02', '2017-4-19', 'D'])

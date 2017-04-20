@@ -95,6 +95,9 @@ def ParseData(path):
 #df:        Dataframe returned from 
 #p:         The position of the predicted data points
 def PlotData(df, p = None):
+    whole = pd.read_csv('./whole.csv', usecols=(0, 2))
+    whole.Date= pd.to_datetime(whole.Date)
+    # whole = pd.Series(whole.High.astype('float64'), index=whole.Date)
     if(p is None):
         p = np.array([])
     #Timestamp data
@@ -116,10 +119,13 @@ def PlotData(df, p = None):
     strTs = [datetime.fromtimestamp(i).strftime('%m-%d-%y') for i in tickMarks]
     mpl.figure()
     #Plots of the high and low values for the day
-    mpl.plot(ts, df.High.values, color = '#727272', linewidth = 1.618, label = 'Actual')
+    mpl.plot(ts, df.High.values,  color = '#727272', linewidth = 1.618, label = 'Actual')
+    mpl.figure()
+    mpl.plot(whole.Date,whole.High, label='whole')
     #Predicted data was also provided
     if(len(p) > 0):
-        mpl.plot(ts[p], df.High.values[p], color = '#7294AA', linewidth = 1.618, label = 'Predicted')
+        mpl.plot(ts[p], df.High.values[p],whole.Date,whole.High, color = '#7294AA', linewidth = 1.618, label = 'Predicted')
+        # mpl.plot(whole.Date[p], whole.High[p], label='whole')
     #Set the tick marks
     mpl.xticks(tickMarks, strTs, rotation='vertical')
     #Set y-axis label
