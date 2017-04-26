@@ -16,6 +16,11 @@ dailyvol_zeroes= pd.DataFrame()
 filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
 filenames_nocsv = [name.replace(".csv", "") for name in filenames]
 
+n_series = np.arange(1,16,1)
+# for ridge regression 1 & ridge regression 2
+alpha_series = np.exp( np.arange(-6.5, 2.6, 0.5))
+
+
 # vars
 warmup_period = 300
 
@@ -113,7 +118,7 @@ for count, name in enumerate(filenames):
     figLR = plt.figure(figsize=(8, 6))
     ax_LR = figLR.add_subplot(111)
     ax_LR.plot(range(1, 16), lr_mse_train_list)
-    ax_LR.set(title=name.replace(".csv","")+' MSE vs n\n"optimal n='+str(n), xlabel='number of regressors', ylabel='MSE')
+    ax_LR.set(title=name.replace(".csv","")+' MSE vs n\noptimal n='+str(n), xlabel='number of regressors', ylabel='MSE')
     plt.savefig(name.replace(".csv","")+' LinearReg MSE vs n.png')
 
     print('\nTesting ...\n')
