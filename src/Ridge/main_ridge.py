@@ -8,19 +8,22 @@ import RidgeRegression as rr
 import BayesianRegression as brr
 import KernelRidgeRegression as krr
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 dailyvol_zeroes= pd.DataFrame()
-# filenames = ['AUDUSD.csv']
+# filenames = ['NZDUSD.csv']
 filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
+filenames_nocsv = [name.replace(".csv", "") for name in filenames]
 
 # vars
-warmup_period = 250
+warmup_period = 300
 
 pap_mse_list = []
 pap_ql_list = []
 pap_lnSE_list = []
 
+lr_optimal_n_list = []
 lr_mse_list = []
 lr_ql_list = []
 lr_lnSE_list = []
@@ -94,103 +97,121 @@ for count, name in enumerate(filenames):
     """
             Linear Regression
     """
-
     print(str('-') * 28 + "\n\nPerforming Linear Regression\n\n")
     # LR model for 10 regressors on the training set
     print("Training ... \n")
-    # for n in range(1,11):
-    #     MSE, QL, ln_SE, b, c = lr.lin_reg(train_set, n, warmup_period)
-    #     lr_mse_list.append(MSE)
-    #
-    #     print("LR MSE for n="+str(n)+" is: "+str(MSE))
-    #
-    # n = lr_mse_list.index(min(lr_mse_list)) + 1  # add one because index starts at zero
-    # print("The smallest n for LR is n="+str(n))
-    # figLR = plt.figure(figsize=(8, 6))
-    # ax_LR = figLR.add_subplot(111)
-    # ax_LR.plot(range(1, 11), lr_mse_list)
-    # ax_LR.set(title='MSE vs n', xlabel='number of regressors', ylabel='MSE')
+    lr_mse_train_list = []
+    for n in range(1,16):
+        MSE, QL, ln_SE, b, c = lr.lin_reg(train_set, n, warmup_period)
+        lr_mse_train_list.append(MSE)
 
-    n=10
+        print("LR MSE for n="+str(n)+" is: "+str(MSE))
+
+    n = lr_mse_train_list.index(min(lr_mse_train_list)) + 1  # add one because index starts at zero
+    lr_optimal_n_list.append(n)
+    print("The smallest n for LR is n="+str(n))
+    figLR = plt.figure(figsize=(8, 6))
+    ax_LR = figLR.add_subplot(111)
+    ax_LR.plot(range(1, 16), lr_mse_train_list)
+    ax_LR.set(title=name.replace(".csv","")+' MSE vs n\n"optimal n='+str(n), xlabel='number of regressors', ylabel='MSE')
+    plt.savefig(name.replace(".csv","")+' MSE vs n.png')
+
     print('\nTesting ...\n')
     # LR test set. Use the entire training set as the fit for the test set. See code in LR.
     MSE_LR_test, QL_LR_test, ln_SE_LR_test, b_LR_test, c_LR_test = lr.lin_reg(train_set, n, warmup_period=warmup_period, test=(True, test_set))
+    print("LR("+str(n)+") test MSE: "+str(MSE_LR_test)+"; test QL"+str(QL_LR_test))
 
-    print("LR(10) MSE in the test set is: "+str(MSE_LR_test))
+    lr_mse_list.append(MSE_LR_test)
+    lr_ql_list.append(QL_LR_test)
+    lr_lnSE_list.append(ln_SE_LR_test)
 
-    """
-            Ridge Regression
-    """
 
-    print(str('-') * 27 + "\n\nPerforming Ridge Regression\n\n")
-    print("Training ... \n")
-
-    # Current status: Working code for train set
-    # TODO vary lamda while holding n = 9
-    # TODO vary both n and lamda
-    for n in range(1,11):
-        MSE, QL, ln_SE, b, c = rr.ridge_reg(train_set, n, warmup_period,lamda=1)
-        rr_mse_list.append(MSE)
-
-        print("RR MSE for n="+str(n)+" is: "+str(MSE))
-
-    n = rr_mse_list.index(min(rr_mse_list)) + 1  # add one because index starts at zero
-    print("The smallest n for RR is n="+str(n))
-    print('\nTesting ...\n')
-
-    """
-           Bayesian Ridge Regression
-    """
-    print(str('-') * 36 + "\n\nPerforming Bayesian Ridge Regression\n\n")
-    print("Training ... \n")
-    # Current status: Working code for train set
-    # TODO vary alphas and lamdas while holding n = 9
-    # TODO vary both n and lamdas and alphas
-    for n in range(1,11):
-        MSE, QL, ln_SE, b, c = brr.bayes_ridge_reg(train_set, n, warmup_period, alpha_1=1e-06, alpha_2=1e-06,
-                                                   lambda_1=1e-06, lambda_2=1e-06, test=False)
-        brr_mse_list.append(MSE)
-
-        print("BRR MSE for n="+str(n)+" is: "+str(MSE))
-
-    n = brr_mse_list.index(min(brr_mse_list)) + 1  # add one because index starts at zero
-    print("The smallest n for BRR is n="+str(n))
-    print('\nTesting ...\n')
-
-    """
-           Kernel Ridge Regression
-    """
-    print(str('-') * 34 + "\n\nPerforming Kernel Ridge Regression\n\n")
-    print("Training ... \n")
-    # Current status: Working code for train set
-    # TODO vary alphas and lamdas while holding n = 9
-    # TODO vary a whole bunch of stuff
-    kernels=['linear', 'polynomial', 'sigmoid', 'rbf', 'laplacian' ]  #  chi2
-
-    for kernel in kernels:
-        for n in range(1,11):
-            MSE, QL, ln_SE = krr.kernel_ridge_reg(train_set, n, warmup_period, alpha=1,coef0=1, degree=3, kernel=kernel, test=False)
-            krr_mse_list.append(MSE)
-            print("KRR MSE for n=" + str(n) + " and kernel=" + kernel + " is: " + str(MSE))
-
-        n = krr_mse_list.index(min(krr_mse_list)) + 1  # add one because index starts at zero
-        print("The smallest n for KRR is n=" + str(n) + " for kernel = " + kernel)
-        print("\nTraining ... \n")
-
-    print('\nTesting ...\n')
+    # """
+    #         Ridge Regression
+    # """
+    #
+    # print(str('-') * 27 + "\n\nPerforming Ridge Regression\n\n")
+    # print("Training ... \n")
+    #
+    # # Current status: Working code for train set
+    # # TODO vary lamda while holding n = 9
+    # # TODO vary both n and lamda
+    # for n in range(1,11):
+    #     MSE, QL, ln_SE, b, c = rr.ridge_reg(train_set, n, warmup_period,lamda=1)
+    #     rr_mse_list.append(MSE)
+    #
+    #     print("RR MSE for n="+str(n)+" is: "+str(MSE))
+    #
+    # n = rr_mse_list.index(min(rr_mse_list)) + 1  # add one because index starts at zero
+    # print("The smallest n for RR is n="+str(n))
+    # print('\nTesting ...\n')
+    #
+    # """
+    #        Bayesian Ridge Regression
+    # """
+    # print(str('-') * 36 + "\n\nPerforming Bayesian Ridge Regression\n\n")
+    # print("Training ... \n")
+    # # Current status: Working code for train set
+    # # TODO vary alphas and lamdas while holding n = 9
+    # # TODO vary both n and lamdas and alphas
+    # for n in range(1,11):
+    #     MSE, QL, ln_SE, b, c = brr.bayes_ridge_reg(train_set, n, warmup_period, alpha_1=1e-06, alpha_2=1e-06,
+    #                                                lambda_1=1e-06, lambda_2=1e-06, test=False)
+    #     brr_mse_list.append(MSE)
+    #
+    #     print("BRR MSE for n="+str(n)+" is: "+str(MSE))
+    #
+    # n = brr_mse_list.index(min(brr_mse_list)) + 1  # add one because index starts at zero
+    # print("The smallest n for BRR is n="+str(n))
+    # print('\nTesting ...\n')
+    #
+    # """
+    #        Kernel Ridge Regression
+    # """
+    #
+    # print(str('-') * 34 + "\n\nPerforming Kernel Ridge Regression\n\n")
+    # print("Training ... \n")
+    # # Current status: Working code for train set
+    # # TODO vary alphas and lamdas while holding n = 9
+    # # TODO vary a whole bunch of stuff
+    # kernels=['linear', 'polynomial', 'sigmoid', 'rbf', 'laplacian' ]  #  chi2
+    #
+    # for kernel in kernels:
+    #     for n in range(1,11):
+    #         MSE, QL, ln_SE = krr.kernel_ridge_reg(train_set, n, warmup_period, alpha=1,coef0=1, degree=3, kernel=kernel, test=False)
+    #         krr_mse_list.append(MSE)
+    #         print("KRR MSE for n=" + str(n) + " and kernel=" + kernel + " is: " + str(MSE))
+    #
+    #     n = krr_mse_list.index(min(krr_mse_list)) + 1  # add one because index starts at zero
+    #     print("The smallest n for KRR is n=" + str(n) + " for kernel = " + kernel)
+    #     print("\nTraining ... \n")
+    #
+    # print('\nTesting ...\n')
 
     # feel free to put a breakpoint in the line below...
     print('hi')
 
-    """
-    Notes:
-    Test set code is not written yet for RR, BRR, or KRR...
-    
-    kernel = polynomial and sigmoid run very slow.
-    kernel = rbf, linear, and laplacian run pretty fast.
-    kernel = sigmoid MSE is terrible on the train set
-    
-    kernel = chi2 gives me an error...see below.
+pap_test_restuls_df = pd.DataFrame({"PastAsPresent MSE":pap_mse_list,
+                                     "PastAsPresent QL": pap_ql_list})
+pap_test_restuls_df = pap_test_restuls_df.set_index(np.transpose(filenames_nocsv), drop=True)
+pap_test_restuls_df.to_csv('PastAsPresent_test_MSE_QL.csv')
+
+
+lr_test_restuls_df = pd.DataFrame({"LinearReg MSE":pap_mse_list,
+                                   "LinearReg QL": pap_ql_list,
+                                   "Optimal n": lr_optimal_n_list})
+lr_test_restuls_df = lr_test_restuls_df.set_index(np.transpose(filenames_nocsv), drop=True)
+lr_test_restuls_df.to_csv('LinearReg_test_MSE_QL.csv')
+
+"""
+Notes:
+Test set code is not written yet for RR, BRR, or KRR...
+
+kernel = polynomial and sigmoid run very slow.
+kernel = rbf, linear, and laplacian run pretty fast.
+kernel = sigmoid MSE is terrible on the train set
+
+kernel = chi2 gives me an error...see below.
     
 OUTPUT
 
