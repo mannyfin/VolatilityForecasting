@@ -1,5 +1,5 @@
 
-def read_in_files(file_names):
+def read_in_files(file_names, day=0, week=0, month=0):
     """
     1. Read the csv files to memory into a pandas dataframe with pd.read_csv
     2. separate the df into year, month, and date objects
@@ -64,8 +64,59 @@ def read_in_files(file_names):
     for group in df.groupby(['month', 'year'], sort=False):
         df_single_month.append(group[1])
 
-    # these are the chunks of the daily, weekly, and monthly data
-    return df, df_single_day, df_single_week, df_single_month
+    if day == 0:
+        del df_single_day
+        if week == 0:
+            del df_single_week
+            return df, df_single_month
+        if month == 0:
+            del df_single_month
+            return df, df_single_week
+        else:
+            return df, df_single_week, df_single_month
+
+    if week == 0:
+        del df_single_week
+        if day == 1:
+            if month == 1:
+                return df, df_single_day, df_single_month
+            else:
+                return df, df_single_day
+        else:
+            del df_single_day
+            return df, df_single_month
+
+    if month == 0:
+        del df_single_month
+        if day == 1:
+            if week == 1:
+                return df, df_single_day, df_single_week
+            else:
+                del df_single_week
+                return df, df_single_day
+
+        else:
+            return df, df_single_week
+    else:
+        # these are the chunks of the daily, weekly, and monthly data
+        return df, df_single_day, df_single_week, df_single_month
+    #
+    # if day == 1 and week == 1:
+    #     return df, df_single_day, df_single_week
+    # elif day == 1 and month == 1:
+    #     return df, df_single_day, df_single_month
+    # elif week == 1 and month == 1:
+    #     return df, df_single_week, df_single_month
+    #
+    # if day ==1:
+    #     return df, df_single_day
+    # elif week ==1:
+    #     return df, df_single_week
+    # elif month ==1:
+    #     return df, df_single_month
+    # else:
+    #     # these are the chunks of the daily, weekly, and monthly data
+    #     return df, df_single_day, df_single_week, df_single_month
 
 """
 this code may be useful

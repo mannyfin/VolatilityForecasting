@@ -1,36 +1,41 @@
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LinearRegression as lr
+from sklearn.linear_model import BayesianRidge as bayesian_ridge
 from Performance_Measure import *
 
 
-def lin_reg(data, n, warmup_period, test=False):
+def bayes_ridge_reg(data, n, warmup_period,alpha_1=1e-06, alpha_2=1e-06, lambda_1=1e-06, lambda_2=1e-06, test=False):
     # TODO: write functions to find the optimal number of regressors n in the training set and collect MSE, QL and ln(SE) in the test set
-    # def lin_reg(data, n, filename, stringinput, warmup_period):
     """
     :param warmup_period uses a fixed window warmup period defined by the var, warmup_period
     :param data could be train_sample or test_sample
     :param n is the number of regressors
     :return: MSE, QL, ln(SE) and parameters b and c
+    lamda = L2 penalty term, in sklearn docs this is alpha
+    test: False if doing training. If you are doing testing, pass a tuple with (True, test_set) where test_set is pref
+         a dataframe.
     """
     # use log volatility rather than volatility for linear regression model
     LogVol = np.log(data['Volatility_Time'].astype('float64'))
-    PredictedLogVol=[]
+    PredictedLogVol = []
     x = [i for i in range(n)]
     for initial in range(warmup_period, len(LogVol)):
         for i in range(n):
-            x[i] = LogVol[i:(initial +i-n-1)]
+            x[i] = LogVol[i:(initial + i - n - 1)]
 
         xstacked = np.column_stack(x)
 
-        y = LogVol[n:initial-1]
-        A = lr()
+        y = LogVol[n:initial - 1]
+        A = bayesian_ridge(alpha_1=alpha_1, alpha_2=alpha_2, compute_score=False,
+                           copy_X=True, fit_intercept=True, lambda_1=lambda_1, lambda_2=lambda_2,
+                           n_iter=300, normalize=False, tol=0.001, verbose=False)
+
         A.fit(xstacked, y)
         b = [A.coef_[i] for i in range(n)]
         c = A.intercept_
 
         # reshape data for prediction
-        PredictedLogVol.append(A.predict(LogVol[initial-n : initial].values.reshape(1, -1))[0])
+        PredictedLogVol.append(A.predict(LogVol[initial - n: initial].values.reshape(1, -1))[0])
 
     if test is False:
         y = data.Volatility_Time[warmup_period:]
@@ -67,6 +72,3 @@ def lin_reg(data, n, warmup_period, test=False):
         ln_SE = pd.Series(np.log(SE))
 
     return MSE, QL, ln_SE, b, c
-
-
-

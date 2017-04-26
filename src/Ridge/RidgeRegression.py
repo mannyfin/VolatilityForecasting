@@ -1,17 +1,20 @@
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LinearRegression as lr
+from sklearn.linear_model import Ridge as ridge
 from Performance_Measure import *
 
 
-def lin_reg(data, n, warmup_period, test=False):
+def ridge_reg(data, n, warmup_period, lamda=1, test=False):
+    
     # TODO: write functions to find the optimal number of regressors n in the training set and collect MSE, QL and ln(SE) in the test set
-    # def lin_reg(data, n, filename, stringinput, warmup_period):
     """
     :param warmup_period uses a fixed window warmup period defined by the var, warmup_period
     :param data could be train_sample or test_sample
     :param n is the number of regressors
     :return: MSE, QL, ln(SE) and parameters b and c
+    lamda = L2 penalty term, in sklearn docs this is alpha
+    test: False if doing training. If you are doing testing, pass a tuple with (True, test_set) where test_set is pref
+         a dataframe.
     """
     # use log volatility rather than volatility for linear regression model
     LogVol = np.log(data['Volatility_Time'].astype('float64'))
@@ -24,7 +27,7 @@ def lin_reg(data, n, warmup_period, test=False):
         xstacked = np.column_stack(x)
 
         y = LogVol[n:initial-1]
-        A = lr()
+        A = ridge(alpha=lamda, solver='auto')
         A.fit(xstacked, y)
         b = [A.coef_[i] for i in range(n)]
         c = A.intercept_
@@ -67,6 +70,3 @@ def lin_reg(data, n, warmup_period, test=False):
         ln_SE = pd.Series(np.log(SE))
 
     return MSE, QL, ln_SE, b, c
-
-
-
