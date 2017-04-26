@@ -114,7 +114,7 @@ for count, name in enumerate(filenames):
     ax_LR = figLR.add_subplot(111)
     ax_LR.plot(range(1, 16), lr_mse_train_list)
     ax_LR.set(title=name.replace(".csv","")+' MSE vs n\n"optimal n='+str(n), xlabel='number of regressors', ylabel='MSE')
-    plt.savefig(name.replace(".csv","")+' MSE vs n.png')
+    plt.savefig(name.replace(".csv","")+' LinearReg MSE vs n.png')
 
     print('\nTesting ...\n')
     # LR test set. Use the entire training set as the fit for the test set. See code in LR.
