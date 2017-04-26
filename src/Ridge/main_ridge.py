@@ -11,11 +11,15 @@ import matplotlib.pyplot as plt
 
 
 dailyvol_zeroes= pd.DataFrame()
-filenames = ['AUDUSD.csv']
-# filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
+# filenames = ['AUDUSD.csv']
+filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
 
 # vars
 warmup_period = 250
+
+pap_mse_list = []
+pap_ql_list = []
+pap_lnSE_list = []
 
 for count, name in enumerate(filenames):
     # initialize some lists
@@ -45,7 +49,11 @@ for count, name in enumerate(filenames):
 
     # PastAsPresent -- Test sample only
     papMSE_test, papQL_test, pap_ln_SE_test = pap.tn_pred_tn_plus_1(test_set)
-    print("Past as Present MSE: "+str(papMSE_test))
+    print("Past as Present MSE: " + str(papMSE_test) + "; QL: " + str(papQL_test))
+
+    pap_mse_list.append(papMSE_test)
+    pap_ql_list.append(papQL_test)
+    pap_lnSE_list.append(pap_ln_SE_test)
 
     """
             Linear Regression
