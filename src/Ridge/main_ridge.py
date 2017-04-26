@@ -21,12 +21,48 @@ pap_mse_list = []
 pap_ql_list = []
 pap_lnSE_list = []
 
+lr_mse_list = []
+lr_ql_list = []
+lr_lnSE_list = []
+
+rr1_mse_list = []
+rr1_ql_list = []
+rr1_lnSE_list = []
+
+rr2_mse_list = []
+rr2_ql_list = []
+rr2_lnSE_list = []
+
+brr1_mse_list = []
+brr1_ql_list = []
+brr1_lnSE_list = []
+
+brr2_mse_list = []
+brr2_ql_list = []
+brr2_lnSE_list = []
+
+krr_linear_mse_list = []
+krr_linear_ql_list = []
+krr_linear_lnSE_list = []
+
+krr_rbf_mse_list = []
+krr_rbf_ql_list = []
+krr_rbf_lnSE_list = []
+
+krr_chi2_mse_list = []
+krr_chi2_ql_list = []
+krr_chi2_lnSE_list = []
+
+krr_sigmoid_mse_list = []
+krr_sigmoid_ql_list = []
+krr_sigmoid_lnSE_list = []
+
+krr_poly_mse_list = []
+krr_poly_ql_list = []
+krr_poly_lnSE_list = []
+
 for count, name in enumerate(filenames):
     # initialize some lists
-    lr_mse_list = []
-    rr_mse_list = []
-    brr_mse_list = []
-    krr_mse_list = []
 
     print("Running file: " + str(name))
     #  reads in the files and puts them into dataframes, returns a dataframe called df
