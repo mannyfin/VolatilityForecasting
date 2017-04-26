@@ -61,6 +61,8 @@ def lin_reg(data, n, warmup_period, test=False):
         SE = [(y.values[i] - PredictedVol.values[i]) ** 2 for i in range(len(y))]
         ln_SE = pd.Series(np.log(SE))
 
+        return MSE, QL, ln_SE, b, c
+
     elif test[0] is True:
         # test[1] is the test set. First convert to log vol
         y = np.log(test[1].Volatility_Time.astype('float64'))
@@ -90,7 +92,7 @@ def lin_reg(data, n, warmup_period, test=False):
         # SE = [(y.values[i] - tested_vol.values[i]) ** 2 for i in range(len(y))]
         ln_SE = pd.Series(np.log(SE))
 
-    return MSE, QL, ln_SE,tested_vol, b, c
+        return MSE, QL, ln_SE,tested_vol, b, c
 
 
 
