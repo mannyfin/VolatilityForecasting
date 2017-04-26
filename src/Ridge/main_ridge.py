@@ -36,7 +36,7 @@ for count, name in enumerate(filenames):
 
     #  Split the dataset into train and test set
     #  909 is break point for train/test
-    train_set, test_set = sd.split_data(dataframe=daily_vol_result, idx=909, reset_index=False)
+    train_set, test_set = sd.split_data(dataframe=daily_vol_result, idx=910, reset_index=False)
 
     """
             PastAsPresent
@@ -54,22 +54,23 @@ for count, name in enumerate(filenames):
     print(str('-') * 28 + "\n\nPerforming Linear Regression\n\n")
     # LR model for 10 regressors on the training set
     print("Training ... \n")
-    for n in range(1,11):
-        MSE, QL, ln_SE, b, c = lr.lin_reg(train_set, n, warmup_period)
-        lr_mse_list.append(MSE)
+    # for n in range(1,11):
+    #     MSE, QL, ln_SE, b, c = lr.lin_reg(train_set, n, warmup_period)
+    #     lr_mse_list.append(MSE)
+    #
+    #     print("LR MSE for n="+str(n)+" is: "+str(MSE))
+    #
+    # n = lr_mse_list.index(min(lr_mse_list)) + 1  # add one because index starts at zero
+    # print("The smallest n for LR is n="+str(n))
+    # figLR = plt.figure(figsize=(8, 6))
+    # ax_LR = figLR.add_subplot(111)
+    # ax_LR.plot(range(1, 11), lr_mse_list)
+    # ax_LR.set(title='MSE vs n', xlabel='number of regressors', ylabel='MSE')
 
-        print("LR MSE for n="+str(n)+" is: "+str(MSE))
-
-    n = lr_mse_list.index(min(lr_mse_list)) + 1  # add one because index starts at zero
-    print("The smallest n for LR is n="+str(n))
-    figLR = plt.figure(figsize=(8, 6))
-    ax_LR = figLR.add_subplot(111)
-    ax_LR.plot(range(1, 11), lr_mse_list)
-    ax_LR.set(title='MSE vs n', xlabel='number of regressors', ylabel='MSE')
-
+    n=10
     print('\nTesting ...\n')
     # LR test set. Use the entire training set as the fit for the test set. See code in LR.
-    MSE_LR_test, QL_LR_test, ln_SE_LR_test, b_LR_test, c_LR_test = lr.lin_reg(daily_vol_result, n, warmup_period=warmup_period, test=(True, test_set))
+    MSE_LR_test, QL_LR_test, ln_SE_LR_test, b_LR_test, c_LR_test = lr.lin_reg(train_set, n, warmup_period=warmup_period, test=(True, test_set))
 
     print("LR(10) MSE in the test set is: "+str(MSE_LR_test))
 
