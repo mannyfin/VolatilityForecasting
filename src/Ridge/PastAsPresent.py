@@ -38,5 +38,5 @@ class PastAsPresent(object):
         SE = [(observed.values[i] - prediction.values[i]) ** 2 for i in range(len(observed))]
         ln_SE = pd.Series(np.log(SE)) # the type of ln_SE is pandas.core.series.Series
 
-        return MSE, QL,ln_SE
+        return MSE, QL,ln_SE,prediction
 

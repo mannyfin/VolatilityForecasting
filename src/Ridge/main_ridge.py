@@ -27,47 +27,58 @@ warmup_period = 300
 pap_mse_list = []
 pap_ql_list = []
 pap_lnSE_list = []
+pap_PredVol_list = []
 
 lr_optimal_n_list = []
 lr_mse_list = []
 lr_ql_list = []
 lr_lnSE_list = []
+lr_PredVol_list = []
 
 rr1_mse_list = []
 rr1_ql_list = []
 rr1_lnSE_list = []
+rr1_PredVol_list = []
 
 rr2_mse_list = []
 rr2_ql_list = []
 rr2_lnSE_list = []
+rr2_PredVol_list = []
 
 brr1_mse_list = []
 brr1_ql_list = []
 brr1_lnSE_list = []
+brr1_PredVol_list = []
 
 brr2_mse_list = []
 brr2_ql_list = []
 brr2_lnSE_list = []
+brr2_PredVol_list = []
 
 krr_linear_mse_list = []
 krr_linear_ql_list = []
 krr_linear_lnSE_list = []
+krr_linear_PredVol_list = []
 
 krr_rbf_mse_list = []
 krr_rbf_ql_list = []
 krr_rbf_lnSE_list = []
+krr_rbf_PredVol_list = []
 
 krr_chi2_mse_list = []
 krr_chi2_ql_list = []
 krr_chi2_lnSE_list = []
+krr_chi2_PredVol_list = []
 
 krr_sigmoid_mse_list = []
 krr_sigmoid_ql_list = []
 krr_sigmoid_lnSE_list = []
+krr_sigmoid_PredVol_list = []
 
 krr_poly_mse_list = []
 krr_poly_ql_list = []
 krr_poly_lnSE_list = []
+krr_poly_PredVol_list = []
 
 for count, name in enumerate(filenames):
     # initialize some lists
@@ -92,12 +103,13 @@ for count, name in enumerate(filenames):
     print(str('-') * 24 + "\n\nPerforming PastAsPresent\n\n")
 
     # PastAsPresent -- Test sample only
-    papMSE_test, papQL_test, pap_ln_SE_test = pap.tn_pred_tn_plus_1(test_set)
+    papMSE_test, papQL_test, pap_ln_SE_test,pap_PredVol_test = pap.tn_pred_tn_plus_1(test_set)
     print("Past as Present MSE: " + str(papMSE_test) + "; QL: " + str(papQL_test))
 
     pap_mse_list.append(papMSE_test)
     pap_ql_list.append(papQL_test)
     pap_lnSE_list.append(pap_ln_SE_test)
+    pap_PredVol_list.append(pap_PredVol_test)
 
     """
             Linear Regression
@@ -107,7 +119,7 @@ for count, name in enumerate(filenames):
     print("Training ... \n")
     lr_mse_train_list = []
     for n in range(1,16):
-        MSE, QL, ln_SE, b, c = lr.lin_reg(train_set, n, warmup_period)
+        MSE, QL, ln_SE, PredVol, b, c = lr.lin_reg(train_set, n, warmup_period)
         lr_mse_train_list.append(MSE)
 
         print("LR MSE for n="+str(n)+" is: "+str(MSE))
@@ -123,12 +135,14 @@ for count, name in enumerate(filenames):
 
     print('\nTesting ...\n')
     # LR test set. Use the entire training set as the fit for the test set. See code in LR.
-    MSE_LR_test, QL_LR_test, ln_SE_LR_test, b_LR_test, c_LR_test = lr.lin_reg(train_set, n, warmup_period=warmup_period, test=(True, test_set))
+    MSE_LR_test, QL_LR_test, ln_SE_LR_test,PredVol_LR_test, b_LR_test, c_LR_test = lr.lin_reg(train_set, n, warmup_period=warmup_period, test=(True, test_set))
     print("LR("+str(n)+") test MSE: "+str(MSE_LR_test)+"; test QL"+str(QL_LR_test))
 
     lr_mse_list.append(MSE_LR_test)
     lr_ql_list.append(QL_LR_test)
     lr_lnSE_list.append(ln_SE_LR_test)
+    lr_PredVol_list.append(PredVol_LR_test)
+
 
 
     # """

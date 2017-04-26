@@ -90,7 +90,7 @@ def lin_reg(data, n, warmup_period, test=False):
         # SE = [(y.values[i] - tested_vol.values[i]) ** 2 for i in range(len(y))]
         ln_SE = pd.Series(np.log(SE))
 
-    return MSE, QL, ln_SE, b, c
+    return MSE, QL, ln_SE,tested_vol, b, c
 
 
 
