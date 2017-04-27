@@ -119,7 +119,7 @@ for count, name in enumerate(filenames):
     print("Training ... \n")
     lr_mse_train_list = []
     for n in range(1,16):
-        MSE = lr.lin_reg(train_set, n, warmup_period)[0]
+        MSE = lr.lin_reg(train_set, n, warmup_period, name=name)[0]
         lr_mse_train_list.append(MSE)
 
         print("LR MSE for n="+str(n)+" is: "+str(MSE))
@@ -135,7 +135,7 @@ for count, name in enumerate(filenames):
 
     print('\nTesting ...\n')
     # LR test set. Use the entire training set as the fit for the test set. See code in LR.
-    MSE_LR_test, QL_LR_test, ln_SE_LR_test, PredVol_LR_test, b_LR_test, c_LR_test = lr.lin_reg(train_set, n, warmup_period=warmup_period, test=(True, test_set))
+    MSE_LR_test, QL_LR_test, ln_SE_LR_test, PredVol_LR_test, b_LR_test, c_LR_test = lr.lin_reg(train_set, n, warmup_period=warmup_period,name=name, test=(True, test_set))
     print("LR("+str(n)+") test MSE: "+str(MSE_LR_test)+"; test QL: "+str(QL_LR_test))
 
     lr_mse_list.append(MSE_LR_test)
