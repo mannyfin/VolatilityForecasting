@@ -2,9 +2,11 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression as lr
 from Performance_Measure import *
+import matplotlib.pyplot as plt
+import os
 
 
-def lin_reg(data, n, warmup_period, test=False):
+def lin_reg(data, n, warmup_period,name=None, test=False):
     # TODO: write functions to find the optimal number of regressors n in the training set and collect MSE, QL and ln(SE) in the test set
     # def lin_reg(data, n, filename, stringinput, warmup_period):
     """
@@ -43,7 +45,10 @@ def lin_reg(data, n, warmup_period, test=False):
 
     param_plot.plot(title='Regressors and Intercept for n=' + str(n), figsize=(9, 6))\
               .legend(loc="center left", bbox_to_anchor=(1, 0.5))
-
+    os.chdir('Ridge//Results/(b) Linear Regression')
+    plt.savefig(str(name)+' LR('+str(n)+') regressors and SE and warmup='+str(warmup_period)+'.png')
+    plt.close()
+    os.chdir('../../..')
 
     if test is False:
         y = data.Volatility_Time[warmup_period:]
