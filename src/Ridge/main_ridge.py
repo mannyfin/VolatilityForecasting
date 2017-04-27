@@ -22,7 +22,7 @@ alpha_series = np.exp( np.arange(-6.5, 2.6, 0.5))
 
 
 # vars
-warmup_period = 400
+warmup_period = 300
 
 pap_mse_list = []
 pap_ql_list = []
@@ -59,6 +59,11 @@ krr_linear_mse_list = []
 krr_linear_ql_list = []
 krr_linear_lnSE_list = []
 krr_linear_PredVol_list = []
+
+krr_Gaussian_mse_list = []
+krr_Gaussian_ql_list = []
+krr_Gaussian_lnSE_list = []
+krr_Gaussiany_PredVol_list = []
 
 krr_rbf_mse_list = []
 krr_rbf_ql_list = []
@@ -131,7 +136,7 @@ for count, name in enumerate(filenames):
     ax_LR = figLR.add_subplot(111)
     ax_LR.plot(range(1, 16), lr_mse_train_list)
     ax_LR.set(title=name.replace(".csv","")+' MSE vs n (warmup: '+str(warmup_period)+')\noptimal n='+str(n), xlabel='number of regressors', ylabel='MSE')
-    plt.savefig(name.replace(".csv","")+' LinearReg MSE vs n_warmup: .'+str(warmup_period)+'png')
+    plt.savefig(name.replace(".csv","")+' LinearReg MSE vs n_warmup_'+str(warmup_period)+'.png')
 
     print('\nTesting ...\n')
     # LR test set. Use the entire training set as the fit for the test set. See code in LR.
@@ -216,185 +221,9 @@ for count, name in enumerate(filenames):
 # pap_test_restuls_df.to_csv('PastAsPresent_test_MSE_QL.csv')
 
 
-lr_test_restuls_df = pd.DataFrame({"LinearReg MSE":pap_mse_list,
-                                   "LinearReg QL": pap_ql_list,
+lr_test_restuls_df = pd.DataFrame({"LinearReg MSE":lr_mse_list,
+                                   "LinearReg QL": lr_ql_list,
                                    "Optimal n": lr_optimal_n_list})
 lr_test_restuls_df = lr_test_restuls_df.set_index(np.transpose(filenames_nocsv), drop=True)
 lr_test_restuls_df.to_csv('LinearReg_test_MSE_QL_warmup_'+str(warmup_period)+'.csv')
 print('hi')
-
-"""
-Notes:
-Test set code is not written yet for RR, BRR, or KRR...
-
-kernel = polynomial and sigmoid run very slow.
-kernel = rbf, linear, and laplacian run pretty fast.
-kernel = sigmoid MSE is terrible on the train set
-
-kernel = chi2 gives me an error...see below.
-    
-OUTPUT
-
-Running file: AUDUSD.csv
-------------------------
-
-Performing PastAsPresent
-
-
-Past as Present MSE: 0.000677190421995
-----------------------------
-
-Performing Linear Regression
-
-
-Training ... 
-
-LR MSE for n=1 is: 0.00101481488567
-LR MSE for n=2 is: 0.000936783794972
-LR MSE for n=3 is: 0.00094051482296
-LR MSE for n=4 is: 0.000933448615908
-LR MSE for n=5 is: 0.000924728539503
-LR MSE for n=6 is: 0.000927502269249
-LR MSE for n=7 is: 0.000922801269685
-LR MSE for n=8 is: 0.000923686734076
-LR MSE for n=9 is: 0.000922411265635
-LR MSE for n=10 is: 0.000920593392994
-The smallest n for LR is n=10
-
-Testing ...
-
-LR(10) MSE in the test set is: 0.000479657855634
----------------------------
-
-Performing Ridge Regression
-
-
-Training ... 
-
-RR MSE for n=1 is: 0.00101108302058
-RR MSE for n=2 is: 0.000935202214518
-RR MSE for n=3 is: 0.00093965784718
-RR MSE for n=4 is: 0.000933161381345
-RR MSE for n=5 is: 0.000924425052345
-RR MSE for n=6 is: 0.000926757751116
-RR MSE for n=7 is: 0.000921685220548
-RR MSE for n=8 is: 0.000921021108621
-RR MSE for n=9 is: 0.000919130846668
-RR MSE for n=10 is: 0.00091687591175
-The smallest n for RR is n=10
-
-Testing ...
-
-------------------------------------
-
-Performing Bayesian Ridge Regression
-
-
-Training ... 
-
-BRR MSE for n=1 is: 0.00101460821754
-BRR MSE for n=2 is: 0.00093652969911
-BRR MSE for n=3 is: 0.000940334231144
-BRR MSE for n=4 is: 0.000933512500354
-BRR MSE for n=5 is: 0.000924913240712
-BRR MSE for n=6 is: 0.000927571723697
-BRR MSE for n=7 is: 0.000922660397337
-BRR MSE for n=8 is: 0.000922534610268
-BRR MSE for n=9 is: 0.000920564798842
-BRR MSE for n=10 is: 0.000918167236629
-The smallest n for BRR is n=10
-
-Testing ...
-
-------------------------------------
-
-Performing Kernel Ridge Regression
-
-
-Training ... 
-
-KRR MSE for n=1 and kernel=linear is: 0.00111179180933
-KRR MSE for n=2 and kernel=linear is: 0.000979549863475
-KRR MSE for n=3 and kernel=linear is: 0.000975536412152
-KRR MSE for n=4 and kernel=linear is: 0.00095877615691
-KRR MSE for n=5 and kernel=linear is: 0.000943299920845
-KRR MSE for n=6 and kernel=linear is: 0.000943798936509
-KRR MSE for n=7 and kernel=linear is: 0.000935082933737
-KRR MSE for n=8 and kernel=linear is: 0.000931869221408
-KRR MSE for n=9 and kernel=linear is: 0.000928328518061
-KRR MSE for n=10 and kernel=linear is: 0.000924466534838
-The smallest n for KRR is n=10 for kernel = linear
-KRR MSE for n=1 and kernel=polynomial is: 0.001005586998
-KRR MSE for n=2 and kernel=polynomial is: 0.00094359561238
-KRR MSE for n=3 and kernel=polynomial is: 0.000947598939324
-KRR MSE for n=4 and kernel=polynomial is: 0.000944340887012
-KRR MSE for n=5 and kernel=polynomial is: 0.000938939435993
-KRR MSE for n=6 and kernel=polynomial is: 0.000944393434271
-KRR MSE for n=7 and kernel=polynomial is: 0.000942598229622
-KRR MSE for n=8 and kernel=polynomial is: 0.000932349703323
-KRR MSE for n=9 and kernel=polynomial is: 0.000938533096635
-KRR MSE for n=10 and kernel=polynomial is: 0.000938961255562
-The smallest n for KRR is n=10 for kernel = polynomial
-I:\Anaconda3\lib\site-packages\sklearn\linear_model\ridge.py:154: UserWarning: Singular matrix in solving dual problem. Using least-squares solution instead.
-  warnings.warn("Singular matrix in solving dual problem. Using "
-KRR MSE for n=1 and kernel=sigmoid is: 0.00193776225919
-KRR MSE for n=2 and kernel=sigmoid is: 0.0016905076853
-KRR MSE for n=3 and kernel=sigmoid is: 0.0016968621607
-KRR MSE for n=4 and kernel=sigmoid is: 0.00165115695034
-KRR MSE for n=5 and kernel=sigmoid is: 0.00165187206087
-KRR MSE for n=6 and kernel=sigmoid is: 0.00165901101048
-KRR MSE for n=7 and kernel=sigmoid is: 0.00164985139608
-KRR MSE for n=8 and kernel=sigmoid is: 0.00165951812041
-KRR MSE for n=9 and kernel=sigmoid is: 0.00165494735817
-KRR MSE for n=10 and kernel=sigmoid is: 0.00165877382423
-The smallest n for KRR is n=10 for kernel = sigmoid
-KRR MSE for n=1 and kernel=rbf is: 0.0010157983252
-KRR MSE for n=2 and kernel=rbf is: 0.000985750399317
-KRR MSE for n=3 and kernel=rbf is: 0.000988171847439
-KRR MSE for n=4 and kernel=rbf is: 0.000983524455797
-KRR MSE for n=5 and kernel=rbf is: 0.00097859412136
-KRR MSE for n=6 and kernel=rbf is: 0.000995950390833
-KRR MSE for n=7 and kernel=rbf is: 0.00099605810568
-KRR MSE for n=8 and kernel=rbf is: 0.000984774257374
-KRR MSE for n=9 and kernel=rbf is: 0.000980194358956
-KRR MSE for n=10 and kernel=rbf is: 0.000972685010345
-The smallest n for KRR is n=10 for kernel = rbf
-KRR MSE for n=1 and kernel=laplacian is: 0.00105966151203
-KRR MSE for n=2 and kernel=laplacian is: 0.000986192980385
-KRR MSE for n=3 and kernel=laplacian is: 0.000994942240928
-KRR MSE for n=4 and kernel=laplacian is: 0.000981252894236
-KRR MSE for n=5 and kernel=laplacian is: 0.000979944175186
-KRR MSE for n=6 and kernel=laplacian is: 0.000987171570476
-KRR MSE for n=7 and kernel=laplacian is: 0.000983416699001
-KRR MSE for n=8 and kernel=laplacian is: 0.00097829487795
-KRR MSE for n=9 and kernel=laplacian is: 0.000972614451636
-Traceback (most recent call last):
-KRR MSE for n=10 and kernel=laplacian is: 0.000969209909576
-  File "I:\PyCharm\PyCharm 2016.3.2\helpers\pydev\pydevd.py", line 1578, in <module>
-The smallest n for KRR is n=10 for kernel = laplacian
-    globals = debugger.run(setup['file'], None, None, is_module)
-  File "I:\PyCharm\PyCharm 2016.3.2\helpers\pydev\pydevd.py", line 1015, in run
-    pydev_imports.execfile(file, globals, locals)  # execute the script
-  File "I:\PyCharm\PyCharm 2016.3.2\helpers\pydev\_pydev_imps\_pydev_execfile.py", line 18, in execfile
-    exec(compile(contents+"\n", file, 'exec'), glob, loc)
-  File "C:/Users/Manolis1/Desktop/FIN580/Homework1/VolatilityForecasting/src/Ridge/main_ridge.py", line 127, in <module>
-    MSE, QL, ln_SE = krr.kernel_ridge_reg(train_set, n, warmup_period, alpha=1,coef0=1, degree=3, kernel=kernel, test=False)
-  File "C:/Users/Manolis1/Desktop/FIN580/Homework1/VolatilityForecasting/src/Ridge\KernelRidgeRegression.py", line 31, in kernel_ridge_reg
-    A.fit(xstacked, y)
-  File "I:\Anaconda3\lib\site-packages\sklearn\kernel_ridge.py", line 149, in fit
-    K = self._get_kernel(X)
-  File "I:\Anaconda3\lib\site-packages\sklearn\kernel_ridge.py", line 121, in _get_kernel
-    filter_params=True, **params)
-  File "I:\Anaconda3\lib\site-packages\sklearn\metrics\pairwise.py", line 1399, in pairwise_kernels
-    return _parallel_pairwise(X, Y, func, n_jobs, **kwds)
-  File "I:\Anaconda3\lib\site-packages\sklearn\metrics\pairwise.py", line 1083, in _parallel_pairwise
-    return func(X, Y, **kwds)
-  File "I:\Anaconda3\lib\site-packages\sklearn\metrics\pairwise.py", line 1027, in chi2_kernel
-    K = additive_chi2_kernel(X, Y)
-  File "I:\Anaconda3\lib\site-packages\sklearn\metrics\pairwise.py", line 975, in additive_chi2_kernel
-    raise ValueError("X contains negative values.")
-ValueError: X contains negative values.
-
-Process finished with exit code 1
-
-    """
