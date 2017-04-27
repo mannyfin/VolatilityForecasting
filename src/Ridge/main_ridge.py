@@ -22,7 +22,7 @@ alpha_series = np.exp( np.arange(-6.5, 2.6, 0.5))
 
 
 # vars
-warmup_period = 300
+warmup_period = 400
 
 pap_mse_list = []
 pap_ql_list = []
@@ -97,19 +97,19 @@ for count, name in enumerate(filenames):
     #  909 is break point for train/test
     train_set, test_set = sd.split_data(dataframe=daily_vol_result, idx=910, reset_index=False)
 
-    """
-            PastAsPresent
-    """
-    print(str('-') * 24 + "\n\nPerforming PastAsPresent\n\n")
-
-    # PastAsPresent -- Test sample only
-    papMSE_test, papQL_test, pap_ln_SE_test,pap_PredVol_test = pap.tn_pred_tn_plus_1(test_set)
-    print("Past as Present MSE: " + str(papMSE_test) + "; QL: " + str(papQL_test))
-
-    pap_mse_list.append(papMSE_test)
-    pap_ql_list.append(papQL_test)
-    pap_lnSE_list.append(pap_ln_SE_test)
-    pap_PredVol_list.append(pap_PredVol_test)
+    # """
+    #         PastAsPresent
+    # """
+    # print(str('-') * 24 + "\n\nPerforming PastAsPresent\n\n")
+    #
+    # # PastAsPresent -- Test sample only
+    # papMSE_test, papQL_test, pap_ln_SE_test,pap_PredVol_test = pap.tn_pred_tn_plus_1(test_set)
+    # print("Past as Present MSE: " + str(papMSE_test) + "; QL: " + str(papQL_test))
+    #
+    # pap_mse_list.append(papMSE_test)
+    # pap_ql_list.append(papQL_test)
+    # pap_lnSE_list.append(pap_ln_SE_test)
+    # pap_PredVol_list.append(pap_PredVol_test)
 
     """
             Linear Regression
@@ -130,8 +130,8 @@ for count, name in enumerate(filenames):
     figLR = plt.figure(figsize=(8, 6))
     ax_LR = figLR.add_subplot(111)
     ax_LR.plot(range(1, 16), lr_mse_train_list)
-    ax_LR.set(title=name.replace(".csv","")+' MSE vs n\noptimal n='+str(n), xlabel='number of regressors', ylabel='MSE')
-    plt.savefig(name.replace(".csv","")+' LinearReg MSE vs n.png')
+    ax_LR.set(title=name.replace(".csv","")+' MSE vs n (warmup: '+str(warmup_period)+')\noptimal n='+str(n), xlabel='number of regressors', ylabel='MSE')
+    plt.savefig(name.replace(".csv","")+' LinearReg MSE vs n_warmup: .'+str(warmup_period)+'png')
 
     print('\nTesting ...\n')
     # LR test set. Use the entire training set as the fit for the test set. See code in LR.
@@ -210,17 +210,18 @@ for count, name in enumerate(filenames):
     # feel free to put a breakpoint in the line below...
     print('hi')
 
-pap_test_restuls_df = pd.DataFrame({"PastAsPresent MSE":pap_mse_list,
-                                     "PastAsPresent QL": pap_ql_list})
-pap_test_restuls_df = pap_test_restuls_df.set_index(np.transpose(filenames_nocsv), drop=True)
-pap_test_restuls_df.to_csv('PastAsPresent_test_MSE_QL.csv')
+# pap_test_restuls_df = pd.DataFrame({"PastAsPresent MSE":pap_mse_list,
+#                                      "PastAsPresent QL": pap_ql_list})
+# pap_test_restuls_df = pap_test_restuls_df.set_index(np.transpose(filenames_nocsv), drop=True)
+# pap_test_restuls_df.to_csv('PastAsPresent_test_MSE_QL.csv')
 
 
 lr_test_restuls_df = pd.DataFrame({"LinearReg MSE":pap_mse_list,
                                    "LinearReg QL": pap_ql_list,
                                    "Optimal n": lr_optimal_n_list})
 lr_test_restuls_df = lr_test_restuls_df.set_index(np.transpose(filenames_nocsv), drop=True)
-lr_test_restuls_df.to_csv('LinearReg_test_MSE_QL.csv')
+lr_test_restuls_df.to_csv('LinearReg_test_MSE_QL_warmup_'+str(warmup_period)+'.csv')
+print('hi')
 
 """
 Notes:
