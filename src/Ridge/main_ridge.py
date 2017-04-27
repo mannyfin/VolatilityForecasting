@@ -171,8 +171,8 @@ for count, name in enumerate(filenames):
     # Current status: Working code for train set
     # n_seq = np.arange(1,3,1)
     n_seq = np.arange(1,16,1)
-    lamda_seq = np.exp(np.arange(-6.5, -5.5, 0.5))
-    # lamda_seq = np.exp(np.arange(-6.5, 2.6, 0.5))
+    # lamda_seq = np.exp(np.arange(-6.5, -5.5, 0.5))
+    lamda_seq = np.exp(np.arange(-6.5, 2.6, 0.5))
     rr_mse_list_all = []
     rr_mse_list_train = []
     for n in n_seq:
