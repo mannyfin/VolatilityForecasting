@@ -169,8 +169,8 @@ for count, name in enumerate(filenames):
     print("Training ... \n")
 
     # Current status: Working code for train set
-    n_seq = np.arange(1,3,1)
-    # n_seq = np.arange(1,16,1)
+    # n_seq = np.arange(1,3,1)
+    n_seq = np.arange(1,16,1)
     lamda_seq = np.exp(np.arange(-6.5, -5.5, 0.5))
     # lamda_seq = np.exp(np.arange(-6.5, 2.6, 0.5))
     rr_mse_list_all = []
@@ -204,15 +204,15 @@ for count, name in enumerate(filenames):
         arrays = [np.array(['MSE', 'log_lambda'])]
         blah.append(pd.DataFrame([asdf[n-1], np.log(lamda_seq).tolist()], index=arrays).T)
         # make a plot of MSE vs lamda for a specific n
-        blah[n-1].plot(x='log(lambda)', y='MSE', title=str(name)+' Ridge Regression MSE vs log(lambda) for n=' + str(n), figsize=(9, 6)) \
+        blah[n-1].plot(x='log_lambda', y='MSE', title=str(name)+' Ridge Regression MSE vs log lambda for n=' + str(n), figsize=(9, 6)) \
             .legend(loc="center left", bbox_to_anchor=(1, 0.5))
         plt.savefig(str(name)+' Ridge Regression MSE vs log_lambda for n=' + str(n)+'.png')
         # minlamda.append(blah[n-1]['lamda'][blah[n-1]['MSE'].idxmin()])
 
     print('\nTesting ...\n')
     # RR test set. Use the entire training set as the fit for the test set. See code in RR.
-    MSE_RR_test, QL_RR_test, ln_SE_RR_test, PredVol_RR_test, b_RR_test, c_RR_test = rr.ridge_reg(train_set, int(rr_optimal_n), warmup_period=warmup_period,lamda = rr_optimal_lambda, name=name, test=(True, test_set))
-    print(str(name)+" RR("+str(rr_optimal_n)+")"+"log_lamdba_"+str(rr_optimal_lambda)+" test MSE: "+str(MSE_RR_test)+"; test QL: "+str(QL_RR_test))
+    MSE_RR_test, QL_RR_test, ln_SE_RR_test, PredVol_RR_test, b_RR_test, c_RR_test = rr.ridge_reg(train_set, int(rr_optimal_n), warmup_period=warmup_period,lamda = np.exp(rr_optimal_log_lambda), name=name, test=(True, test_set))
+    print(str(name)+" RR("+str(rr_optimal_n)+")"+"log_lamdba_"+str(rr_optimal_log_lambda)+" test MSE: "+str(MSE_RR_test)+"; test QL: "+str(QL_RR_test))
 
     rr_mse_list.append(MSE_RR_test)
     rr_ql_list.append(QL_RR_test)
@@ -280,7 +280,7 @@ for count, name in enumerate(filenames):
 rr_test_restuls_df = pd.DataFrame({"Ridge Regression MSE":rr_mse_list,
                                      "Ridge Regression QL": rr_ql_list,
                                    "Optimal n": rr_optimal_n_list,
-                                   "Optimal lambda": rr_optimal_lambda_list})
+                                   "Optimal log_lambda": rr_optimal_log_lambda_list})
 rr_test_restuls_df = rr_test_restuls_df.set_index(np.transpose(filenames_nocsv), drop=True)
 rr_test_restuls_df.to_csv('Ridge_Regression_test_MSE_QL.csv')
 
