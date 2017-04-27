@@ -46,10 +46,10 @@ def ridge_reg(data, n, warmup_period, lamda=1,name=None, test=False):
     param_plot = pd.DataFrame(np.array(param_list), index=data.Date[warmup_period:],
                               columns=['b' + str(count) for count, elem in enumerate(b)] + ['c'] + ['SE'])
 
-    param_plot.plot(title='Regressors and Intercept for n=' + str(n), figsize=(9, 6))\
+    param_plot.plot(title=str(name)+' RR('+str(n)+') regressors, intercept and SE_lamda='+str(round(lamda,4)) + '_warmup='+str(warmup_period), figsize=(9, 6))\
               .legend(loc="center left", bbox_to_anchor=(1, 0.5))
-    os.chdir('Ridge//Results/RidgeRegression')
-    plt.savefig(str(name)+' RR('+str(n)+') regressors and lamda='+str(lamda) + ' and SE and warmup='+str(warmup_period)+'.png')
+    os.chdir('Ridge//Results/(cd) RidgeRegression 1&2/')
+    plt.savefig(str(name)+' RR('+str(n)+') regressors, intercept and SE_lamda='+str(round(lamda,4)) + '_warmup='+str(warmup_period)+'.png')
     plt.close()
     os.chdir('../../..')
 
@@ -69,6 +69,8 @@ def ridge_reg(data, n, warmup_period, lamda=1,name=None, test=False):
         SE = [(y.values[i] - PredictedVol.values[i]) ** 2 for i in range(len(y))]
         ln_SE = pd.Series(np.log(SE))
 
+        return MSE, QL, ln_SE, b, c
+
     elif test[0] is True:
         # test[1] is the test set
         y = test[1].Volatility_Time
@@ -87,4 +89,4 @@ def ridge_reg(data, n, warmup_period, lamda=1,name=None, test=False):
         SE = [(y.values[i] - PredictedVol.values[i]) ** 2 for i in range(len(y))]
         ln_SE = pd.Series(np.log(SE))
 
-    return MSE, QL, ln_SE, b, c
+        return MSE, QL, ln_SE, PredictedVol, b, c
