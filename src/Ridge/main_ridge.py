@@ -10,10 +10,14 @@ import KernelRidgeRegression as krr
 import matplotlib.pyplot as plt
 import numpy as np
 
+from multiprocessing import Pool
+import multiprocessing
+import time
 
 dailyvol_zeroes= pd.DataFrame()
 # filenames = ['NZDUSD.csv']
 filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
+# names = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
 filenames_nocsv = [name.replace(".csv", "") for name in filenames]
 
 n_series = np.arange(1,16,1)
@@ -82,7 +86,7 @@ krr_poly_PredVol_list = []
 
 for count, name in enumerate(filenames):
     # initialize some lists
-
+# def multip(name):
     print("Running file: " + str(name))
     #  reads in the files and puts them into dataframes, returns a dataframe called df
     df, df_single_day = rd.read_in_files(name, day=1)
@@ -221,6 +225,22 @@ lr_test_restuls_df = pd.DataFrame({"LinearReg MSE":pap_mse_list,
                                    "Optimal n": lr_optimal_n_list})
 lr_test_restuls_df = lr_test_restuls_df.set_index(np.transpose(filenames_nocsv), drop=True)
 lr_test_restuls_df.to_csv('LinearReg_test_MSE_QL.csv')
+
+
+# if __name__ == '__main__':
+#
+#     p = Pool(processes = len(names))
+#     start = time.time()
+#     async_result = p.map_async(multip, names)
+#     # for file in names:
+#     #     # p.apply_async(multip, [file])
+#     #     p.map(multip, [file])
+#     #     # p.start()
+#     p.close()
+#     p.join()
+#     print("Complete")
+#     end = time.time()
+# print('total time (s)= ' + str(end-start))
 
 """
 Notes:
