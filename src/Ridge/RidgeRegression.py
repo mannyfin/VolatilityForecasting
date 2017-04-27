@@ -2,9 +2,10 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import Ridge as ridge
 from Performance_Measure import *
+import matplotlib.pyplot as plt
+import os
 
-
-def ridge_reg(data, n, warmup_period, lamda=1, test=False):
+def ridge_reg(data, n, warmup_period, lamda=1,name=None, test=False):
     
     # TODO: write functions to find the optimal number of regressors n in the training set and collect MSE, QL and ln(SE) in the test set
     """
@@ -16,6 +17,9 @@ def ridge_reg(data, n, warmup_period, lamda=1, test=False):
     test: False if doing training. If you are doing testing, pass a tuple with (True, test_set) where test_set is pref
          a dataframe.
     """
+
+    param_list=[]
+
     # use log volatility rather than volatility for linear regression model
     LogVol = np.log(data['Volatility_Time'].astype('float64'))
     PredictedLogVol=[]
@@ -34,6 +38,20 @@ def ridge_reg(data, n, warmup_period, lamda=1, test=False):
 
         # reshape data for prediction
         PredictedLogVol.append(A.predict(LogVol[initial-n : initial].values.reshape(1, -1))[0])
+
+        SE = (A.predict(LogVol[initial-n : initial].values.reshape(1, -1)) - LogVol[initial]) ** 2
+        param_list.append([b + [c] + [SE] ][0])
+
+    # plot the regressors and intercept
+    param_plot = pd.DataFrame(np.array(param_list), index=data.Date[warmup_period:],
+                              columns=['b' + str(count) for count, elem in enumerate(b)] + ['c'] + ['SE'])
+
+    param_plot.plot(title='Regressors and Intercept for n=' + str(n), figsize=(9, 6))\
+              .legend(loc="center left", bbox_to_anchor=(1, 0.5))
+    os.chdir('Ridge//Results/RidgeRegression')
+    plt.savefig(str(name)+' RR('+str(n)+') regressors and lamda='+str(lamda) + ' and SE and warmup='+str(warmup_period)+'.png')
+    plt.close()
+    os.chdir('../../..')
 
     if test is False:
         y = data.Volatility_Time[warmup_period:]

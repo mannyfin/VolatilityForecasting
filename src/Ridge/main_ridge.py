@@ -10,14 +10,10 @@ import KernelRidgeRegression as krr
 import matplotlib.pyplot as plt
 import numpy as np
 
-from multiprocessing import Pool
-import multiprocessing
-import time
 
 dailyvol_zeroes= pd.DataFrame()
 # filenames = ['NZDUSD.csv']
 filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
-# names = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
 filenames_nocsv = [name.replace(".csv", "") for name in filenames]
 
 n_series = np.arange(1,16,1)
@@ -86,7 +82,7 @@ krr_poly_PredVol_list = []
 
 for count, name in enumerate(filenames):
     # initialize some lists
-# def multip(name):
+
     print("Running file: " + str(name))
     #  reads in the files and puts them into dataframes, returns a dataframe called df
     df, df_single_day = rd.read_in_files(name, day=1)
@@ -137,38 +133,58 @@ for count, name in enumerate(filenames):
     ax_LR.set(title=name.replace(".csv","")+' MSE vs n\noptimal n='+str(n), xlabel='number of regressors', ylabel='MSE')
     plt.savefig(name.replace(".csv","")+' LinearReg MSE vs n.png')
 
-    print('\nTesting ...\n')
-    # LR test set. Use the entire training set as the fit for the test set. See code in LR.
-    MSE_LR_test, QL_LR_test, ln_SE_LR_test, PredVol_LR_test, b_LR_test, c_LR_test = lr.lin_reg(train_set, n, warmup_period=warmup_period,name=name, test=(True, test_set))
-    print("LR("+str(n)+") test MSE: "+str(MSE_LR_test)+"; test QL: "+str(QL_LR_test))
-
-    lr_mse_list.append(MSE_LR_test)
-    lr_ql_list.append(QL_LR_test)
-    lr_lnSE_list.append(ln_SE_LR_test)
-    lr_PredVol_list.append(PredVol_LR_test)
-
-
-
-    # """
-    #         Ridge Regression
-    # """
-    #
-    # print(str('-') * 27 + "\n\nPerforming Ridge Regression\n\n")
-    # print("Training ... \n")
-    #
-    # # Current status: Working code for train set
-    # # TODO vary lamda while holding n = 9
-    # # TODO vary both n and lamda
-    # for n in range(1,11):
-    #     MSE, QL, ln_SE, b, c = rr.ridge_reg(train_set, n, warmup_period,lamda=1)
-    #     rr_mse_list.append(MSE)
-    #
-    #     print("RR MSE for n="+str(n)+" is: "+str(MSE))
-    #
-    # n = rr_mse_list.index(min(rr_mse_list)) + 1  # add one because index starts at zero
-    # print("The smallest n for RR is n="+str(n))
     # print('\nTesting ...\n')
+    # # LR test set. Use the entire training set as the fit for the test set. See code in LR.
+    # MSE_LR_test, QL_LR_test, ln_SE_LR_test, PredVol_LR_test, b_LR_test, c_LR_test = lr.lin_reg(train_set, n, warmup_period=warmup_period,name=name, test=(True, test_set))
+    # print("LR("+str(n)+") test MSE: "+str(MSE_LR_test)+"; test QL: "+str(QL_LR_test))
     #
+    # lr_mse_list.append(MSE_LR_test)
+    # lr_ql_list.append(QL_LR_test)
+    # lr_lnSE_list.append(ln_SE_LR_test)
+    # lr_PredVol_list.append(PredVol_LR_test)
+
+
+
+    """
+            Ridge Regression
+    """
+
+    print(str('-') * 27 + "\n\nPerforming Ridge Regression\n\n")
+    print("Training ... \n")
+
+    # Current status: Working code for train set
+    # TODO vary lamda while holding n = 9
+    # TODO vary both n and lamda
+    for n in range(1,16):
+        for lamda in np.exp(np.arange(-6.5, 2.6, 0.5)):
+
+            MSE, QL, ln_SE, b, c = rr.ridge_reg(train_set, n, warmup_period,name=name, lamda=lamda)
+            rr2_mse_list.append(MSE)
+
+            print("RR MSE for n="+str(n) + 'and lamda='+str(lamda)+" is: "+str(MSE))
+
+    n = rr2_mse_list.index(min(rr2_mse_list)) + 1  # add one because index starts at zero
+    print("The smallest n for RR is n="+str(n))
+
+    # splits out rr2_mse_list into groups of 19, which is the length of the lamda array
+    asdf = [rr2_mse_list[i:i + 19] for i in range(0, len(rr2_mse_list), 19)]
+    blah=[]
+    minlamda=[]
+    for n in range(1, 16):
+        # arrays = [np.array(['n=' + str(n), 'n=' + str(n)]), np.array(['MSE', 'lamda'])]
+        arrays = [np.array(['MSE', 'lamda'])]
+        blah.append(pd.DataFrame([asdf[0], lamda.tolist()], index=arrays).T)
+        # minlamda.append(blah[n-1]['n=' + str(n), 'lamda'][blah[n-1]['n=' + str(n), 'MSE'].idxmin()])
+
+        # make a plot of MSE vs lamda for a specific n
+        blah[n-1].plot(x='lamda', y='MSE', title='MSE vs lamda for n=' + str(n), figsize=(9, 6)) \
+            .legend(loc="center left", bbox_to_anchor=(1, 0.5))
+
+        minlamda.append(blah[n-1]['lamda'][blah[n-1]['MSE'].idxmin()])
+
+
+    print('\nTesting ...\n')
+
     # """
     #        Bayesian Ridge Regression
     # """
@@ -225,22 +241,6 @@ lr_test_restuls_df = pd.DataFrame({"LinearReg MSE":pap_mse_list,
                                    "Optimal n": lr_optimal_n_list})
 lr_test_restuls_df = lr_test_restuls_df.set_index(np.transpose(filenames_nocsv), drop=True)
 lr_test_restuls_df.to_csv('LinearReg_test_MSE_QL.csv')
-
-
-# if __name__ == '__main__':
-#
-#     p = Pool(processes = len(names))
-#     start = time.time()
-#     async_result = p.map_async(multip, names)
-#     # for file in names:
-#     #     # p.apply_async(multip, [file])
-#     #     p.map(multip, [file])
-#     #     # p.start()
-#     p.close()
-#     p.join()
-#     print("Complete")
-#     end = time.time()
-# print('total time (s)= ' + str(end-start))
 
 """
 Notes:
