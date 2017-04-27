@@ -13,8 +13,8 @@ import numpy as np
 
 dailyvol_zeroes= pd.DataFrame()
 # filenames = ['AUDUSD.csv']
-# filenames = ['AUDUSD.csv', 'CADUSD.csv']
-filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
+filenames = ['AUDUSD.csv', 'CADUSD.csv']
+# filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
 filenames_nocsv = [name.replace(".csv", "") for name in filenames]
 
 n_series = np.arange(1,16,1)
@@ -41,58 +41,58 @@ rr_ql_list = []
 rr_lnSE_list = []
 rr_PredVol_list = []
 rr_optimal_n_list = []
-rr_optimal_lambda_list = []
+rr_optimal_log_lambda_list = []
 
 brr_mse_list = []
 brr_ql_list = []
 brr_lnSE_list = []
 brr_PredVol_list = []
 brr_optimal_n_list = []
-brr_optimal_alpha1_list = []
-brr_optimal_alpha2_list = []
-brr_optimal_lambda1_list = []
-brr_optimal_lambda2_list = []
+brr_optimal_log_alpha1_list = []
+brr_optimal_log_alpha2_list = []
+brr_optimal_log_lambda1_list = []
+brr_optimal_log_lambda2_list = []
 
 krr_linear_mse_list = []
 krr_linear_ql_list = []
 krr_linear_lnSE_list = []
 krr_linear_PredVol_list = []
-krr_linear_alpha_list = []
+krr_linear_log_alpha_list = []
 krr_linear_gamma_list = []
 
 krr_Gaussian_mse_list = []
 krr_Gaussian_ql_list = []
 krr_Gaussian_lnSE_list = []
 krr_Gaussian_PredVol_list = []
-krr_Gaussian_alpha_list = []
+krr_Gaussian_log_alpha_list = []
 krr_Gaussian_gamma_list = []
 
 krr_rbf_mse_list = []
 krr_rbf_ql_list = []
 krr_rbf_lnSE_list = []
 krr_rbf_PredVol_list = []
-krr_rbf_alpha_list = []
+krr_rbf_log_alpha_list = []
 krr_rbf_gamma_list = []
 
 krr_chi2_mse_list = []
 krr_chi2_ql_list = []
 krr_chi2_lnSE_list = []
 krr_chi2_PredVol_list = []
-krr_chi2_alpha_list = []
+krr_chi2_log_alpha_list = []
 krr_chi2_gamma_list = []
 
 krr_sigmoid_mse_list = []
 krr_sigmoid_ql_list = []
 krr_sigmoid_lnSE_list = []
 krr_sigmoid_PredVol_list = []
-krr_sigmoid_alpha_list = []
+krr_sigmoid_log_alpha_list = []
 krr_sigmoid_gamma_list = []
 
 krr_poly_mse_list = []
 krr_poly_ql_list = []
 krr_poly_lnSE_list = []
 krr_poly_PredVol_list = []
-krr_poly_alpha_list = []
+krr_poly_log_alpha_list = []
 krr_poly_gamma_list = []
 krr_poly_degree_list = []
 
@@ -169,10 +169,10 @@ for count, name in enumerate(filenames):
     print("Training ... \n")
 
     # Current status: Working code for train set
-    # n_seq = np.arange(1,2,1)
-    n_seq = np.arange(1,16,1)
-    # lamda_seq = np.exp(np.arange(-6.5, -5.5, 0.5))
-    lamda_seq = np.exp(np.arange(-6.5, 2.6, 0.5))
+    n_seq = np.arange(1,3,1)
+    # n_seq = np.arange(1,16,1)
+    lamda_seq = np.exp(np.arange(-6.5, -5.5, 0.5))
+    # lamda_seq = np.exp(np.arange(-6.5, 2.6, 0.5))
     rr_mse_list_all = []
     rr_mse_list_train = []
     for n in n_seq:
@@ -183,36 +183,36 @@ for count, name in enumerate(filenames):
 
             print("RR MSE for n="+str(n) + ' and lamda='+str(lamda)+" is: "+str(MSE))
 
-    n = rr_mse_list_all.index(min(rr_mse_list_all)) + 1  # add one because index starts at zero
-    print("The smallest n for RR is n="+str(n))
+    # n = rr_mse_list_all.index(min(rr_mse_list_all)) + 1  # add one because index starts at zero
+    # print("The smallest n for RR is n="+str(n))
 
-    arrays = [np.array(['MSE', 'lamda', 'n'])]
-    rrdf = pd.DataFrame([np.array(rr_mse_list_all), np.array(lamda_seq.tolist()*len(n_seq)),np.repeat(n_seq, len(lamda_seq))], index=arrays).T
+    arrays = [np.array(['MSE', 'log_lamda', 'n'])]
+    rrdf = pd.DataFrame([np.array(rr_mse_list_all), np.array(np.log(lamda_seq).tolist()*len(n_seq)),np.repeat(n_seq, len(lamda_seq))], index=arrays).T
     min_index = rr_mse_list_all.index(min(rr_mse_list_all))
-    rr_optimal_lambda = rrdf.lamda[min_index]
+    rr_optimal_log_lambda = rrdf.log_lamda[min_index]
     rr_optimal_n = rrdf.n[min_index]
     rr_mse_list_train.append(min(rr_mse_list_all))
     rr_optimal_n_list.append(rr_optimal_n)
-    rr_optimal_lambda_list.append(rr_optimal_lambda)
+    rr_optimal_log_lambda_list.append(rr_optimal_log_lambda)
 
     # splits out rr_mse_list into groups of 19, which is the length of the lamda array
     asdf = [rr_mse_list_all[i:i + len(lamda_seq)] for i in range(0, len(rr_mse_list_all), len(lamda_seq))]
     blah=[]
     minlamda=[]
     for n in n_seq:
-        arrays = [np.array(['n=' + str(n), 'n=' + str(n)]), np.array(['MSE', 'lamda'])]
-        arrays = [np.array(['MSE', 'lamda'])]
-        blah.append(pd.DataFrame([asdf[n-1], lamda_seq.tolist()], index=arrays).T)
+        arrays = [np.array(['n=' + str(n), 'n=' + str(n)]), np.array(['MSE', 'log_lambda'])]
+        arrays = [np.array(['MSE', 'log_lambda'])]
+        blah.append(pd.DataFrame([asdf[n-1], np.log(lamda_seq).tolist()], index=arrays).T)
         # make a plot of MSE vs lamda for a specific n
-        blah[n-1].plot(x='lamda', y='MSE', title=str(name)+' Ridge Regression MSE vs lamda for n=' + str(n), figsize=(9, 6)) \
+        blah[n-1].plot(x='log(lambda)', y='MSE', title=str(name)+' Ridge Regression MSE vs log(lambda) for n=' + str(n), figsize=(9, 6)) \
             .legend(loc="center left", bbox_to_anchor=(1, 0.5))
-        plt.savefig(str(name)+' Ridge Regression MSE vs lamda for n=' + str(n)+'.png')
+        plt.savefig(str(name)+' Ridge Regression MSE vs log_lambda for n=' + str(n)+'.png')
         # minlamda.append(blah[n-1]['lamda'][blah[n-1]['MSE'].idxmin()])
 
     print('\nTesting ...\n')
     # RR test set. Use the entire training set as the fit for the test set. See code in RR.
     MSE_RR_test, QL_RR_test, ln_SE_RR_test, PredVol_RR_test, b_RR_test, c_RR_test = rr.ridge_reg(train_set, int(rr_optimal_n), warmup_period=warmup_period,lamda = rr_optimal_lambda, name=name, test=(True, test_set))
-    print(str(name)+" RR("+str(n)+")"+" lamdba_"+str(lamda)+" test MSE: "+str(MSE_RR_test)+"; test QL: "+str(QL_RR_test))
+    print(str(name)+" RR("+str(rr_optimal_n)+")"+"log_lamdba_"+str(rr_optimal_lambda)+" test MSE: "+str(MSE_RR_test)+"; test QL: "+str(QL_RR_test))
 
     rr_mse_list.append(MSE_RR_test)
     rr_ql_list.append(QL_RR_test)
