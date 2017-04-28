@@ -16,9 +16,6 @@ dailyvol_zeroes= pd.DataFrame()
 filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
 filenames_nocsv = [name.replace(".csv", "") for name in filenames]
 
-# vars
-warmup_period = 300
-
 pap_mse_list = []
 pap_ql_list = []
 pap_lnSE_list = []
@@ -96,9 +93,11 @@ krr_poly_log_alpha_list = []
 krr_poly_gamma_list = []
 krr_poly_degree_list = []
 
+# vars
+warmup_period = 300
 lr_optimal_n_list_benchmark = [9,7,7,7,7,7,10]
 n_seq = np.arange(1, 16, 1)
-lamda_seq = np.exp(np.arange(-0.6, 3.1, 0.2))  # for RR1 and RR2
+lamda_seq = np.exp(np.arange(-1, 3.1, 0.2))  # for RR1 and RR2
 
 for count, name in enumerate(filenames):
     # initialize some lists
