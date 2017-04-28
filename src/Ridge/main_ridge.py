@@ -99,6 +99,8 @@ krr_poly_gamma_list = []
 krr_poly_degree_list = []
 
 lr_optimal_n_list_benchmark = [9,7,7,7,7,7,10]
+n_seq = np.arange(1, 16, 1)
+lamda_seq = np.exp(np.arange(-0.6, 3.1, 0.2))  # for RR1 and RR2
 
 for count, name in enumerate(filenames):
     # initialize some lists
@@ -143,7 +145,7 @@ for count, name in enumerate(filenames):
     # LR model for 10 regressors on the training set
     print("Training ... \n")
     lr_mse_train_list = []
-    for n in range(1,16):
+    for n in n_seq:
         MSE = lr.lin_reg(train_set, n, warmup_period, name=name)[0]
         lr_mse_train_list.append(MSE)
 
@@ -185,9 +187,7 @@ for count, name in enumerate(filenames):
     # Current status: Working code for train set
 
     # n_seq = np.arange(1,3,1)
-    n_seq = np.arange(1,16,1)
     # lamda_seq = np.exp(np.arange(-6.5, -5.5, 0.5))
-    lamda_seq = np.exp(np.arange(-0.6, 3.1, 0.2))
     rr1_mse_list_all = []
     rr1_mse_list_train = []
     rr2_mse_list_all = []
