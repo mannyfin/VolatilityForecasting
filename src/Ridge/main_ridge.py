@@ -328,7 +328,7 @@ lr_test_restuls_df = pd.DataFrame({"LinearReg MSE":lr_mse_list,
                                    "LinearReg QL": lr_ql_list,
                                    "Optimal n": lr_optimal_n_list})
 lr_test_restuls_df = lr_test_restuls_df.set_index(np.transpose(filenames_nocsv), drop=True)
-lr_test_restuls_df.to_csv('LinearReg_test_MSE_QL_warmup_'+str(warmup_period)+'.csv')
+lr_test_restuls_df.to_csv('LinearReg_test_MSE_QL_warmup_'+str(warmup_period)+'.csv') 
 
 rr1_test_restuls_df = pd.DataFrame({"Ridge Regression1 MSE":rr1_mse_list,
                                      "Ridge Regression1 QL": rr1_ql_list,
