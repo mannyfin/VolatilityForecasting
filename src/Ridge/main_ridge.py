@@ -100,7 +100,8 @@ krr_poly_degree_list = []
 
 lr_optimal_n_list_benchmark = [9,7,7,7,7,7,10]
 n_seq = np.arange(1, 16, 1)
-lamda_seq = np.exp(np.arange(-0.6, 3.1, 0.2))  # for RR1 and RR2
+lamda_seq = np.exp(np.arange(3, 3.1, 0.2))  # for RR1 and RR2
+# lamda_seq = np.exp(np.arange(-0.6, 3.1, 0.2))  # for RR1 and RR2
 
 for count, name in enumerate(filenames):
     # initialize some lists
@@ -329,7 +330,6 @@ lr_test_restuls_df.to_csv('LinearReg_test_MSE_QL_warmup_'+str(warmup_period)+'.c
 
 rr1_test_restuls_df = pd.DataFrame({"Ridge Regression1 MSE":rr1_mse_list,
                                      "Ridge Regression1 QL": rr1_ql_list,
-                                   "Optimal n": rr1_optimal_n_list,
                                    "Optimal log_lambda": rr1_optimal_log_lambda_list})
 rr1_test_restuls_df = rr1_test_restuls_df.set_index(np.transpose(filenames_nocsv), drop=True)
 rr1_test_restuls_df.to_csv('Ridge_Regression1_test_MSE_QL.csv')
