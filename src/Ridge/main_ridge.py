@@ -9,7 +9,6 @@ import BayesianRegression as brr
 import KernelRidgeRegression as krr
 import matplotlib.pyplot as plt
 import numpy as np
-import csv
 
 
 dailyvol_zeroes= pd.DataFrame()
@@ -134,8 +133,8 @@ for count, name in enumerate(filenames):
 
     pap_lnSE_list_df = pd.DataFrame(np.array([pap_lnSE_list[0]]), index=["pap_lnSE"]).transpose()
     pap_PredVol_list_df = pd.DataFrame(np.array([pap_PredVol_list[0]]), index=["pap_PredVol"]).transpose()
-    pap_lnSE_list_df.to_csv(str(name)+"pap_lnSE.csv")
-    pap_PredVol_list_df.to_csv(str(name)+"pap_PredVol.csv")
+    pap_lnSE_list_df.to_csv(str(name)+" pap_lnSE.csv")
+    pap_PredVol_list_df.to_csv(str(name)+" pap_PredVol.csv")
 
     """
             Linear Regression
@@ -149,7 +148,8 @@ for count, name in enumerate(filenames):
         lr_mse_train_list.append(MSE)
 
         print("LR MSE for n="+str(n)+" is: "+str(MSE))
-
+    lrdf = pd.DataFrame([n_seq,lr_mse_train_list],index=["n","lr_mse_train"])
+    lrdf.to_csv(str(name)+" lr_mse_train.csv")
     n = lr_mse_train_list.index(min(lr_mse_train_list)) + 1  # add one because index starts at zero
     lr_optimal_n_list.append(n)
     print("The smallest n for LR is n="+str(n))
@@ -202,10 +202,10 @@ for count, name in enumerate(filenames):
     for n in n_seq:
         for lamda in lamda_seq:
 
-            MSE, QL, ln_SE, b, c = rr.ridge_reg(train_set, n, warmup_period,name=name, lamda=lamda)
-            rr2_mse_list_all.append(MSE)
+            MSE_RR2, QL_RR2, ln_SE_RR2, b_RR2, c_RR2 = rr.ridge_reg(train_set, n, warmup_period,name=name, lamda=lamda)
+            rr2_mse_list_all.append(MSE_RR2)
 
-            print("RR2 MSE for n="+str(n) + ' and lamda='+str(lamda)+" is: "+str(MSE))
+            print("RR2 MSE for n="+str(n) + ' and lamda='+str(lamda)+" is: "+str(MSE_RR2))
 
     # n = rr_mse_list_all.index(min(rr_mse_list_all)) + 1  # add one because index starts at zero
     # print("The smallest n for RR is n="+str(n))
@@ -234,7 +234,7 @@ for count, name in enumerate(filenames):
         arrays = [np.array(['n=' + str(n), 'n=' + str(n)]), np.array(['MSE', 'log_lambda'])]
         arrays = [np.array(['MSE', 'log_lambda'])]
         blah.append(pd.DataFrame([asdf[n-1], np.log(lamda_seq).tolist()], index=arrays).T)
-        blah[n - 1].to_csv(str(name)+" MSE vs log lambda_n_"+str(n)+".csv")
+        blah[n - 1].to_csv(str(name)+" MSE vs log lambda_n_train"+str(n)+".csv")
         # make a plot of MSE vs lamda for a specific n
         blah[n-1].plot(x='log_lambda', y='MSE', title=str(name)+' Ridge Regression MSE vs log lambda for n=' + str(n), figsize=(9, 6)) \
             .legend(loc="center left", bbox_to_anchor=(1, 0.5))
@@ -256,8 +256,8 @@ for count, name in enumerate(filenames):
 
     rr1_lnSE_list_df = pd.DataFrame(np.array([rr1_lnSE_list[0]]), index=["rr1_lnSE"]).transpose()
     rr1_PredVol_list_df = pd.DataFrame(np.array([rr1_PredVol_list[0]]), index=["rr1_PredVol"]).transpose()
-    rr1_lnSE_list_df.to_csv(str(name)+"rr1_lnSE.csv")
-    rr1_PredVol_list_df.to_csv(str(name)+"rr1_PredVol.csv")
+    rr1_lnSE_list_df.to_csv(str(name)+" rr1_lnSE.csv")
+    rr1_PredVol_list_df.to_csv(str(name)+" rr1_PredVol.csv")
 
     rr2_mse_list.append(MSE_RR2_test)
     rr2_ql_list.append(QL_RR2_test)
@@ -266,8 +266,8 @@ for count, name in enumerate(filenames):
 
     rr2_lnSE_list_df = pd.DataFrame(np.array([rr2_lnSE_list[0]]), index=["rr2_lnSE"]).transpose()
     rr2_PredVol_list_df = pd.DataFrame(np.array([rr2_PredVol_list[0]]), index=["rr2_PredVol"]).transpose()
-    rr2_lnSE_list_df.to_csv(str(name)+"rr2_lnSE.csv")
-    rr2_PredVol_list_df.to_csv(str(name)+"rr2_PredVol.csv")
+    rr2_lnSE_list_df.to_csv(str(name)+" rr2_lnSE.csv")
+    rr2_PredVol_list_df.to_csv(str(name)+" rr2_PredVol.csv")
 
 
     # """
