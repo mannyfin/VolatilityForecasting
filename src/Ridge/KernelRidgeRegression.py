@@ -52,21 +52,33 @@ def kernel_ridge_reg(data, n, warmup_period, alpha=1,coef0=1, degree=3, kernel='
         ln_SE = pd.Series(np.log(SE))
 
     elif test[0] is True:
-        # test[1] is the test set
-        y = test[1].Volatility_Time
+
+        # test[1] is the test set. First convert to log vol
+        y = np.log(test[1].Volatility_Time.astype('float64'))
         # take the last n predicted elements (starting from the beginning of the test set till the end)
         # and put them in PredictedVol
-        PredictedVol = pd.Series(np.exp(PredictedLogVol[-len(test[1]):]))
+        tested_vol=[]
+        # use the last n samples of the train set for predicting the first value of the test set
+        test_set = pd.concat([LogVol[-n:],y],axis=0)
+        for initial in range(0, len(y)):
+                tested_vol.append(A.predict(test_set.iloc[initial: initial+n].values.reshape(1, -1))[0])
+        # PredictedVol = pd.Series(np.exp(PredictedLogVol[-len(test[1]):]))
+
+        tested_vol = pd.Series(np.exp(tested_vol),index=y.index)
+        y = y.apply(np.exp)
+        # y = np.exp(y.reset_index().drop('index',axis=1))
+        # y.drop('index',axis=1)
         Performance_ = PerformanceMeasure()
-        MSE = Performance_.mean_se(observed=y, prediction=PredictedVol)
+        MSE = Performance_.mean_se(observed=y, prediction=tested_vol)
         QL = Performance_.quasi_likelihood(observed=y.astype('float64'),
-                                           prediction=PredictedVol.astype('float64'))
+                                           prediction=tested_vol.astype('float64'))
 
         # dates = data['Date'][n:]
         # label=str(filename)+" "+str(stringinput)+" Linear Regression: "+str(n) + " Past Vol SE "
         # SE(y, PredictedVol, dates,function_method=label)
 
-        SE = [(y.values[i] - PredictedVol.values[i]) ** 2 for i in range(len(y))]
+        SE = (y - tested_vol) ** 2
+        # SE = [(y.values[i] - tested_vol.values[i]) ** 2 for i in range(len(y))]
         ln_SE = pd.Series(np.log(SE))
 
-    return MSE, QL, ln_SE
+        return MSE, QL, ln_SE,tested_vol, b, c
