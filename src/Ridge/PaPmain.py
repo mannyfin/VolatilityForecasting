@@ -2,8 +2,12 @@ import pandas as pd
 import numpy as np
 from PastAsPresent import PastAsPresent as pap
 # from dictstruct import Struct
+from makedirs import makedirs
+
 
 def PaP(test_set, name, dictlist):
+
+    makedirs('Ridge//Results', 'PastAsPresent', name=name)
 
     if PaP.__name__ not in dictlist:
         dictlist[PaP.__name__] = dict()

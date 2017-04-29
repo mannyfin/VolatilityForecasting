@@ -6,9 +6,13 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import linear_regression as lr
+from makedirs import makedirs
 
 
 def LR(train_set, test_set, warmup_period, name,n_seq, dictlist):
+
+    makedirs('Ridge//Results', 'LinearRegression', name=name)
+
     if LR.__name__ not in dictlist:
 
         dictlist[LR.__name__] = dict()

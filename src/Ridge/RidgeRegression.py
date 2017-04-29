@@ -48,10 +48,12 @@ def ridge_reg(data, n, warmup_period, lamda=1,name=None, test=False):
 
     param_plot.plot(title=str(name)+' RR('+str(n)+') regressors, intercept and SE_lamda='+str(round(lamda,4)) + '_warmup='+str(warmup_period), figsize=(9, 6))\
               .legend(loc="center left", bbox_to_anchor=(1, 0.5))
-    os.chdir('Ridge//Results/(cd) RidgeRegression 1&2/')
+
+    # TODO commented out chdir lines below as of 4/29
+    # os.chdir('Ridge//Results/(cd) RidgeRegression_previous 1&2/')
     plt.savefig(str(name)+' RR('+str(n)+') regressors, intercept and SE_lamda='+str(round(lamda,4)) + '_warmup='+str(warmup_period)+'.png')
     plt.close()
-    os.chdir('../../..')
+    # os.chdir('../../..')
 
     if test is False:
         y = data.Volatility_Time[warmup_period:]

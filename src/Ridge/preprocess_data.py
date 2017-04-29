@@ -29,4 +29,4 @@ def preprocess(name):
     #  909 is break point for train/test
     train_set, test_set = sd.split_data(dataframe=daily_vol_result, idx=910, reset_index=False)
 
-    return train_set, test_set
+    return train_set, test_set, name

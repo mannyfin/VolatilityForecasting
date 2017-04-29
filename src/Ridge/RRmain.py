@@ -6,21 +6,42 @@ import numpy as np
 import pandas as pd
 import RidgeRegression as rr
 import matplotlib.pyplot as plt
+from makedirs import makedirs
 
+def RR(train_set, test_set, warmup_period, name,n_seq, lamda_seq, lr_optimal_n_list_benchmark, count, dictlist):
 
-def RR(train_set, test_set, warmup_period, name,n_seq, lamda_seq, lr_optimal_n_list_benchmark, count, filenames_nocsv):
-    rr1_mse_list = []
-    rr1_ql_list = []
-    rr1_lnSE_list = []
-    rr1_PredVol_list = []
-    rr1_optimal_log_lambda_list = []
+    makedirs('Ridge//Results', 'RidgeRegression', name=name)
 
-    rr2_mse_list = []
-    rr2_ql_list = []
-    rr2_lnSE_list = []
-    rr2_PredVol_list = []
-    rr2_optimal_n_list = []
-    rr2_optimal_log_lambda_list = []
+    if RR.__name__ not in dictlist:
+
+        dictlist[RR.__name__] = dict()
+
+        dictlist[RR.__name__]['rr1_mse_list'] = []
+        dictlist[RR.__name__]['rr1_ql_list'] = []
+        dictlist[RR.__name__]['rr1_lnSE_list'] = []
+        dictlist[RR.__name__]['rr1_PredVol_list'] = []
+        dictlist[RR.__name__]['rr1_optimal_log_lambda_list'] = []
+
+        dictlist[RR.__name__]['rr2_mse_list'] = []
+        dictlist[RR.__name__]['rr2_ql_list'] = []
+        dictlist[RR.__name__]['rr2_lnSE_list'] = []
+        dictlist[RR.__name__]['rr2_PredVol_list'] = []
+        dictlist[RR.__name__]['rr2_optimal_n_list'] = []
+        dictlist[RR.__name__]['rr2_optimal_log_lambda_list'] = []
+
+    # old
+    # rr1_mse_list = []
+    # rr1_ql_list = []
+    # rr1_lnSE_list = []
+    # rr1_PredVol_list = []
+    # rr1_optimal_log_lambda_list = []
+    #
+    # rr2_mse_list = []
+    # rr2_ql_list = []
+    # rr2_lnSE_list = []
+    # rr2_PredVol_list = []
+    # rr2_optimal_n_list = []
+    # rr2_optimal_log_lambda_list = []
 
     """
                Ridge Regression
@@ -31,16 +52,23 @@ def RR(train_set, test_set, warmup_period, name,n_seq, lamda_seq, lr_optimal_n_l
 
     # Current status: Working code for train set
 
+    # old
     # n_seq = np.arange(1,3,1)
     # lamda_seq = np.exp(np.arange(-6.5, -5.5, 0.5))
-    rr1_mse_list_all = []
-    rr1_mse_list_train = []
-    rr2_mse_list_all = []
-    rr2_mse_list_train = []
+    # rr1_mse_list_all = []
+    # rr1_mse_list_train = []
+    # rr2_mse_list_all = []
+    # rr2_mse_list_train = []
+    dictlist[RR.__name__]['rr1_mse_list_all'] = []
+    dictlist[RR.__name__]['rr1_mse_list_train'] = []
+    dictlist[RR.__name__]['rr2_mse_list_all'] = []
+    dictlist[RR.__name__]['rr2_mse_list_train'] = []
+
     for lamda in lamda_seq:
         MSE_RR1, QL_RR1, ln_SE_RR1, b_RR1, c_RR1 = rr.ridge_reg(train_set, lr_optimal_n_list_benchmark[count],
                                                                 warmup_period, name=name, lamda=lamda)
-        rr1_mse_list_all.append(MSE_RR1)
+        # rr1_mse_list_all.append(MSE_RR1)
+        dictlist[RR.__name__]['rr1_mse_list_all'].append(MSE_RR1)
 
         print("RR1 MSE for n=" + str(lr_optimal_n_list_benchmark[count]) + ' and lamda=' + str(lamda) + " is: " + str(
             MSE_RR1))
@@ -48,34 +76,59 @@ def RR(train_set, test_set, warmup_period, name,n_seq, lamda_seq, lr_optimal_n_l
     for n in n_seq:
         for lamda in lamda_seq:
             MSE_RR2, QL_RR2, ln_SE_RR2, b_RR2, c_RR2 = rr.ridge_reg(train_set, n, warmup_period, name=name, lamda=lamda)
-            rr2_mse_list_all.append(MSE_RR2)
+            # rr2_mse_list_all.append(MSE_RR2)
+            dictlist[RR.__name__]['rr2_mse_list_all'].append(MSE_RR2)
 
             print("RR2 MSE for n=" + str(n) + ' and lamda=' + str(lamda) + " is: " + str(MSE_RR2))
 
+    # was previously commented out before dict change
     # n = rr_mse_list_all.index(min(rr_mse_list_all)) + 1  # add one because index starts at zero
     # print("The smallest n for RR is n="+str(n))
 
     arrays_RR1 = [np.array(['MSE', 'log_lamda'])]
-    rrdf_RR1 = pd.DataFrame([np.array(rr1_mse_list_all), np.array(np.log(lamda_seq))], index=arrays_RR1).T
-    min_index_RR1 = rr1_mse_list_all.index(min(rr1_mse_list_all))
+
+    # rrdf_RR1 = pd.DataFrame([np.array(rr1_mse_list_all), np.array(np.log(lamda_seq))], index=arrays_RR1).T
+    # min_index_RR1 = rr1_mse_list_all.index(min(rr1_mse_list_all))
+
+    rrdf_RR1 = pd.DataFrame([np.array(dictlist[RR.__name__]['rr1_mse_list_all']), np.array(np.log(lamda_seq))], index=arrays_RR1).T
+    min_index_RR1 = dictlist[RR.__name__]['rr1_mse_list_all'].index(min(dictlist[RR.__name__]['rr1_mse_list_all']))
     rr1_optimal_log_lambda = rrdf_RR1.log_lamda[min_index_RR1]
+
+    # old
     # min MSE for a file
-    rr1_mse_list_train.append(min(rr1_mse_list_all))
-    rr1_optimal_log_lambda_list.append(rr1_optimal_log_lambda)
+    # rr1_mse_list_train.append(min(rr1_mse_list_all))
+    # rr1_optimal_log_lambda_list.append(rr1_optimal_log_lambda)
+    dictlist[RR.__name__]['rr1_mse_list_train'].append(min(dictlist[RR.__name__]['rr1_mse_list_train']))
+    dictlist[RR.__name__]['rr1_optimal_log_lambda_list'].append(rr1_optimal_log_lambda)
 
     arrays = [np.array(['MSE', 'log_lamda', 'n'])]
+
+    # old
+    # rrdf = pd.DataFrame(
+    #     [np.array(rr2_mse_list_all), np.array(np.log(lamda_seq).tolist() * len(n_seq)), np.repeat(n_seq, len(lamda_seq))],
+    #     index=arrays).T
+    # min_index = rr2_mse_list_all.index(min(rr2_mse_list_all))
+
     rrdf = pd.DataFrame(
-        [np.array(rr2_mse_list_all), np.array(np.log(lamda_seq).tolist() * len(n_seq)), np.repeat(n_seq, len(lamda_seq))],
+        [np.array(dictlist[RR.__name__]['rr2_mse_list_all']), np.array(np.log(lamda_seq).tolist() * len(n_seq)), np.repeat(n_seq, len(lamda_seq))],
         index=arrays).T
-    min_index = rr2_mse_list_all.index(min(rr2_mse_list_all))
+    min_index = dictlist[RR.__name__]['rr2_mse_list_all'].index(min(dictlist[RR.__name__]['rr2_mse_list_all']))
+
     rr2_optimal_log_lambda = rrdf.log_lamda[min_index]
     rr2_optimal_n = rrdf.n[min_index]
-    rr2_mse_list_train.append(min(rr2_mse_list_all))
-    rr2_optimal_n_list.append(rr2_optimal_n)
-    rr2_optimal_log_lambda_list.append(rr2_optimal_log_lambda)
+
+    # old
+    # rr2_mse_list_train.append(min(rr2_mse_list_all))
+    # rr2_optimal_n_list.append(rr2_optimal_n)
+    # rr2_optimal_log_lambda_list.append(rr2_optimal_log_lambda)
+
+    dictlist[RR.__name__]['rr2_mse_list_train'].append(min( dictlist[RR.__name__]['rr2_mse_list_all']))
+    dictlist[RR.__name__]['rr2_optimal_n_list'].append(rr2_optimal_n)
+    dictlist[RR.__name__]['rr2_optimal_log_lambda_list'].append(rr2_optimal_log_lambda)
 
     # splits out rr_mse_list into groups of 19, which is the length of the lamda array
-    asdf = [rr2_mse_list_all[i:i + len(lamda_seq)] for i in range(0, len(rr2_mse_list_all), len(lamda_seq))]
+    # asdf = [rr2_mse_list_all[i:i + len(lamda_seq)] for i in range(0, len(rr2_mse_list_all), len(lamda_seq))]
+    asdf = [dictlist[RR.__name__]['rr2_mse_list_all'][i:i + len(lamda_seq)] for i in range(0, len(dictlist[RR.__name__]['rr2_mse_list_all']), len(lamda_seq))]
     blah = []
     minlamda = []
     for n in n_seq:
@@ -105,27 +158,57 @@ def RR(train_set, test_set, warmup_period, name,n_seq, lamda_seq, lr_optimal_n_l
     print(str(name) + " RR2(" + str(rr2_optimal_n) + ")" + "log_lamdba_" + str(rr2_optimal_log_lambda) + " test MSE: " + str(
             MSE_RR2_test) + "; test QL: " + str(QL_RR2_test))
 
-    rr1_mse_list.append(MSE_RR1_test)
-    rr1_ql_list.append(QL_RR1_test)
-    rr1_lnSE_list.append(ln_SE_RR1_test)
-    rr1_PredVol_list.append(PredVol_RR1_test)
+    #
+    # rr1_mse_list.append(MSE_RR1_test)
+    # rr1_ql_list.append(QL_RR1_test)
+    # rr1_lnSE_list.append(ln_SE_RR1_test)
+    # rr1_PredVol_list.append(PredVol_RR1_test)
+    #
+    # rr1_lnSE_list_df = pd.DataFrame(np.array([rr1_lnSE_list[0]]), index=["rr1_lnSE"]).transpose()
+    # rr1_PredVol_list_df = pd.DataFrame(np.array([rr1_PredVol_list[0]]), index=["rr1_PredVol"]).transpose()
+    # rr1_lnSE_list_df.to_csv(str(name)+" rr1_lnSE.csv")
+    # rr1_PredVol_list_df.to_csv(str(name)+" rr1_PredVol.csv")
+    #
+    # rr2_mse_list.append(MSE_RR2_test)
+    # rr2_ql_list.append(QL_RR2_test)
+    # rr2_lnSE_list.append(ln_SE_RR2_test)
+    # rr2_PredVol_list.append(PredVol_RR2_test)
+    #
+    # rr2_lnSE_list_df = pd.DataFrame(np.array([rr2_lnSE_list[0]]), index=["rr2_lnSE"]).transpose()
+    # rr2_PredVol_list_df = pd.DataFrame(np.array([rr2_PredVol_list[0]]), index=["rr2_PredVol"]).transpose()
+    # rr2_lnSE_list_df.to_csv(str(name)+" rr2_lnSE.csv")
+    # rr2_PredVol_list_df.to_csv(str(name)+" rr2_PredVol.csv")
 
-    rr1_lnSE_list_df = pd.DataFrame(np.array([rr1_lnSE_list[0]]), index=["rr1_lnSE"]).transpose()
-    rr1_PredVol_list_df = pd.DataFrame(np.array([rr1_PredVol_list[0]]), index=["rr1_PredVol"]).transpose()
-    rr1_lnSE_list_df.to_csv(str(name) + " rr1_lnSE.csv")
-    rr1_PredVol_list_df.to_csv(str(name) + " rr1_PredVol.csv")
+    dictlist[RR.__name__]['rr1_mse_list'].append(MSE_RR1_test)
+    dictlist[RR.__name__]['rr1_ql_list'].append(QL_RR1_test)
+    dictlist[RR.__name__]['rr1_lnSE_list'].append(ln_SE_RR1_test)
+    dictlist[RR.__name__]['rr1_PredVol_list'].append(PredVol_RR1_test)
 
-    rr2_mse_list.append(MSE_RR2_test)
-    rr2_ql_list.append(QL_RR2_test)
-    rr2_lnSE_list.append(ln_SE_RR2_test)
-    rr2_PredVol_list.append(PredVol_RR2_test)
+    rr1_lnse = dictlist[RR.__name__]['rr1_lnSE_list'][0]
+    rr1_predvol = dictlist[RR.__name__]['rr1_PredVol_list'][0]
 
-    rr2_lnSE_list_df = pd.DataFrame(np.array([rr2_lnSE_list[0]]), index=["rr2_lnSE"]).transpose()
-    rr2_PredVol_list_df = pd.DataFrame(np.array([rr2_PredVol_list[0]]), index=["rr2_PredVol"]).transpose()
-    rr2_lnSE_list_df.to_csv(str(name) + " rr2_lnSE.csv")
-    rr2_PredVol_list_df.to_csv(str(name) + " rr2_PredVol.csv")
 
-    return rr1_mse_list, rr1_ql_list, rr1_optimal_log_lambda_list
+    rr1_lnSE_list_df = pd.DataFrame(np.array([rr1_lnse]), index=["rr1_lnSE"]).transpose()
+    rr1_PredVol_list_df = pd.DataFrame(np.array([rr1_predvol]), index=["rr1_PredVol"]).transpose()
+    rr1_lnSE_list_df.to_csv(str(name)+" rr1_lnSE.csv")
+    rr1_PredVol_list_df.to_csv(str(name)+" rr1_PredVol.csv")
+
+    dictlist[RR.__name__]['rr2_mse_list'].append(MSE_RR2_test)
+    dictlist[RR.__name__]['rr2_ql_list'].append(QL_RR2_test)
+    dictlist[RR.__name__]['rr2_ql_list'] = []
+    dictlist[RR.__name__]['rr2_lnSE_list'].append(ln_SE_RR2_test)
+    dictlist[RR.__name__]['rr2_PredVol_list'].append(PredVol_RR2_test)
+
+    rr2_lnse = dictlist[RR.__name__]['rr2_lnSE_list'][0]
+    rr2_predvol = dictlist[RR.__name__]['rr2_PredVol_list'][0]
+
+    rr2_lnSE_list_df = pd.DataFrame(np.array([rr2_lnse]), index=["rr2_lnSE"]).transpose()
+    rr2_PredVol_list_df = pd.DataFrame(np.array([rr2_predvol]), index=["rr2_PredVol"]).transpose()
+    rr2_lnSE_list_df.to_csv(str(name)+" rr2_lnSE.csv")
+    rr2_PredVol_list_df.to_csv(str(name)+" rr2_PredVol.csv")
+
+
+    return dictlist
     # rr1_test_restuls_df = pd.DataFrame({"Ridge Regression1 MSE": rr1_mse_list,
     #                                     "Ridge Regression1 QL": rr1_ql_list,
     #                                     "Optimal log_lambda": rr1_optimal_log_lambda_list})
