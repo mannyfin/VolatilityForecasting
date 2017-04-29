@@ -120,59 +120,59 @@ for count, name in enumerate(filenames):
     """
             PastAsPresent
     """
-    # print(str('-') * 24 + "\n\nPerforming PastAsPresent\n\n")
-    #
-    # # PastAsPresent -- Test sample only
-    # papMSE_test, papQL_test, pap_ln_SE_test,pap_PredVol_test = pap.tn_pred_tn_plus_1(test_set)
-    # print("Past as Present MSE: " + str(papMSE_test) + "; QL: " + str(papQL_test))
-    #
-    # pap_mse_list.append(papMSE_test)
-    # pap_ql_list.append(papQL_test)
-    # pap_lnSE_list.append(pap_ln_SE_test)
-    # pap_PredVol_list.append(pap_PredVol_test)
-    #
-    # pap_lnSE_list_df = pd.DataFrame(np.array([pap_lnSE_list[0]]), index=["pap_lnSE"]).transpose()
-    # pap_PredVol_list_df = pd.DataFrame(np.array([pap_PredVol_list[0]]), index=["pap_PredVol"]).transpose()
-    # pap_lnSE_list_df.to_csv(str(name)+" pap_lnSE.csv")
-    # pap_PredVol_list_df.to_csv(str(name)+" pap_PredVol.csv")
+    print(str('-') * 24 + "\n\nPerforming PastAsPresent\n\n")
+
+    # PastAsPresent -- Test sample only
+    papMSE_test, papQL_test, pap_ln_SE_test,pap_PredVol_test = pap.tn_pred_tn_plus_1(test_set)
+    print("Past as Present MSE: " + str(papMSE_test) + "; QL: " + str(papQL_test))
+
+    pap_mse_list.append(papMSE_test)
+    pap_ql_list.append(papQL_test)
+    pap_lnSE_list.append(pap_ln_SE_test)
+    pap_PredVol_list.append(pap_PredVol_test)
+
+    pap_lnSE_list_df = pd.DataFrame(np.array([pap_lnSE_list[0]]), index=["pap_lnSE"]).transpose()
+    pap_PredVol_list_df = pd.DataFrame(np.array([pap_PredVol_list[0]]), index=["pap_PredVol"]).transpose()
+    pap_lnSE_list_df.to_csv(str(name)+" pap_lnSE.csv")
+    pap_PredVol_list_df.to_csv(str(name)+" pap_PredVol.csv")
 
     """
             Linear Regression
     """
-    # print(str('-') * 28 + "\n\nPerforming Linear Regression\n\n")
-    # # LR model for 10 regressors on the training set
-    # print("Training ... \n")
-    # lr_mse_train_list = []
-    # for n in n_seq:
-    #     MSE = lr.lin_reg(train_set, n, warmup_period, name=name)[0]
-    #     lr_mse_train_list.append(MSE)
-    #
-    #     print("LR MSE for n="+str(n)+" is: "+str(MSE))
-    # lrdf = pd.DataFrame([n_seq,lr_mse_train_list],index=["n","lr_mse_train"])
-    # lrdf.to_csv(str(name)+" lr_mse_train.csv")
-    # n = lr_mse_train_list.index(min(lr_mse_train_list)) + 1  # add one because index starts at zero
-    # lr_optimal_n_list.append(n)
-    # print("The smallest n for LR is n="+str(n))
-    # figLR = plt.figure(figsize=(8, 6))
-    # ax_LR = figLR.add_subplot(111)
-    # ax_LR.plot(range(1, 16), lr_mse_train_list)
-    # ax_LR.set(title=name.replace(".csv","")+' MSE vs n (warmup: '+str(warmup_period)+')\noptimal n='+str(n), xlabel='number of regressors', ylabel='MSE')
-    # plt.savefig(name.replace(".csv","")+' LinearReg MSE vs n_warmup_'+str(warmup_period)+'.png')
-    #
-    # print('\nTesting ...\n')
-    # # LR test set. Use the entire training set as the fit for the test set. See code in LR.
-    # MSE_LR_test, QL_LR_test, ln_SE_LR_test, PredVol_LR_test, b_LR_test, c_LR_test = lr.lin_reg(train_set, n, warmup_period=warmup_period,name=name, test=(True, test_set))
-    # print("LR("+str(n)+") test MSE: "+str(MSE_LR_test)+"; test QL: "+str(QL_LR_test))
-    #
-    # lr_mse_list.append(MSE_LR_test)
-    # lr_ql_list.append(QL_LR_test)
-    # lr_lnSE_list.append(ln_SE_LR_test)
-    # lr_PredVol_list.append(PredVol_LR_test)
-    #
-    # lr_lnSE_list_df = pd.DataFrame(np.array([lr_lnSE_list[0]]), index=["lr_lnSE"]).transpose()
-    # lr_PredVol_list_df = pd.DataFrame(np.array([lr_PredVol_list[0]]), index=["lr_PredVol"]).transpose()
-    # lr_lnSE_list_df.to_csv(str(name)+"lr_lnSE.csv")
-    # lr_PredVol_list_df.to_csv(str(name)+"lr_PredVol.csv")
+    print(str('-') * 28 + "\n\nPerforming Linear Regression\n\n")
+    # LR model for 10 regressors on the training set
+    print("Training ... \n")
+    lr_mse_train_list = []
+    for n in n_seq:
+        MSE = lr.lin_reg(train_set, n, warmup_period, name=name)[0]
+        lr_mse_train_list.append(MSE)
+
+        print("LR MSE for n="+str(n)+" is: "+str(MSE))
+    lrdf = pd.DataFrame([n_seq,lr_mse_train_list],index=["n","lr_mse_train"])
+    lrdf.to_csv(str(name)+" lr_mse_train.csv")
+    n = lr_mse_train_list.index(min(lr_mse_train_list)) + 1  # add one because index starts at zero
+    lr_optimal_n_list.append(n)
+    print("The smallest n for LR is n="+str(n))
+    figLR = plt.figure(figsize=(8, 6))
+    ax_LR = figLR.add_subplot(111)
+    ax_LR.plot(range(1, 16), lr_mse_train_list)
+    ax_LR.set(title=name.replace(".csv","")+' MSE vs n (warmup: '+str(warmup_period)+')\noptimal n='+str(n), xlabel='number of regressors', ylabel='MSE')
+    plt.savefig(name.replace(".csv","")+' LinearReg MSE vs n_warmup_'+str(warmup_period)+'.png')
+
+    print('\nTesting ...\n')
+    # LR test set. Use the entire training set as the fit for the test set. See code in LR.
+    MSE_LR_test, QL_LR_test, ln_SE_LR_test, PredVol_LR_test, b_LR_test, c_LR_test = lr.lin_reg(train_set, n, warmup_period=warmup_period,name=name, test=(True, test_set))
+    print("LR("+str(n)+") test MSE: "+str(MSE_LR_test)+"; test QL: "+str(QL_LR_test))
+
+    lr_mse_list.append(MSE_LR_test)
+    lr_ql_list.append(QL_LR_test)
+    lr_lnSE_list.append(ln_SE_LR_test)
+    lr_PredVol_list.append(PredVol_LR_test)
+
+    lr_lnSE_list_df = pd.DataFrame(np.array([lr_lnSE_list[0]]), index=["lr_lnSE"]).transpose()
+    lr_PredVol_list_df = pd.DataFrame(np.array([lr_PredVol_list[0]]), index=["lr_PredVol"]).transpose()
+    lr_lnSE_list_df.to_csv(str(name)+"lr_lnSE.csv")
+    lr_PredVol_list_df.to_csv(str(name)+"lr_PredVol.csv")
 
 
     """
@@ -272,26 +272,26 @@ for count, name in enumerate(filenames):
     """
            Bayesian Ridge Regression
     """
-    # print(str('-') * 36 + "\n\nPerforming Bayesian Ridge Regression\n\n")
-    # print("Training ... \n")
-    # # Current status: Working code for train set
-    # # TODO vary alphas and lamdas while holding n = 9
-    # # TODO vary both n and lamdas and alphas
-    # for n in range(1,11):
-    #     for alpha1 in np.exp(np.arange(-17,-3,1)):
-    #         for alpha2 in np.exp(np.arange(-17,-3,1)):
-    #             for lamda1 in np.exp(np.arange(-17,-3,1)):
-    #                 for lamda2 in np.exp(np.arange(-17,-3,1)):
-    #
-    #                     MSE, QL, ln_SE, b, c = brr.bayes_ridge_reg(train_set, n, warmup_period, alpha_1=alpha1, alpha_2=alpha2,
-    #                                                                lambda_1=lamda1, lambda_2=lamda2, test=False)
-    #                     brr_mse_list.append(MSE)
-    #
-    #                     print("BRR MSE for n="+str(n)+" is: "+str(MSE))
-    #
-    # n = brr_mse_list.index(min(brr_mse_list)) + 1  # add one because index starts at zero
-    # print("The smallest n for BRR is n="+str(n))
-    # print('\nTesting ...\n')
+    print(str('-') * 36 + "\n\nPerforming Bayesian Ridge Regression\n\n")
+    print("Training ... \n")
+    # Current status: Working code for train set
+    # TODO vary alphas and lamdas while holding n = 9
+    # TODO vary both n and lamdas and alphas
+    for n in range(1,11):
+        for alpha1 in np.exp(np.arange(-17,-3,1)):
+            for alpha2 in np.exp(np.arange(-17,-3,1)):
+                for lamda1 in np.exp(np.arange(-17,-3,1)):
+                    for lamda2 in np.exp(np.arange(-17,-3,1)):
+
+                        MSE, QL, ln_SE, b, c = brr.bayes_ridge_reg(train_set, n, warmup_period, alpha_1=alpha1, alpha_2=alpha2,
+                                                                   lambda_1=lamda1, lambda_2=lamda2, test=False)
+                        brr_mse_list.append(MSE)
+
+                        print("BRR MSE for n="+str(n)+" is: "+str(MSE))
+
+    n = brr_mse_list.index(min(brr_mse_list)) + 1  # add one because index starts at zero
+    print("The smallest n for BRR is n="+str(n))
+    print('\nTesting ...\n')
 
 
 
@@ -306,7 +306,7 @@ for count, name in enumerate(filenames):
     # # Current status: Working code for train set
     # # TODO vary alphas and lamdas while holding n = 9
     # # TODO vary a whole bunch of stuff
-    # kernels=['linear', 'polynomial', 'sigmoid', 'rbf', 'laplacian' ]  #  chi2
+    # kernels=['linear','gaussian', 'polynomial', 'sigmoid', 'rbf', 'laplacian' ]  #  chi2
     #
     # for kernel in kernels:
     #     for n in range(1,11):
