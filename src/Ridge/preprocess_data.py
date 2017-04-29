@@ -11,7 +11,7 @@ import Volatility as vol
 import split_data as sd
 
 
-def prepreocess(name):
+def preprocess(name):
 
     # initialize some lists
 

@@ -8,12 +8,16 @@ import matplotlib.pyplot as plt
 import linear_regression as lr
 
 
-def LR(train_set, test_set, warmup_period, name,n_seq, filenames_nocsv):
-    lr_optimal_n_list = []
-    lr_mse_list = []
-    lr_ql_list = []
-    lr_lnSE_list = []
-    lr_PredVol_list = []
+def LR(train_set, test_set, warmup_period, name,n_seq, dictlist):
+    if LR.__name__ not in dictlist:
+
+        dictlist[LR.__name__] = dict()
+
+        dictlist[LR.__name__]['lr_optimal_n_list'] = []
+        dictlist[LR.__name__]['lr_mse_list'] = []
+        dictlist[LR.__name__]['lr_ql_list'] = []
+        dictlist[LR.__name__]['lr_lnSE_list'] = []
+        dictlist[LR.__name__]['lr_PredVol_list'] = []
 
     """
             Linear Regression
@@ -30,7 +34,11 @@ def LR(train_set, test_set, warmup_period, name,n_seq, filenames_nocsv):
     lrdf = pd.DataFrame([n_seq ,lr_mse_train_list] ,index=["n" ,"lr_mse_train"])
     lrdf.to_csv(str(name ) +" lr_mse_train.csv")
     n = lr_mse_train_list.index(min(lr_mse_train_list)) + 1  # add one because index starts at zero
-    lr_optimal_n_list.append(n)
+
+    # lr_optimal_n_list.append(n)
+    dictlist['LR']['lr_optimal_n_list'].append(n)
+
+
     print( "The smallest n for LR is n=" +str(n))
     figLR = plt.figure(figsize=(8, 6))
     ax_LR = figLR.add_subplot(111)
@@ -44,13 +52,26 @@ def LR(train_set, test_set, warmup_period, name,n_seq, filenames_nocsv):
                                                                                                ,name=name, test=(True, test_set))
     print( "LR(" +str(n ) + ") test MSE: " +str(MSE_LR_test ) + "; test QL: " +str(QL_LR_test))
 
-    lr_mse_list.append(MSE_LR_test)
-    lr_ql_list.append(QL_LR_test)
-    lr_lnSE_list.append(ln_SE_LR_test)
-    lr_PredVol_list.append(PredVol_LR_test)
+    # lr_mse_list.append(MSE_LR_test)
+    # lr_ql_list.append(QL_LR_test)
+    # lr_lnSE_list.append(ln_SE_LR_test)
+    # lr_PredVol_list.append(PredVol_LR_test)
+    dictlist['LR']['lr_mse_list'].append(MSE_LR_test)
+    dictlist['LR']['lr_ql_list'].append(QL_LR_test)
+    dictlist['LR']['lr_lnSE_list'].append(ln_SE_LR_test)
+    dictlist['LR']['lr_PredVol_list'].append(PredVol_LR_test)
 
-    lr_lnSE_list_df = pd.DataFrame(np.array([lr_lnSE_list[0]]), index=["lr_lnSE"]).transpose()
-    lr_PredVol_list_df = pd.DataFrame(np.array([lr_PredVol_list[0]]), index=["lr_PredVol"]).transpose()
+    lr_lnse = dictlist['LR']['lr_lnSE_list'][0]
+    lr_predvol = dictlist['LR']['lr_PredVol_list'][0]
+
+    # lr_lnSE_list_df = pd.DataFrame(np.array([lr_lnSE_list[0]]), index=["lr_lnSE"]).transpose()
+    # lr_PredVol_list_df = pd.DataFrame(np.array([lr_PredVol_list[0]]), index=["lr_PredVol"]).transpose()
+
+    lr_lnSE_list_df = pd.DataFrame(np.array([lr_lnse]), index=["lr_lnSE"]).transpose()
+    lr_PredVol_list_df = pd.DataFrame(np.array([lr_predvol]), index=["lr_PredVol"]).transpose()
+
+
+
     lr_lnSE_list_df.to_csv(str(name ) +"lr_lnSE.csv")
     lr_PredVol_list_df.to_csv(str(name ) +"lr_PredVol.csv")
     #
@@ -61,7 +82,8 @@ def LR(train_set, test_set, warmup_period, name,n_seq, filenames_nocsv):
     # lr_test_restuls_df.to_csv('LinearReg_test_MSE_QL_warmup_'+str(warmup_period)+'.csv')
 
 
-    return lr_mse_list, lr_ql_list, lr_optimal_n_list
+    # return lr_mse_list, lr_ql_list, lr_optimal_n_list
+    return dictlist
     # lr_test_restuls_df = pd.DataFrame({"LinearReg MSE":lr_mse_list,
     #                                    "LinearReg QL": lr_ql_list,
     #                                    "Optimal n": lr_optimal_n_list})

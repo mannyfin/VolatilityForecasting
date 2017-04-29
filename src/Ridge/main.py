@@ -11,11 +11,13 @@ import BayesianRegression as brr
 import KernelRidgeRegression as krr
 import matplotlib.pyplot as plt
 import numpy as np
-import preprocess_data
+from preprocess_data import preprocess
 from PaPmain import PaP
 from LRmain import LR
 import temp
 from append_lists import initialize_lists, append_outputs
+from dictstruct import Struct
+
 
 # filenames = ['AUDUSD.csv']
 filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
@@ -30,18 +32,25 @@ lr_optimal_n_list_benchmark = [3,3,3,3,3,3,3]
 n_seq = np.arange(1, 16, 1)
 lamda_seq = np.exp(np.arange(-1, 3.1, 0.2))  # for RR1 and RR2
 
-initialize_lists(pap=True)
+# initialize_lists(pap=True)
+# dictlist = Struct(dict())
+dictlist = dict()
 
 for count, name in enumerate(filenames):
-    train_set, test_set = preprocess_data(name)
+    train_set, test_set = preprocess(name)
 
     """
             PastAsPresent
     """
-    pap_mse_list, pap_ql_list = PaP(test_set, name)
+    # pap_mse_list, pap_ql_list = PaP(test_set, name, dictlist)
+    dictlist = PaP(test_set=test_set, name=name, dictlist=dictlist)
 
     """
             Linear Regression
     """
     # lr_mse_list, lr_ql_list, lr_optimal_n_list = LR(train_set, test_set, warmup_period, name,n_seq)
+    dictlist = LR(train_set=train_set, test_set=test_set, warmup_period=warmup_period, name=name,n_seq=n_seq,
+                  dictlist=dictlist)
+
+
 

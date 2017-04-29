@@ -24,7 +24,7 @@ def RR(train_set, test_set, warmup_period, name,n_seq, lamda_seq, lr_optimal_n_l
 
     """
                Ridge Regression
-       """
+    """
 
     print(str('-') * 27 + "\n\nPerforming Ridge Regression\n\n")
     print("Training ... \n")
