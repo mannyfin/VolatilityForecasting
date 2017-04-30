@@ -95,8 +95,9 @@ krr_poly_degree_list = []
 
 # vars
 warmup_period = 300
-lr_optimal_n_list_benchmark = [3,3,3,3,3,3,3]
-# lr_optimal_n_list_benchmark = [9,7,7,7,7,7,10]
+# lr_optimal_n_list_benchmark = [3,3,3,3,3,3,3]
+# lr_optimal_n_list_benchmark = [5,5,5,5,5,5,5]
+lr_optimal_n_list_benchmark = [9,7,7,7,7,7,10]
 n_seq = np.arange(1, 16, 1)
 lamda_seq = np.exp(np.arange(-1, 3.1, 0.2))  # for RR1 and RR2
 
@@ -131,8 +132,8 @@ for count, name in enumerate(filenames):
     pap_lnSE_list.append(pap_ln_SE_test)
     pap_PredVol_list.append(pap_PredVol_test)
 
-    pap_lnSE_list_df = pd.DataFrame(np.array([pap_lnSE_list[0]]), index=["pap_lnSE"]).transpose()
-    pap_PredVol_list_df = pd.DataFrame(np.array([pap_PredVol_list[0]]), index=["pap_PredVol"]).transpose()
+    pap_lnSE_list_df = pd.DataFrame(np.array([pap_lnSE_list[count]]), index=["pap_lnSE"]).transpose()
+    pap_PredVol_list_df = pd.DataFrame(np.array([pap_PredVol_list[count]]), index=["pap_PredVol"]).transpose()
     pap_lnSE_list_df.to_csv(str(name)+" pap_lnSE.csv")
     pap_PredVol_list_df.to_csv(str(name)+" pap_PredVol.csv")
 
@@ -169,8 +170,8 @@ for count, name in enumerate(filenames):
     lr_lnSE_list.append(ln_SE_LR_test)
     lr_PredVol_list.append(PredVol_LR_test)
 
-    lr_lnSE_list_df = pd.DataFrame(np.array([lr_lnSE_list[0]]), index=["lr_lnSE"]).transpose()
-    lr_PredVol_list_df = pd.DataFrame(np.array([lr_PredVol_list[0]]), index=["lr_PredVol"]).transpose()
+    lr_lnSE_list_df = pd.DataFrame(np.array([lr_lnSE_list[count]]), index=["lr_lnSE"]).transpose()
+    lr_PredVol_list_df = pd.DataFrame(np.array([lr_PredVol_list[count]]), index=["lr_PredVol"]).transpose()
     lr_lnSE_list_df.to_csv(str(name)+"lr_lnSE.csv")
     lr_PredVol_list_df.to_csv(str(name)+"lr_PredVol.csv")
 
@@ -184,8 +185,6 @@ for count, name in enumerate(filenames):
 
     # Current status: Working code for train set
 
-    # n_seq = np.arange(1,3,1)
-    # lamda_seq = np.exp(np.arange(-6.5, -5.5, 0.5))
     rr1_mse_list_all = []
     rr1_mse_list_train = []
     rr2_mse_list_all = []
@@ -204,9 +203,6 @@ for count, name in enumerate(filenames):
             rr2_mse_list_all.append(MSE_RR2)
 
             print("RR2 MSE for n="+str(n) + ' and lamda='+str(lamda)+" is: "+str(MSE_RR2))
-
-    # n = rr_mse_list_all.index(min(rr_mse_list_all)) + 1  # add one because index starts at zero
-    # print("The smallest n for RR is n="+str(n))
 
     arrays_RR1 = [np.array(['MSE', 'log_lamda'])]
     rrdf_RR1 = pd.DataFrame([np.array(rr1_mse_list_all), np.array(np.log(lamda_seq))], index=arrays_RR1).T
@@ -238,7 +234,6 @@ for count, name in enumerate(filenames):
         blah[n-1].plot(x='log_lambda', y='MSE', title=str(name)+' Ridge Regression MSE vs log lambda for n=' + str(n), figsize=(9, 6)) \
             .legend(loc="center left", bbox_to_anchor=(1, 0.5))
         plt.savefig(str(name)+' Ridge Regression MSE vs log_lambda for n=' + str(n)+'.png')
-        # minlamda.append(blah[n-1]['lamda'][blah[n-1]['MSE'].idxmin()])
 
     print('\nTesting ...\n')
     # RR test set. Use the entire training set as the fit for the test set. See code in RR.
@@ -253,8 +248,8 @@ for count, name in enumerate(filenames):
     rr1_lnSE_list.append(ln_SE_RR1_test)
     rr1_PredVol_list.append(PredVol_RR1_test)
 
-    rr1_lnSE_list_df = pd.DataFrame(np.array([rr1_lnSE_list[0]]), index=["rr1_lnSE"]).transpose()
-    rr1_PredVol_list_df = pd.DataFrame(np.array([rr1_PredVol_list[0]]), index=["rr1_PredVol"]).transpose()
+    rr1_lnSE_list_df = pd.DataFrame(np.array([rr1_lnSE_list[count]]), index=["rr1_lnSE"]).transpose()
+    rr1_PredVol_list_df = pd.DataFrame(np.array([rr1_PredVol_list[count]]), index=["rr1_PredVol"]).transpose()
     rr1_lnSE_list_df.to_csv(str(name)+" rr1_lnSE.csv")
     rr1_PredVol_list_df.to_csv(str(name)+" rr1_PredVol.csv")
 
@@ -263,8 +258,8 @@ for count, name in enumerate(filenames):
     rr2_lnSE_list.append(ln_SE_RR2_test)
     rr2_PredVol_list.append(PredVol_RR2_test)
 
-    rr2_lnSE_list_df = pd.DataFrame(np.array([rr2_lnSE_list[0]]), index=["rr2_lnSE"]).transpose()
-    rr2_PredVol_list_df = pd.DataFrame(np.array([rr2_PredVol_list[0]]), index=["rr2_PredVol"]).transpose()
+    rr2_lnSE_list_df = pd.DataFrame(np.array([rr2_lnSE_list[count]]), index=["rr2_lnSE"]).transpose()
+    rr2_PredVol_list_df = pd.DataFrame(np.array([rr2_PredVol_list[count]]), index=["rr2_PredVol"]).transpose()
     rr2_lnSE_list_df.to_csv(str(name)+" rr2_lnSE.csv")
     rr2_PredVol_list_df.to_csv(str(name)+" rr2_PredVol.csv")
 
@@ -323,17 +318,17 @@ for count, name in enumerate(filenames):
     # feel free to put a breakpoint in the line below...
     print('hi')
 
-# pap_test_restuls_df = pd.DataFrame({"PastAsPresent MSE":pap_mse_list,
-#                                      "PastAsPresent QL": pap_ql_list})
-# pap_test_restuls_df = pap_test_restuls_df.set_index(np.transpose(filenames_nocsv), drop=True)
-# pap_test_restuls_df.to_csv('PastAsPresent_test_MSE_QL.csv')
-#
-#
-# lr_test_restuls_df = pd.DataFrame({"LinearReg MSE":lr_mse_list,
-#                                    "LinearReg QL": lr_ql_list,
-#                                    "Optimal n": lr_optimal_n_list})
-# lr_test_restuls_df = lr_test_restuls_df.set_index(np.transpose(filenames_nocsv), drop=True)
-# lr_test_restuls_df.to_csv('LinearReg_test_MSE_QL_warmup_'+str(warmup_period)+'.csv')
+pap_test_restuls_df = pd.DataFrame({"PastAsPresent MSE":pap_mse_list,
+                                     "PastAsPresent QL": pap_ql_list})
+pap_test_restuls_df = pap_test_restuls_df.set_index(np.transpose(filenames_nocsv), drop=True)
+pap_test_restuls_df.to_csv('PastAsPresent_test_MSE_QL.csv')
+
+
+lr_test_restuls_df = pd.DataFrame({"LinearReg MSE":lr_mse_list,
+                                   "LinearReg QL": lr_ql_list,
+                                   "Optimal n": lr_optimal_n_list})
+lr_test_restuls_df = lr_test_restuls_df.set_index(np.transpose(filenames_nocsv), drop=True)
+lr_test_restuls_df.to_csv('LinearReg_test_MSE_QL_warmup_'+str(warmup_period)+'.csv')
 
 rr1_test_restuls_df = pd.DataFrame({"Ridge Regression1 MSE":rr1_mse_list,
                                      "Ridge Regression1 QL": rr1_ql_list,
