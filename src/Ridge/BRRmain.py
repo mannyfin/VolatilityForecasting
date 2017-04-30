@@ -20,11 +20,7 @@ def BRR(train_set, test_set, warmup_period, name, count, n_seq, dictlist, param_
     :return: dictionary list
     """
 
-<<<<<<< HEAD
     makedirs('Ridge//Results', 'BayesianRidgeRegression', name=name)
-=======
-    makedirs('Ridge//Results', '(d) BayesianRidgeRegression2', name=name)
->>>>>>> 6afa2dc12bcf67508c9b7a99b8ab3e06f5b9fb45
 
     if BRR.__name__ not in dictlist:
 
