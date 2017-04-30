@@ -9,7 +9,7 @@ from makedirs import makedirs
 
 def BRR(train_set, test_set, warmup_period, name,n_seq, dictlist, param_range1, param_range2, param_range3,param_range4):
 
-    makedirs('Ridge//Results', '(d) BayesianRidgeRegression', name=name)
+    makedirs('Ridge//Results', '(d) BayesianRidgeRegression2', name=name)
 
     if BRR.__name__ not in dictlist:
 
@@ -106,8 +106,8 @@ def BRR(train_set, test_set, warmup_period, name,n_seq, dictlist, param_range1, 
     #     rr1_optimal_log_lambda) + " test MSE: " + str(MSE_RR1_test) + "; test QL: " + str(QL_RR1_test))
     print(str(name) + " BRR1(" + str(n) + ")" + " test MSE: " + str(MSE_BRR1_test) + "; test QL: " + str(QL_BRR1_test))
 
-    brr1_lnse = dictlist[BRR.__name__]['brr1_lnSE_list'][0]
-    brr1_predvol = dictlist[BRR.__name__]['brr1_PredVol_list'][0]
+    brr1_lnse = dictlist[BRR.__name__]['brr1_lnSE_list'][count]
+    brr1_predvol = dictlist[BRR.__name__]['brr1_PredVol_list'][count]
 
     brr1_lnSE_list_df = pd.DataFrame(np.array([brr1_lnse]), index=["brr1_lnSE"]).transpose()
     brr1_PredVol_list_df = pd.DataFrame(np.array([brr1_predvol]), index=["brr1_PredVol"]).transpose()
