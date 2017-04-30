@@ -5,7 +5,7 @@ from PastAsPresent import PastAsPresent as pap
 from makedirs import makedirs
 
 
-def PaP(test_set, name, dictlist):
+def PaP(test_set, name, count, dictlist):
 
     makedirs('Ridge//Results', 'PastAsPresent', name=name)
 
@@ -35,8 +35,8 @@ def PaP(test_set, name, dictlist):
     dictlist[PaP.__name__]['pap_lnSE_list'].append(pap_ln_SE_test)
     dictlist[PaP.__name__]['pap_PredVol_list'].append(pap_PredVol_test)
 
-    paplnse = dictlist[PaP.__name__]['pap_lnSE_list'][0]
-    pap_predvol =  dictlist[PaP.__name__]['pap_PredVol_list'][0]
+    paplnse = dictlist[PaP.__name__]['pap_lnSE_list'][count]
+    pap_predvol =  dictlist[PaP.__name__]['pap_PredVol_list'][count]
     # pap_lnSE_list_df = pd.DataFrame(np.array([pap_lnSE_list[0]]), index=["pap_lnSE"]).transpose()
     # pap_PredVol_list_df = pd.DataFrame(np.array([pap_PredVol_list[0]]), index=["pap_PredVol"]).transpose()
     # pap_lnSE_list_df.to_csv(str(name ) +" pap_lnSE.csv")

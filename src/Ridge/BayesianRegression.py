@@ -28,7 +28,7 @@ def bayes_ridge_reg(data, n, warmup_period,alpha_1=1e-06, alpha_2=1e-06, lambda_
         y = LogVol[n:initial - 1]
         A = bayesian_ridge(alpha_1=alpha_1, alpha_2=alpha_2, compute_score=False,
                            copy_X=True, fit_intercept=True, lambda_1=lambda_1, lambda_2=lambda_2,
-                           normalize=False, tol=0.001, verbose=False)
+                           normalize=False, tol=0.000001, verbose=False)
 
         A.fit(xstacked, y)
         b = [A.coef_[i] for i in range(n)]

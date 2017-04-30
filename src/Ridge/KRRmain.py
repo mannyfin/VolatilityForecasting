@@ -5,9 +5,9 @@ import KernelRidgeRegression as krr
 from makedirs import makedirs
 
 
-def KRR(train_set, test_set, warmup_period, name,n_seq, dictlist, param_range=np.exp(np.arange(-17, -3, 1))):
+def KRR(train_set, test_set, warmup_period, name,count, n_seq, dictlist, param_range=np.exp(np.arange(-17, -3, 1))):
 
-    makedirs('Ridge//Results', 'BayesianRidgeRegression', name=name)
+    makedirs('Ridge//Results', 'KernelRidgeRegression', name=name)
 
     if KRR.__name__ not in dictlist:
 

@@ -8,7 +8,8 @@ import RidgeRegression as rr
 import matplotlib.pyplot as plt
 from makedirs import makedirs
 
-def RR(train_set, test_set, warmup_period, name,n_seq, lamda_seq, lr_optimal_n_list_benchmark, count, dictlist):
+
+def RR(train_set, test_set, warmup_period, name, count, n_seq, lamda_seq, lr_optimal_n_list_benchmark, dictlist):
 
     makedirs('Ridge//Results', 'RidgeRegression', name=name)
 
@@ -188,8 +189,8 @@ def RR(train_set, test_set, warmup_period, name,n_seq, lamda_seq, lr_optimal_n_l
     dictlist[RR.__name__]['rr1_lnSE_list'].append(ln_SE_RR1_test)
     dictlist[RR.__name__]['rr1_PredVol_list'].append(PredVol_RR1_test)
 
-    rr1_lnse = dictlist[RR.__name__]['rr1_lnSE_list'][0]
-    rr1_predvol = dictlist[RR.__name__]['rr1_PredVol_list'][0]
+    rr1_lnse = dictlist[RR.__name__]['rr1_lnSE_list'][count]
+    rr1_predvol = dictlist[RR.__name__]['rr1_PredVol_list'][count]
 
 
     rr1_lnSE_list_df = pd.DataFrame(np.array([rr1_lnse]), index=["rr1_lnSE"]).transpose()
@@ -203,8 +204,8 @@ def RR(train_set, test_set, warmup_period, name,n_seq, lamda_seq, lr_optimal_n_l
     dictlist[RR.__name__]['rr2_lnSE_list'].append(ln_SE_RR2_test)
     dictlist[RR.__name__]['rr2_PredVol_list'].append(PredVol_RR2_test)
 
-    rr2_lnse = dictlist[RR.__name__]['rr2_lnSE_list'][0]
-    rr2_predvol = dictlist[RR.__name__]['rr2_PredVol_list'][0]
+    rr2_lnse = dictlist[RR.__name__]['rr2_lnSE_list'][count]
+    rr2_predvol = dictlist[RR.__name__]['rr2_PredVol_list'][count]
 
     rr2_lnSE_list_df = pd.DataFrame(np.array([rr2_lnse]), index=["rr2_lnSE"]).transpose()
     rr2_PredVol_list_df = pd.DataFrame(np.array([rr2_predvol]), index=["rr2_PredVol"]).transpose()

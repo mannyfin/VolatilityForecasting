@@ -9,7 +9,7 @@ import linear_regression as lr
 from makedirs import makedirs
 
 
-def LR(train_set, test_set, warmup_period, name,n_seq, dictlist):
+def LR(train_set, test_set, warmup_period, name, count, n_seq, dictlist):
 
     makedirs('Ridge//Results', 'LinearRegression', name=name)
 
@@ -34,27 +34,26 @@ def LR(train_set, test_set, warmup_period, name,n_seq, dictlist):
         MSE = lr.lin_reg(train_set, n, warmup_period, name=name)[0]
         lr_mse_train_list.append(MSE)
 
-        print( "LR MSE for n=" +str(n ) + " is: " +str(MSE))
-    lrdf = pd.DataFrame([n_seq ,lr_mse_train_list] ,index=["n" ,"lr_mse_train"])
-    lrdf.to_csv(str(name ) +" lr_mse_train.csv")
+        print( "LR MSE for n=" + str(n ) + " is: " + str(MSE))
+    lrdf = pd.DataFrame([n_seq, lr_mse_train_list], index=["n", "lr_mse_train"])
+    lrdf.to_csv(str(name ) + " lr_mse_train.csv")
     n = lr_mse_train_list.index(min(lr_mse_train_list)) + 1  # add one because index starts at zero
 
     # lr_optimal_n_list.append(n)
     dictlist['LR']['lr_optimal_n_list'].append(n)
 
-
     print( "The smallest n for LR is n=" +str(n))
     figLR = plt.figure(figsize=(8, 6))
     ax_LR = figLR.add_subplot(111)
     ax_LR.plot(range(1, 16), lr_mse_train_list)
-    ax_LR.set(title=name.replace(".csv" ,"" ) + ' MSE vs n (warmup: ' +str(warmup_period ) + ')\noptimal n=' +str(n), xlabel='number of regressors', ylabel='MSE')
-    plt.savefig(name.replace(".csv" ,"" ) + ' LinearReg MSE vs n_warmup_' +str(warmup_period ) +'.png')
+    ax_LR.set(title=name.replace(".csv", "") + ' MSE vs n (warmup: ' + str(warmup_period ) + ')\noptimal n=' + str(n), xlabel='number of regressors', ylabel='MSE')
+    plt.savefig(name.replace(".csv", "") + ' LinearReg MSE vs n_warmup_' + str(warmup_period ) +'.png')
 
     print('\nTesting ...\n')
     # LR test set. Use the entire training set as the fit for the test set. See code in LR.
     MSE_LR_test, QL_LR_test, ln_SE_LR_test, PredVol_LR_test, b_LR_test, c_LR_test = lr.lin_reg(train_set, n, warmup_period=warmup_period
                                                                                                ,name=name, test=(True, test_set))
-    print( "LR(" +str(n ) + ") test MSE: " +str(MSE_LR_test ) + "; test QL: " +str(QL_LR_test))
+    print( "LR(" + str(n) + ") test MSE: " + str(MSE_LR_test ) + "; test QL: " + str(QL_LR_test))
 
     # lr_mse_list.append(MSE_LR_test)
     # lr_ql_list.append(QL_LR_test)
@@ -65,8 +64,8 @@ def LR(train_set, test_set, warmup_period, name,n_seq, dictlist):
     dictlist['LR']['lr_lnSE_list'].append(ln_SE_LR_test)
     dictlist['LR']['lr_PredVol_list'].append(PredVol_LR_test)
 
-    lr_lnse = dictlist['LR']['lr_lnSE_list'][0]
-    lr_predvol = dictlist['LR']['lr_PredVol_list'][0]
+    lr_lnse = dictlist['LR']['lr_lnSE_list'][count]
+    lr_predvol = dictlist['LR']['lr_PredVol_list'][count]
 
     # lr_lnSE_list_df = pd.DataFrame(np.array([lr_lnSE_list[0]]), index=["lr_lnSE"]).transpose()
     # lr_PredVol_list_df = pd.DataFrame(np.array([lr_PredVol_list[0]]), index=["lr_PredVol"]).transpose()

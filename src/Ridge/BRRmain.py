@@ -7,9 +7,20 @@ import BayesianRegression as brr
 from makedirs import makedirs
 
 
-def BRR(train_set, test_set, warmup_period, name,n_seq, dictlist, param_range1, param_range2, param_range3,param_range4):
+def BRR(train_set, test_set, warmup_period, name, count, n_seq, dictlist, param_range):
+    """
+    growing window bayesian ridge regression
+    :param train_set: 
+    :param test_set: 
+    :param warmup_period: warmup period
+    :param name: name of file w/o .csv
+    :param n_seq: for BRR1, this is a constant. for BRR2 it is a list 
+    :param dictlist: dictionary of outputs from test set
+    :param param_range: 4-tuple of parameter ranges to explore
+    :return: dictionary list
+    """
 
-    makedirs('Ridge//Results', '(d) BayesianRidgeRegression', name=name)
+    makedirs('Ridge//Results', 'BayesianRidgeRegression', name=name)
 
     if BRR.__name__ not in dictlist:
 
@@ -51,12 +62,12 @@ def BRR(train_set, test_set, warmup_period, name,n_seq, dictlist, param_range1, 
     #                 for lamda2 in np.exp(np.arange(-17, -3, 1)):
     # for n in range(1,n_seq):    #this is brr2
     n = n_seq  #just including n =const
-    mselists, alpha1list, alpha2list, lamda1list, lamda2list= [], [], [], [], []
+    mselists, alpha1list, alpha2list, lamda1list, lamda2list = [], [], [], [], []
 
-    for alpha1 in param_range1:
-        for alpha2 in param_range2:
-            for lamda1 in param_range3:
-                for lamda2 in param_range4:
+    for alpha1 in param_range[0]:
+        for alpha2 in param_range[1]:
+            for lamda1 in param_range[2]:
+                for lamda2 in param_range[3]:
                     MSE, QL, ln_SE, b, c = brr.bayes_ridge_reg(train_set, n, warmup_period, alpha_1=alpha1,
                                                                alpha_2=alpha2,
                                                                lambda_1=lamda1,
@@ -70,8 +81,8 @@ def BRR(train_set, test_set, warmup_period, name,n_seq, dictlist, param_range1, 
                     lamda1list.append(lamda1)
                     lamda2list.append(lamda2)
 
-                    print("BRR_n=" + str(n) + " MSE:" + str(MSE)+";QL:"+str(QL)+";alpha1:"+str(alpha1)+";alpha2:"+str(alpha2)
-                          + ";lamda1:" + str(lamda1) + ";lamda2:" + str(lamda2))
+                    print("BRR_n=" + str(n) + " MSE:  " + str(MSE)+"   ; QL: "+str(QL)+"  ; alpha1: "+str(alpha1) +
+                          "  ; alpha2:" + str(alpha2) + "  ; lamda1:  " + str(lamda1) + "  ; lamda2:" + str(lamda2))
 
     # find the best combo of alpha1, alpha2, lamda1, lamda2
     # n = brr_mse_list.index(min(brr_mse_list)) + 1  # add one because index starts at zero
@@ -101,19 +112,17 @@ def BRR(train_set, test_set, warmup_period, name,n_seq, dictlist, param_range1, 
     dictlist[BRR.__name__]['brr1_lnSE_list'].append(ln_SE_BRR1_test)
     dictlist[BRR.__name__]['brr1_PredVol_list'].append(PredVol_BRR1_test)
 
-
     # print(str(name) + " BRR1(" + str(lr_optimal_n_list_benchmark[count]) + ")" + "log_lamdba_" + str(
     #     rr1_optimal_log_lambda) + " test MSE: " + str(MSE_RR1_test) + "; test QL: " + str(QL_RR1_test))
+
     print(str(name) + " BRR1(" + str(n) + ")" + " test MSE: " + str(MSE_BRR1_test) + "; test QL: " + str(QL_BRR1_test))
 
-    brr1_lnse = dictlist[BRR.__name__]['brr1_lnSE_list'][0]
-    brr1_predvol = dictlist[BRR.__name__]['brr1_PredVol_list'][0]
+    brr1_lnse = dictlist[BRR.__name__]['brr1_lnSE_list'][count]
+    brr1_predvol = dictlist[BRR.__name__]['brr1_PredVol_list'][count]
 
     brr1_lnSE_list_df = pd.DataFrame(np.array([brr1_lnse]), index=["brr1_lnSE"]).transpose()
     brr1_PredVol_list_df = pd.DataFrame(np.array([brr1_predvol]), index=["brr1_PredVol"]).transpose()
     brr1_lnSE_list_df.to_csv(str(name)+" brr1_lnSE.csv")
     brr1_PredVol_list_df.to_csv(str(name)+" brr1_PredVol.csv")
-
-
 
     return dictlist
