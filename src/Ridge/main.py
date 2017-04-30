@@ -1,21 +1,14 @@
 
 
 import pandas as pd
-import linear_regression as lr
-import read_in_files as rd
-import Volatility as vol
-import split_data as sd
-from PastAsPresent import PastAsPresent as pap
-import RidgeRegression as rr
-import BayesianRegression as brr
-import KernelRidgeRegression as krr
-import matplotlib.pyplot as plt
 import numpy as np
 from preprocess_data import preprocess
 from PaPmain import PaP
 from LRmain import LR
 from RRmain import RR
 from BRRmain import BRR
+from KRRmain import KRR
+
 import makedirs
 from append_lists import initialize_lists, append_outputs
 from dictstruct import Struct
@@ -33,7 +26,7 @@ lr_optimal_n_list_benchmark = [3,3,3,3,3,3,3]
 # lr_optimal_n_list_benchmark = [9,7,7,7,7,7,10]
 n_seq = np.arange(1, 16, 1)
 lamda_seq = np.exp(np.arange(-1, 3.1, 0.2))  # for RR1 and RR2
-param_range = np.exp(np.arange(-5, -3, 1))
+param_range = np.exp(np.arange(-4, -3, 1))
 # initialize_lists(pap=True)
 # dictlist = Struct(dict())
 dictlist = dict()
@@ -63,12 +56,22 @@ for count, name in enumerate(filenames):
     #               lamda_seq=lamda_seq, lr_optimal_n_list_benchmark=lr_optimal_n_list_benchmark, count=count,
     #               dictlist=dictlist)
 
+    # """
+    #         Bayesian Ridge Regression
+    # """
+    # n = 5
+    #
+    # dictlist = BRR(train_set, test_set, warmup_period, name, n, dictlist, param_range)
+    #
     """
-            Bayesian Ridge Regression
+            Kernel Ridge Regression
     """
     n = 5
 
-    dictlist = BRR(train_set, test_set, warmup_period, name, n, dictlist, param_range)
+    dictlist = KRR(train_set, test_set, warmup_period, name, n, dictlist)
 
 
+dictlist['BRR']['brr1_mse_list']
+dictlist['BRR']['brr1_lnSE_list']
 
+print('hi')
