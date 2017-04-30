@@ -52,10 +52,10 @@ def BRR(train_set, test_set, warmup_period, name,n_seq, lamda_seq, lr_optimal_n_
     n = n_seq  #just including n =const
     mselists, alpha1list, alpha2list, lamda1list, lamda2list= [], [], [], [], []
 
-    for alpha1 in np.exp(np.arange(-4, -3, 1)):
-        for alpha2 in np.exp(np.arange(-4, -3, 1)):
-            for lamda1 in np.exp(np.arange(-4, -3, 1)):
-                for lamda2 in np.exp(np.arange(-5, -3, 1)):
+    for alpha1 in np.exp(np.arange(-17, -3, 1)):
+        for alpha2 in np.exp(np.arange(-17, -3, 1)):
+            for lamda1 in np.exp(np.arange(-17, -3, 1)):
+                for lamda2 in np.exp(np.arange(-17, -3, 1)):
                     MSE, QL, ln_SE, b, c = brr.bayes_ridge_reg(train_set, n, warmup_period, alpha_1=alpha1,
                                                                alpha_2=alpha2,
                                                                lambda_1=lamda1,
