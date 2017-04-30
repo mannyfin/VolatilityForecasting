@@ -7,9 +7,9 @@ import BayesianRegression as brr
 from makedirs import makedirs
 
 
-def BRR(train_set, test_set, warmup_period, name,n_seq, dictlist, param_range=np.exp(np.arange(-17, -3, 1))):
+def BRR(train_set, test_set, warmup_period, name,n_seq, dictlist, param_range1, param_range2, param_range3,param_range4):
 
-    makedirs('Ridge//Results', 'BayesianRidgeRegression', name=name)
+    makedirs('Ridge//Results', '(d) BayesianRidgeRegression', name=name)
 
     if BRR.__name__ not in dictlist:
 
@@ -53,10 +53,10 @@ def BRR(train_set, test_set, warmup_period, name,n_seq, dictlist, param_range=np
     n = n_seq  #just including n =const
     mselists, alpha1list, alpha2list, lamda1list, lamda2list= [], [], [], [], []
 
-    for alpha1 in param_range:
-        for alpha2 in param_range:
-            for lamda1 in param_range:
-                for lamda2 in param_range:
+    for alpha1 in param_range1:
+        for alpha2 in param_range2:
+            for lamda1 in param_range3:
+                for lamda2 in param_range4:
                     MSE, QL, ln_SE, b, c = brr.bayes_ridge_reg(train_set, n, warmup_period, alpha_1=alpha1,
                                                                alpha_2=alpha2,
                                                                lambda_1=lamda1,
@@ -70,7 +70,8 @@ def BRR(train_set, test_set, warmup_period, name,n_seq, dictlist, param_range=np
                     lamda1list.append(lamda1)
                     lamda2list.append(lamda2)
 
-                    print("BRR MSE for n=" + str(n) + " is: " + str(MSE))
+                    print("BRR_n=" + str(n) + " MSE:" + str(MSE)+";QL:"+str(QL)+";alpha1:"+str(alpha1)+";alpha2:"+str(alpha2)
+                          + ";lamda1:" + str(lamda1) + ";lamda2:" + str(lamda2))
 
     # find the best combo of alpha1, alpha2, lamda1, lamda2
     # n = brr_mse_list.index(min(brr_mse_list)) + 1  # add one because index starts at zero
