@@ -6,7 +6,8 @@ import numpy as np
 import BayesianRegression as brr
 from makedirs import makedirs
 
-def BRR(train_set, test_set, warmup_period, name,n_seq, dictlist):
+
+def BRR(train_set, test_set, warmup_period, name,n_seq, dictlist, param_range=np.exp(np.arange(-17, -3, 1))):
 
     makedirs('Ridge//Results', 'BayesianRidgeRegression', name=name)
 
@@ -52,10 +53,10 @@ def BRR(train_set, test_set, warmup_period, name,n_seq, dictlist):
     n = n_seq  #just including n =const
     mselists, alpha1list, alpha2list, lamda1list, lamda2list= [], [], [], [], []
 
-    for alpha1 in np.exp(np.arange(-17, -3, 1)):
-        for alpha2 in np.exp(np.arange(-17, -3, 1)):
-            for lamda1 in np.exp(np.arange(-17, -3, 1)):
-                for lamda2 in np.exp(np.arange(-17, -3, 1)):
+    for alpha1 in param_range:
+        for alpha2 in param_range:
+            for lamda1 in param_range:
+                for lamda2 in param_range:
                     MSE, QL, ln_SE, b, c = brr.bayes_ridge_reg(train_set, n, warmup_period, alpha_1=alpha1,
                                                                alpha_2=alpha2,
                                                                lambda_1=lamda1,
@@ -104,12 +105,12 @@ def BRR(train_set, test_set, warmup_period, name,n_seq, dictlist):
     #     rr1_optimal_log_lambda) + " test MSE: " + str(MSE_RR1_test) + "; test QL: " + str(QL_RR1_test))
     print(str(name) + " BRR1(" + str(n) + ")" + " test MSE: " + str(MSE_BRR1_test) + "; test QL: " + str(QL_BRR1_test))
 
-    rr1_lnse = dictlist[BRR.__name__]['brr1_lnSE_list'][0]
-    rr1_predvol = dictlist[BRR.__name__]['brr1_PredVol_list'][0]
+    brr1_lnse = dictlist[BRR.__name__]['brr1_lnSE_list'][0]
+    brr1_predvol = dictlist[BRR.__name__]['brr1_PredVol_list'][0]
 
-    rr1_lnSE_list_df = pd.DataFrame(np.array([rr1_lnse]), index=["rr1_lnSE"]).transpose()
-    rr1_PredVol_list_df = pd.DataFrame(np.array([rr1_predvol]), index=["rr1_PredVol"]).transpose()
-    rr1_lnSE_list_df.to_csv(str(name)+" brr1_lnSE.csv")
-    rr1_PredVol_list_df.to_csv(str(name)+" brr1_PredVol.csv")
+    brr1_lnSE_list_df = pd.DataFrame(np.array([brr1_lnse]), index=["brr1_lnSE"]).transpose()
+    brr1_PredVol_list_df = pd.DataFrame(np.array([brr1_predvol]), index=["brr1_PredVol"]).transpose()
+    brr1_lnSE_list_df.to_csv(str(name)+" brr1_lnSE.csv")
+    brr1_PredVol_list_df.to_csv(str(name)+" brr1_PredVol.csv")
 
     return dictlist

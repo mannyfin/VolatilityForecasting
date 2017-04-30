@@ -33,7 +33,7 @@ lr_optimal_n_list_benchmark = [3,3,3,3,3,3,3]
 # lr_optimal_n_list_benchmark = [9,7,7,7,7,7,10]
 n_seq = np.arange(1, 16, 1)
 lamda_seq = np.exp(np.arange(-1, 3.1, 0.2))  # for RR1 and RR2
-
+param_range = np.exp(np.arange(-5, -3, 1))
 # initialize_lists(pap=True)
 # dictlist = Struct(dict())
 dictlist = dict()
@@ -68,7 +68,7 @@ for count, name in enumerate(filenames):
     """
     n = 5
 
-    dictlist = BRR(train_set, test_set, warmup_period, name, n, dictlist)
+    dictlist = BRR(train_set, test_set, warmup_period, name, n, dictlist, param_range)
 
 
 
