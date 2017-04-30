@@ -1,17 +1,37 @@
+"""
+only do BRR1
+"""
+import pandas as pd
 import numpy as np
 import BayesianRegression as brr
+from makedirs import makedirs
 
+def BRR(train_set, test_set, warmup_period, name,n_seq, lamda_seq, lr_optimal_n_list_benchmark, count, dictlist):
 
-def BRR(train_set, test_set, warmup_period):
-    brr_mse_list = []
-    brr_ql_list = []
-    brr_lnSE_list = []
-    brr_PredVol_list = []
-    brr_optimal_n_list = []
-    brr_optimal_log_alpha1_list = []
-    brr_optimal_log_alpha2_list = []
-    brr_optimal_log_lambda1_list = []
-    brr_optimal_log_lambda2_list = []
+    makedirs('Ridge//Results', 'BayesianRidgeRegression', name=name)
+
+    if BRR.__name__ not in dictlist:
+
+        dictlist[BRR.__name__] = dict()
+
+        dictlist[BRR.__name__]['brr1_mse_list'] = []
+        dictlist[BRR.__name__]['brr1_ql_list'] = []
+        dictlist[BRR.__name__]['brr1_lnSE_list'] = []
+        dictlist[BRR.__name__]['brr1_PredVol_list'] = []
+        dictlist[BRR.__name__]['brr_optimal_log_alpha1_list'] = []
+        dictlist[BRR.__name__]['brr_optimal_log_alpha2_list'] = []
+        dictlist[BRR.__name__]['brr_optimal_log_lambda1_list'] = []
+        dictlist[BRR.__name__]['brr_optimal_log_lambda2_list'] = []
+    #
+    # brr_mse_list = []
+    # brr_ql_list = []
+    # brr_lnSE_list = []
+    # brr_PredVol_list = []
+    # brr_optimal_n_list = []
+    # brr_optimal_log_alpha1_list = []
+    # brr_optimal_log_alpha2_list = []
+    # brr_optimal_log_lambda1_list = []
+    # brr_optimal_log_lambda2_list = []
 
     """
            Bayesian Ridge Regression
@@ -21,18 +41,75 @@ def BRR(train_set, test_set, warmup_period):
     # Current status: Working code for train set
     # TODO vary alphas and lamdas while holding n = 9
     # TODO vary both n and lamdas and alphas
-    for n in range(1, 11):
-        for alpha1 in np.exp(np.arange(-17, -3, 1)):
-            for alpha2 in np.exp(np.arange(-17, -3, 1)):
-                for lamda1 in np.exp(np.arange(-17, -3, 1)):
-                    for lamda2 in np.exp(np.arange(-17, -3, 1)):
-                        MSE, QL, ln_SE, b, c = brr.bayes_ridge_reg(train_set, n, warmup_period, alpha_1=alpha1,
-                                                                   alpha_2=alpha2,
-                                                                   lambda_1=lamda1, lambda_2=lamda2, test=False)
-                        brr_mse_list.append(MSE)
 
-                        print("BRR MSE for n=" + str(n) + " is: " + str(MSE))
+    # for n in range(1, 11):   #this is brr2
+    # for n in range(n_seq):    #this is brr1
+    #     for alpha1 in np.exp(np.arange(-17, -3, 1)):
+    #         for alpha2 in np.exp(np.arange(-17, -3, 1)):
+    #             for lamda1 in np.exp(np.arange(-17, -3, 1)):
+    #                 for lamda2 in np.exp(np.arange(-17, -3, 1)):
+    # for n in range(1,n_seq):    #this is brr2
+    n = n_seq  #just including n =const
+    mselists, alpha1list, alpha2list, lamda1list, lamda2list= [], [], [], [], []
 
-    n = brr_mse_list.index(min(brr_mse_list)) + 1  # add one because index starts at zero
-    print("The smallest n for BRR is n=" + str(n))
+    for alpha1 in np.exp(np.arange(-4, -3, 1)):
+        for alpha2 in np.exp(np.arange(-4, -3, 1)):
+            for lamda1 in np.exp(np.arange(-4, -3, 1)):
+                for lamda2 in np.exp(np.arange(-5, -3, 1)):
+                    MSE, QL, ln_SE, b, c = brr.bayes_ridge_reg(train_set, n, warmup_period, alpha_1=alpha1,
+                                                               alpha_2=alpha2,
+                                                               lambda_1=lamda1,
+                                                               lambda_2=lamda2)
+                    # brr_mse_list.append(MSE)
+                    mselists.append(MSE)
+
+                    # i just use these to quickly find the optimal params later
+                    alpha1list.append(alpha1)
+                    alpha2list.append(alpha2)
+                    lamda1list.append(lamda1)
+                    lamda2list.append(lamda2)
+
+                    print("BRR MSE for n=" + str(n) + " is: " + str(MSE))
+
+    # find the best combo of alpha1, alpha2, lamda1, lamda2
+    # n = brr_mse_list.index(min(brr_mse_list)) + 1  # add one because index starts at zero
+    # Only need the line below for BRR2
+    val_idx = mselists.index(min(mselists))  # add one because index starts at zero
+
+    opt_alpha1 = alpha1list[val_idx]
+    opt_alpha2 = alpha2list[val_idx]
+    opt_lamda1 = lamda1list[val_idx]
+    opt_lamda2 = lamda2list[val_idx]
+
+    dictlist[BRR.__name__]['brr_optimal_log_alpha1_list'].append(alpha1list[val_idx])
+    dictlist[BRR.__name__]['brr_optimal_log_alpha2_list'].append(alpha2list[val_idx])
+    dictlist[BRR.__name__]['brr_optimal_log_lambda1_list'].append(lamda1list[val_idx])
+    dictlist[BRR.__name__]['brr_optimal_log_lambda2_list'].append(lamda2list[val_idx])
+    # print("The smallest n for BRR is n=" + str(n))
+
+    #
     print('\nTesting ...\n')
+    # BRR test set. Use the entire training set as the fit for the test set. See code in BRR.
+    MSE_BRR1_test, QL_BRR1_test, ln_SE_BRR1_test, PredVol_BRR1_test, b_BRR1_test, c_BRR1_test = brr.bayes_ridge_reg(
+        train_set, n, warmup_period ,alpha_1=opt_alpha1, alpha_2=opt_alpha2, lambda_1=opt_lamda1, lambda_2=opt_lamda2,
+        test=(True, test_set))
+
+    dictlist[BRR.__name__]['brr1_mse_list'].append(MSE_BRR1_test)
+    dictlist[BRR.__name__]['brr1_ql_list'].append(QL_BRR1_test)
+    dictlist[BRR.__name__]['brr1_lnSE_list'].append(ln_SE_BRR1_test)
+    dictlist[BRR.__name__]['brr1_PredVol_list'].append(PredVol_BRR1_test)
+
+
+    # print(str(name) + " BRR1(" + str(lr_optimal_n_list_benchmark[count]) + ")" + "log_lamdba_" + str(
+    #     rr1_optimal_log_lambda) + " test MSE: " + str(MSE_RR1_test) + "; test QL: " + str(QL_RR1_test))
+    print(str(name) + " BRR1(" + str(n) + ")" + " test MSE: " + str(MSE_BRR1_test) + "; test QL: " + str(QL_BRR1_test))
+
+    rr1_lnse = dictlist[BRR.__name__]['brr1_lnSE_list'][0]
+    rr1_predvol = dictlist[BRR.__name__]['brr1_PredVol_list'][0]
+
+    rr1_lnSE_list_df = pd.DataFrame(np.array([rr1_lnse]), index=["rr1_lnSE"]).transpose()
+    rr1_PredVol_list_df = pd.DataFrame(np.array([rr1_predvol]), index=["rr1_PredVol"]).transpose()
+    rr1_lnSE_list_df.to_csv(str(name)+" rr1_lnSE.csv")
+    rr1_PredVol_list_df.to_csv(str(name)+" rr1_PredVol.csv")
+
+    return dictlist

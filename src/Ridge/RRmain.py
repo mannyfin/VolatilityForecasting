@@ -143,6 +143,10 @@ def RR(train_set, test_set, warmup_period, name,n_seq, lamda_seq, lr_optimal_n_l
         plt.savefig(str(name) + ' Ridge Regression MSE vs log_lambda for n=' + str(n) + '.png')
         # minlamda.append(blah[n-1]['lamda'][blah[n-1]['MSE'].idxmin()])
 
+    """
+    Testing
+    """
+
     print('\nTesting ...\n')
     # RR test set. Use the entire training set as the fit for the test set. See code in RR.
     MSE_RR1_test, QL_RR1_test, ln_SE_RR1_test, PredVol_RR1_test, b_RR1_test, c_RR1_test = rr.ridge_reg(train_set, int(

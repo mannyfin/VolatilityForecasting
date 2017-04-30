@@ -37,6 +37,8 @@ def bayes_ridge_reg(data, n, warmup_period,alpha_1=1e-06, alpha_2=1e-06, lambda_
         # reshape data for prediction
         PredictedLogVol.append(A.predict(LogVol[initial - n: initial].values.reshape(1, -1))[0])
 
+    #     too many values to test so not worth plotting and saving all the figs of the hyperparameters
+
     if test is False:
         y = data.Volatility_Time[warmup_period:]
 
@@ -51,7 +53,12 @@ def bayes_ridge_reg(data, n, warmup_period,alpha_1=1e-06, alpha_2=1e-06, lambda_
         # SE(y, PredictedVol, dates,function_method=label)
 
         SE = [(y.values[i] - PredictedVol.values[i]) ** 2 for i in range(len(y))]
-        ln_SE = pd.Series(np.log(SE))
+
+        # I got an error saying nonetype isnt iterable below.
+        # ln_SE = pd.Series(np.log(SE))
+        ln_SE = pd.Series(SE).apply(np.log)
+
+        return MSE, QL, ln_SE, b, c
 
     elif test[0] is True:
 

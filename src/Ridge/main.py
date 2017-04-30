@@ -15,6 +15,7 @@ from preprocess_data import preprocess
 from PaPmain import PaP
 from LRmain import LR
 from RRmain import RR
+from BRRmain import BRR
 import makedirs
 from append_lists import initialize_lists, append_outputs
 from dictstruct import Struct
@@ -39,27 +40,35 @@ dictlist = dict()
 
 for count, name in enumerate(filenames):
     train_set, test_set, name = preprocess(name)
+    #
+    # """
+    #         PastAsPresent
+    # """
+    # # pap_mse_list, pap_ql_list = PaP(test_set, name, dictlist)
+    # dictlist = PaP(test_set=test_set, name=name, dictlist=dictlist)
+    #
+    # """
+    #         Linear Regression
+    # """
+    # # lr_mse_list, lr_ql_list, lr_optimal_n_list = LR(train_set, test_set, warmup_period, name,n_seq)
+    # dictlist = LR(train_set=train_set, test_set=test_set, warmup_period=warmup_period, name=name, n_seq=n_seq,
+    #               dictlist=dictlist)
+    #
+    # """
+    #         Ridge Regression
+    # """
+    # n = 5
+    #
+    # dictlist = RR(train_set=train_set, test_set=test_set, warmup_period=warmup_period, name=name,n_seq=n,
+    #               lamda_seq=lamda_seq, lr_optimal_n_list_benchmark=lr_optimal_n_list_benchmark, count=count,
+    #               dictlist=dictlist)
 
     """
-            PastAsPresent
+            Bayesian Ridge Regression
     """
-    # pap_mse_list, pap_ql_list = PaP(test_set, name, dictlist)
-    dictlist = PaP(test_set=test_set, name=name, dictlist=dictlist)
+    n = 5
 
-    """
-            Linear Regression
-    """
-    # lr_mse_list, lr_ql_list, lr_optimal_n_list = LR(train_set, test_set, warmup_period, name,n_seq)
-    dictlist = LR(train_set=train_set, test_set=test_set, warmup_period=warmup_period, name=name, n_seq=n_seq,
-                  dictlist=dictlist)
-
-    """
-            Ridge Regression
-    """
-
-    dictlist = RR(train_set=train_set, test_set=test_set, warmup_period=warmup_period, name=name,n_seq=n_seq,
-                  lamda_seq=lamda_seq, lr_optimal_n_list_benchmark=lr_optimal_n_list_benchmark, count=count,
-                  dictlist=dictlist)
+    dictlist = BRR(train_set, test_set, warmup_period, name,n, lamda_seq, lr_optimal_n_list_benchmark, count, dictlist)
 
 
 

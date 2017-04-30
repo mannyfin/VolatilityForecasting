@@ -51,6 +51,8 @@ def kernel_ridge_reg(data, n, warmup_period, alpha=1,coef0=1, degree=3, kernel='
         SE = [(y.values[i] - PredictedVol.values[i]) ** 2 for i in range(len(y))]
         ln_SE = pd.Series(np.log(SE))
 
+        return MSE, QL, ln_SE
+
     elif test[0] is True:
 
         # test[1] is the test set. First convert to log vol
@@ -81,4 +83,4 @@ def kernel_ridge_reg(data, n, warmup_period, alpha=1,coef0=1, degree=3, kernel='
         # SE = [(y.values[i] - tested_vol.values[i]) ** 2 for i in range(len(y))]
         ln_SE = pd.Series(np.log(SE))
 
-        return MSE, QL, ln_SE,tested_vol, b, c
+        return MSE, QL, ln_SE,tested_vol
