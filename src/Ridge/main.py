@@ -68,7 +68,7 @@ for count, name in enumerate(filenames):
     """
     n = 5
 
-    dictlist = BRR(train_set, test_set, warmup_period, name,n, lamda_seq, lr_optimal_n_list_benchmark, count, dictlist)
+    dictlist = BRR(train_set, test_set, warmup_period, name, n, dictlist)
 
 
 

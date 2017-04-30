@@ -6,7 +6,7 @@ import numpy as np
 import BayesianRegression as brr
 from makedirs import makedirs
 
-def BRR(train_set, test_set, warmup_period, name,n_seq, lamda_seq, lr_optimal_n_list_benchmark, count, dictlist):
+def BRR(train_set, test_set, warmup_period, name,n_seq, dictlist):
 
     makedirs('Ridge//Results', 'BayesianRidgeRegression', name=name)
 
