@@ -109,7 +109,7 @@ def BRR(train_set, test_set, warmup_period, name,n_seq, lamda_seq, lr_optimal_n_
 
     rr1_lnSE_list_df = pd.DataFrame(np.array([rr1_lnse]), index=["rr1_lnSE"]).transpose()
     rr1_PredVol_list_df = pd.DataFrame(np.array([rr1_predvol]), index=["rr1_PredVol"]).transpose()
-    rr1_lnSE_list_df.to_csv(str(name)+" rr1_lnSE.csv")
-    rr1_PredVol_list_df.to_csv(str(name)+" rr1_PredVol.csv")
+    rr1_lnSE_list_df.to_csv(str(name)+" brr1_lnSE.csv")
+    rr1_PredVol_list_df.to_csv(str(name)+" brr1_PredVol.csv")
 
     return dictlist
