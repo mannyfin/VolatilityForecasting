@@ -2,7 +2,26 @@ import pandas as pd
 import numpy as np
 
 
-def KRR_post_process(dictlist,names,kernels):
+def PaP_post_process(dictlist, names):
+    """
+            Past as Present
+    """
+    pap_test_results_df = pd.DataFrame({"PaP MSE": dictlist['PaP']['pap_mse_list'],
+                                        "PaP QL": dictlist['PaP']['pap_ql_list']})
+
+    pap_test_results_df = pap_test_results_df.set_index(np.transpose(names), drop=True)
+    pap_test_results_df.to_csv('PaP_test_MSE_QL.csv')
+
+    # lnSE to csv
+    pap_lnSE = pd.DataFrame(dictlist['PaP']['pap_lnSE_list']).T
+    pap_lnSE.to_csv('PaP_lnSE_list.csv')
+
+    # Predicted vol for each file to csv
+    pap_PredVol = pd.DataFrame(dictlist['PaP']['pap_PredVol_list']).T
+    pap_PredVol.to_csv('PaP_predictedVol.csv')
+
+
+def KRR_post_process(dictlist, names, kernels):
 
     # this is probably the list of kernels
     for kernel in kernels:
