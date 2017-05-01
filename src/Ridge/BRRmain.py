@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import BayesianRegression as brr
 from makedirs import makedirs
-
+import os
 
 def BRR(train_set, test_set, warmup_period, name, count, n_seq, dictlist, param_range):
     """
@@ -87,7 +87,7 @@ def BRR(train_set, test_set, warmup_period, name, count, n_seq, dictlist, param_
     # find the best combo of alpha1, alpha2, lamda1, lamda2
     # n = brr_mse_list.index(min(brr_mse_list)) + 1  # add one because index starts at zero
     # Only need the line below for BRR2
-    val_idx = mselists.index(min(mselists))  # add one because index starts at zero
+    val_idx = mselists.index(min(mselists))
 
     opt_alpha1 = alpha1list[val_idx]
     opt_alpha2 = alpha2list[val_idx]
@@ -124,5 +124,30 @@ def BRR(train_set, test_set, warmup_period, name, count, n_seq, dictlist, param_
     brr1_PredVol_list_df = pd.DataFrame(np.array([brr1_predvol]), index=["brr1_PredVol"]).transpose()
     brr1_lnSE_list_df.to_csv(str(name)+" brr1_lnSE.csv")
     brr1_PredVol_list_df.to_csv(str(name)+" brr1_PredVol.csv")
+
+
+    # # Post_processing
+    # os.chdir('..')
+    # # TODO add decorator to functions above to see if they were actually called
+    # """
+    #         Bayesian Ridge Regression
+    # """
+    # brr_test_restuls_df = pd.DataFrame({"BRR MSE": dictlist['BRR']['brr1_mse_list'],
+    #                                     "BRR QL": dictlist['BRR']['brr1_ql_list'],
+    #                                     "Optimal alpha1": dictlist['BRR']['brr_optimal_log_alpha1_list'],
+    #                                     "Optimal alpha2": dictlist['BRR']['brr_optimal_log_alpha2_list'],
+    #                                     "Optimal lambda1": dictlist['BRR']['brr_optimal_log_lambda1_list'],
+    #                                     "Optimal lambda2": dictlist['BRR']['brr_optimal_log_lambda2_list']})
+    #
+    # brr_test_restuls_df = brr_test_restuls_df.set_index(np.transpose(name), drop=True)
+    # brr_test_restuls_df.to_csv('BRR_test_MSE_QL.csv')
+    #
+    # # lnSE to csv for all files
+    # brr1_lnSE = pd.DataFrame(dictlist['BRR']['brr1_lnSE_list']).T
+    # brr1_lnSE.to_csv('BRR1_lnSE_list.csv')
+    #
+    # # Predicted vol for each file to csv
+    # brr1_PredVol = pd.DataFrame(dictlist['BRR']['brr1_PredVol_list']).T
+    # brr1_PredVol.to_csv('BRR1_predictedVol.csv')
 
     return dictlist

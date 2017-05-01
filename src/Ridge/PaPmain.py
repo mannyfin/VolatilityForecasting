@@ -5,7 +5,7 @@ from PastAsPresent import PastAsPresent as pap
 from makedirs import makedirs
 
 
-def PaP(test_set, name, count, dictlist):
+def PaP(test_set, train_set, name, count, dictlist):
 
     makedirs('Ridge//Results', 'PastAsPresent', name=name)
 
@@ -23,7 +23,12 @@ def PaP(test_set, name, count, dictlist):
     print(str('-') * 24 + "\n\nPerforming PastAsPresent\n\n")
 
     # PastAsPresent -- Test sample only
-    papMSE_test, papQL_test, pap_ln_SE_test ,pap_PredVol_test = pap.tn_pred_tn_plus_1(test_set)
+
+
+    # last element of train set added...................................
+    updated_test_set = pd.concat([train_set.tail(1), test_set])
+
+    papMSE_test, papQL_test, pap_ln_SE_test ,pap_PredVol_test = pap.tn_pred_tn_plus_1(updated_test_set)
     print("Past as Present MSE: " + str(papMSE_test) + "; QL: " + str(papQL_test))
 
     # pap_mse_list.append(papMSE_test)
