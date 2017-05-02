@@ -1,5 +1,5 @@
 import pandas as pd
-
+# TODO drop unnamed 0 col option if desir
 def split_data(dataframe=None, idx=1, reset_index=False):
     train = dataframe[:idx]
     test = dataframe[idx:]

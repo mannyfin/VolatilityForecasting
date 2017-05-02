@@ -32,9 +32,9 @@ os.chdir('Data')
 df.to_csv('combined_vols.csv')
 
 
-train_set, test_set = sd.split_data(dataframe=daily_vol_result, idx=910, reset_index=False)
+train_set, test_set = sd.split_data(dataframe=df, idx=910, reset_index=False)
 
-train_set.to_csv('train_set_comb.csv')
-test_set.to_csv('test_set_comb.csv')
+train_set.to_csv('train_set_comb.csv', index=False)
+test_set.to_csv('test_set_comb.csv', index=False)
 
 print('Complete')
