@@ -12,7 +12,7 @@ import os
 
 
 # filenames = ['AUDUSD.csv']
-# filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
+filenames = ['AUDUSD.csv', 'CADUSD.csv',  'CHFUSD.csv', 'EURUSD.csv', 'GBPUSD.csv', 'NOKUSD.csv', 'NZDUSD.csv']
 filenames = ['AUDUSD.csv', 'CADUSD.csv']
 # filenames_nocsv = [name.replace(".csv", "") for name in filenames]
 

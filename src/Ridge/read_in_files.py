@@ -1,3 +1,5 @@
+import pandas as pd
+import os
 
 def read_in_files(file_names, day=0, week=0, month=0):
     """
@@ -5,8 +7,6 @@ def read_in_files(file_names, day=0, week=0, month=0):
     2. separate the df into year, month, and date objects
     3. It also chunks the data by single day
     """
-    import os
-    import pandas as pd
     # change working directory to where the files are located
     # startdir = os.chdir(os.path.join(os.getenv('userprofile'), 'Desktop\\FIN580\\Homework1'))
     try:
