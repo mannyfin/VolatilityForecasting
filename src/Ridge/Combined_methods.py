@@ -484,6 +484,7 @@ def KRR(train_set, test_set, warmup_period, name, n_seq, kernels, dictlist, para
 
     for kernel in kernels:
         print("\nTraining ... \n")
+        print("Training "+ str(kernel)+" kernel...\n")
         for alpha in param_range[0]:
 
             if kernel is 'sigmoid':

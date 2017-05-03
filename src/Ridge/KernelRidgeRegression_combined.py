@@ -50,6 +50,7 @@ def kernel_ridge_reg(data, n, warmup_period, alpha=1,coef0=1, degree=3, kernel='
         # reshape data for prediction
         # PredictedLogVol.append(A.predict(LogVol.loc[initial-n : initial].values.reshape(1, -1))[0])
         PredictedLogVol.append(A.predict(predict_set.loc[initial-n: initial-1].T))
+        print(str(initial))
 
     if test is False:
         y = vol[warmup_period:]
