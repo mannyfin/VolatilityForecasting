@@ -38,7 +38,7 @@ param_range4 = np.exp(np.arange(-5, -4, 1))
 
 # for KRR
 # alpha must be a list, coef0 must be a list
-kernels = ['linear', 'polynomial', 'rbf', 'laplacian']
+kernels = ['linear'] #, 'polynomial', 'rbf', 'laplacian']
 krr_alpha = [1,2]# np.exp(np.arange(0, 3, 1))
 krr_coef0 = [1,2] #np.exp(np.arange(0, 3, 1))
 krr_degree = [2]

@@ -530,8 +530,9 @@ def KRR(train_set, test_set, warmup_period, name, n_seq, kernels, dictlist, para
 
         # at this point in the code, a specific kernel has finished its grid search. now we find the min mse values and
         # save to the dictionary and reset the lists for the next iteration
-
-        val_idx = mselist.index(min(mselist))  # add one because index starts at zero
+        mse_df = pd.concat(mselist)
+        mse_df.reset_index(drop=True)
+        val_idx = mse_df.SumMSE.idxmin()  # add one because index starts at zero
 
         # for all kernels
         opt_alpha = alphalist[val_idx]
