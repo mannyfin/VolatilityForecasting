@@ -14,8 +14,6 @@ import os
 import pandas as pd
 import numpy as np
 import BayesianRegression_combined as brr
-from makedirs import makedirs
-import os
 
 
 def PaP(test_set, train_set, name, dictlist, filenames=None):
@@ -37,17 +35,12 @@ def PaP(test_set, train_set, name, dictlist, filenames=None):
 
     # PastAsPresent -- Test sample only
 
-
     # last element of train set added...................................
     updated_test_set = pd.concat([train_set.tail(1), test_set])
 
     papMSE_test, papQL_test, pap_ln_SE_test ,pap_PredVol_test = pap.tn_pred_tn_plus_1(updated_test_set)
     print("Past as Present MSE: " + str(papMSE_test) + "; QL: " + str(papQL_test))
 
-    # pap_mse_list.append(papMSE_test)
-    # pap_ql_list.append(papQL_test)
-    # pap_lnSE_list.append(pap_ln_SE_test)
-    # pap_PredVol_list.append(pap_PredVol_test)
     dictlist[PaP.__name__]['pap_mse_list'].append(papMSE_test)
     dictlist[PaP.__name__]['pap_ql_list'].append(papQL_test)
     dictlist[PaP.__name__]['pap_lnSE_list'].append(pap_ln_SE_test)
@@ -55,19 +48,12 @@ def PaP(test_set, train_set, name, dictlist, filenames=None):
 
     paplnse = dictlist[PaP.__name__]['pap_lnSE_list']
     pap_predvol =  dictlist[PaP.__name__]['pap_PredVol_list']
-    # pap_lnSE_list_df = pd.DataFrame(np.array([pap_lnSE_list[0]]), index=["pap_lnSE"]).transpose()
-    # pap_PredVol_list_df = pd.DataFrame(np.array([pap_PredVol_list[0]]), index=["pap_PredVol"]).transpose()
-    # pap_lnSE_list_df.to_csv(str(name ) +" pap_lnSE.csv")
-    # pap_PredVol_list_df.to_csv(str(name ) +" pap_PredVol.csv")
 
-    # pap_lnSE_list_df = pd.DataFrame(np.array([paplnse]), index=["pap_lnSE"]).transpose()
     pap_lnSE_list_df = paplnse[0]
-    # pap_PredVol_list_df = pd.DataFrame(np.array([pap_predvol]), index=["pap_PredVol"]).transpose()
     pap_PredVol_list_df = pap_predvol[0]
     pap_lnSE_list_df.to_csv(str(name ) +" pap_lnSE.csv")
     pap_PredVol_list_df.to_csv(str(name ) +" pap_PredVol.csv")
 
-    # return pap_mse_list, pap_ql_list, pap_lnSE_list, pap_PredVol_list
     return dictlist
 
 
@@ -155,6 +141,9 @@ only does RR1 combined
 
 
 def RR(train_set, test_set, warmup_period,name, n_seq, lamda_seq, lr_optimal_n_list_benchmark, dictlist,filenames=None):
+    """
+    RR2 is commented out...
+    """
 
     makedirs('Ridge//Results', 'RidgeRegression', name=name)
 
@@ -442,7 +431,6 @@ def KRR(train_set, test_set, warmup_period, name, n_seq, kernels, dictlist, para
     """
     makedirs('Ridge//Results', 'KernelRidgeRegression', name=name)
     # kernels var below is for debugging...
-    # kernels = ['linear', 'polynomial', 'sigmoid', 'rbf', 'laplacian' ]  #  chi2
     # kernels = ['linear', 'polynomial', 'rbf', 'laplacian']
     # kernels = ['linear', 'polynomial']
 

@@ -32,14 +32,10 @@ def ridge_reg(data, n, warmup_period, lamda=1, name=None, test=False):
 
     predict_set = vol.apply(np.log)
 
-
-
     # use log volatility rather than volatility for linear regression model
     # LogVol = np.log(data['Volatility_Time'].astype('float64'))
 
-
     PredictedLogVol=[]
-
 
     x = [i for i in range(n)]
     # for initial in range(warmup_period, len(LogVol)):
@@ -128,24 +124,3 @@ def ridge_reg(data, n, warmup_period, lamda=1, name=None, test=False):
         ln_SE = pd.DataFrame(np.log(SE))
 
         return MSE, QL, ln_SE, tested_vol, b, c
-
-
-        #
-        # # test[1] is the test set
-        # y = test[1].Volatility_Time
-        # # take the last n predicted elements (starting from the beginning of the test set till the end)
-        # # and put them in PredictedVol
-        # PredictedVol = pd.Series(np.exp(PredictedLogVol[-len(test[1]):]))
-        # Performance_ = PerformanceMeasure()
-        # MSE = Performance_.mean_se(observed=y, prediction=PredictedVol)
-        # QL = Performance_.quasi_likelihood(observed=y.astype('float64'),
-        #                                    prediction=PredictedVol.astype('float64'))
-        #
-        # # dates = data['Date'][n:]
-        # # label=str(filename)+" "+str(stringinput)+" Linear Regression: "+str(n) + " Past Vol SE "
-        # # SE(y, PredictedVol, dates,function_method=label)
-        #
-        # SE = [(y.values[i] - PredictedVol.values[i]) ** 2 for i in range(len(y))]
-        # ln_SE = pd.Series(np.log(SE))
-        #
-        # return MSE, QL, ln_SE, PredictedVol, b, c

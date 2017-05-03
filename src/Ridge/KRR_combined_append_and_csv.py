@@ -21,11 +21,6 @@ def KRR_append_and_csv(dictlist, filename, methodname, n, kernel, MSE, QL, lnSE,
     dictlist[methodname][kernel]['krr1_lnSE_list'].append(lnSE)
     dictlist[methodname][kernel]['krr1_PredVol_list'].append(PredVol)
 
-    # print(str(name) + " BRR1(" + str(lr_optimal_n_list_benchmark[count]) + ")" + "log_lamdba_" + str(
-    #     rr1_optimal_log_lambda) + " test MSE: " + str(MSE_RR1_test) + "; test QL: " + str(QL_RR1_test))
-
-
-
     krr1_lnse = dictlist[methodname][kernel]['krr1_lnSE_list']
     krr1_predvol = dictlist[methodname][kernel]['krr1_PredVol_list']
 

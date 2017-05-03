@@ -30,11 +30,8 @@ def bayes_ridge_reg(data, n, warmup_period,alpha_1=1e-06, alpha_2=1e-06, lambda_
 
     predict_set = vol.apply(np.log)
 
-
-
     # use log volatility rather than volatility for linear regression model
     # LogVol = np.log(data['Volatility_Time'].astype('float64'))
-
 
     PredictedLogVol=[]
 
