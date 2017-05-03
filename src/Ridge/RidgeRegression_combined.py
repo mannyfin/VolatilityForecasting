@@ -1,20 +1,23 @@
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LinearRegression as lr
+from sklearn.linear_model import Ridge as ridge
 from Performance_Measure import *
 import matplotlib.pyplot as plt
 import os
 
 
-def lin_reg_comb(data, n, warmup_period, name=None, test=False):
+def ridge_reg(data, n, warmup_period, lamda=1, name=None, test=False):
     # TODO: write functions to find the optimal number of regressors n in the training set and collect MSE, QL and ln(SE) in the test set
-    # def lin_reg(data, n, filename, stringinput, warmup_period):
     """
     :param warmup_period uses a fixed window warmup period defined by the var, warmup_period
     :param data could be train_sample or test_sample
     :param n is the number of regressors
     :return: MSE, QL, ln(SE) and parameters b and c
+    lamda = L2 penalty term, in sklearn docs this is alpha
+    test: False if doing training. If you are doing testing, pass a tuple with (True, test_set) where test_set is pref
+         a dataframe.
     """
+
     param_list=[]
     # preprocess
     vol = data.copy()
@@ -48,10 +51,9 @@ def lin_reg_comb(data, n, warmup_period, name=None, test=False):
         xstacked = np.column_stack(x)
 
         y = LogVol.loc[n:initial-1]
-        # y=y.values.reshape(len(y), 1)
+        A = ridge(alpha=lamda, solver='auto')
 
-        A = lr()
-        A.fit(xstacked, y.loc[:,:])
+        A.fit(xstacked,  y.loc[:,:])
         b = [A.coef_[i] for i in range(n)]
         c = A.intercept_
 
@@ -62,16 +64,6 @@ def lin_reg_comb(data, n, warmup_period, name=None, test=False):
         # SE = (A.predict(LogVol.loc[initial-n+1 : initial].values.reshape(1, -1)) - LogVol.loc[initial]) ** 2
         param_list.append([b + [c] + [SE] ][0])
 
-    # # plot the regressors and intercept
-    # param_plot = pd.DataFrame(np.array(param_list), index=data.Date[warmup_period:],
-    #                           columns=['b' + str(count) for count, elem in enumerate(b)] + ['c'] + ['SE'])
-    #
-    # param_plot.plot(title='Regressors and Intercept for n=' + str(n), figsize=(9, 6))\
-    #           .legend(loc="center left", bbox_to_anchor=(1, 0.5))
-    # os.chdir('Ridge//Results/(b) Linear Regression')
-    # plt.savefig(str(name)+' LR('+str(n)+') regressors and SE and warmup='+str(warmup_period)+'.png')
-    # plt.close()
-    # os.chdir('../../..')
 
     if test is False:
         y = vol[warmup_period:]
@@ -91,7 +83,9 @@ def lin_reg_comb(data, n, warmup_period, name=None, test=False):
 
         return MSE, QL, ln_SE, b, c
 
+    # this should be the proper code regardless because all we need for the test set is A.predict
     elif test[0] is True:
+
         # test[1] is the test set. First convert to log vol
         test_Date = test[1].Date
 
@@ -133,7 +127,25 @@ def lin_reg_comb(data, n, warmup_period, name=None, test=False):
         # SE = [(y.values[i] - tested_vol.values[i]) ** 2 for i in range(len(y))]
         ln_SE = pd.DataFrame(np.log(SE))
 
-        return MSE, QL, ln_SE,tested_vol, b, c
+        return MSE, QL, ln_SE, tested_vol, b, c
 
 
-
+        #
+        # # test[1] is the test set
+        # y = test[1].Volatility_Time
+        # # take the last n predicted elements (starting from the beginning of the test set till the end)
+        # # and put them in PredictedVol
+        # PredictedVol = pd.Series(np.exp(PredictedLogVol[-len(test[1]):]))
+        # Performance_ = PerformanceMeasure()
+        # MSE = Performance_.mean_se(observed=y, prediction=PredictedVol)
+        # QL = Performance_.quasi_likelihood(observed=y.astype('float64'),
+        #                                    prediction=PredictedVol.astype('float64'))
+        #
+        # # dates = data['Date'][n:]
+        # # label=str(filename)+" "+str(stringinput)+" Linear Regression: "+str(n) + " Past Vol SE "
+        # # SE(y, PredictedVol, dates,function_method=label)
+        #
+        # SE = [(y.values[i] - PredictedVol.values[i]) ** 2 for i in range(len(y))]
+        # ln_SE = pd.Series(np.log(SE))
+        #
+        # return MSE, QL, ln_SE, PredictedVol, b, c

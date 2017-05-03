@@ -1,20 +1,21 @@
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LinearRegression as lr
+from sklearn.kernel_ridge import KernelRidge as krr
 from Performance_Measure import *
-import matplotlib.pyplot as plt
-import os
 
 
-def lin_reg_comb(data, n, warmup_period, name=None, test=False):
+def kernel_ridge_reg(data, n, warmup_period, alpha=1,coef0=1, degree=3, kernel='linear', test=False):
     # TODO: write functions to find the optimal number of regressors n in the training set and collect MSE, QL and ln(SE) in the test set
-    # def lin_reg(data, n, filename, stringinput, warmup_period):
     """
     :param warmup_period uses a fixed window warmup period defined by the var, warmup_period
     :param data could be train_sample or test_sample
     :param n is the number of regressors
     :return: MSE, QL, ln(SE) and parameters b and c
+    lamda = L2 penalty term, in sklearn docs this is alpha
+    test: False if doing training. If you are doing testing, pass a tuple with (True, test_set) where test_set is pref
+         a dataframe.
     """
+
     param_list=[]
     # preprocess
     vol = data.copy()
@@ -29,15 +30,9 @@ def lin_reg_comb(data, n, warmup_period, name=None, test=False):
 
     predict_set = vol.apply(np.log)
 
-
-
     # use log volatility rather than volatility for linear regression model
-    # LogVol = np.log(data['Volatility_Time'].astype('float64'))
 
-
-    PredictedLogVol=[]
-
-
+    PredictedLogVol = []
     x = [i for i in range(n)]
     # for initial in range(warmup_period, len(LogVol)):
     for initial in range(warmup_period, LogVol.last_valid_index()[0]+1):
@@ -48,30 +43,13 @@ def lin_reg_comb(data, n, warmup_period, name=None, test=False):
         xstacked = np.column_stack(x)
 
         y = LogVol.loc[n:initial-1]
-        # y=y.values.reshape(len(y), 1)
+        A = krr(alpha=alpha, coef0=coef0, degree=degree, kernel=kernel)
 
-        A = lr()
-        A.fit(xstacked, y.loc[:,:])
-        b = [A.coef_[i] for i in range(n)]
-        c = A.intercept_
+        A.fit(xstacked,  y.loc[:,:])
 
         # reshape data for prediction
         # PredictedLogVol.append(A.predict(LogVol.loc[initial-n : initial].values.reshape(1, -1))[0])
         PredictedLogVol.append(A.predict(predict_set.loc[initial-n: initial-1].T))
-        SE = (A.predict(predict_set.loc[initial-n : initial-1].T) - predict_set.loc[initial].T) ** 2
-        # SE = (A.predict(LogVol.loc[initial-n+1 : initial].values.reshape(1, -1)) - LogVol.loc[initial]) ** 2
-        param_list.append([b + [c] + [SE] ][0])
-
-    # # plot the regressors and intercept
-    # param_plot = pd.DataFrame(np.array(param_list), index=data.Date[warmup_period:],
-    #                           columns=['b' + str(count) for count, elem in enumerate(b)] + ['c'] + ['SE'])
-    #
-    # param_plot.plot(title='Regressors and Intercept for n=' + str(n), figsize=(9, 6))\
-    #           .legend(loc="center left", bbox_to_anchor=(1, 0.5))
-    # os.chdir('Ridge//Results/(b) Linear Regression')
-    # plt.savefig(str(name)+' LR('+str(n)+') regressors and SE and warmup='+str(warmup_period)+'.png')
-    # plt.close()
-    # os.chdir('../../..')
 
     if test is False:
         y = vol[warmup_period:]
@@ -89,9 +67,11 @@ def lin_reg_comb(data, n, warmup_period, name=None, test=False):
         SE = [(y.values[i] - PredictedVol.values[i]) ** 2 for i in range(len(y))]
         ln_SE = pd.DataFrame(np.log(SE))
 
-        return MSE, QL, ln_SE, b, c
+        return MSE, QL, ln_SE
+        # this should be the proper code regardless because all we need for the test set is A.predict
 
     elif test[0] is True:
+
         # test[1] is the test set. First convert to log vol
         test_Date = test[1].Date
 
@@ -100,20 +80,19 @@ def lin_reg_comb(data, n, warmup_period, name=None, test=False):
         # take log vol
         y = test_vols.apply(np.log).astype('float64')
 
-
         # y = np.log(test[1].Volatility_Time.astype('float64'))
         # take the last n predicted elements (starting from the beginning of the test set till the end)
         # and put them in PredictedVol
-        tested_vol=[]
+        tested_vol = []
         # use the last n samples of the train set for predicting the first value of the test set
         # test_set = pd.concat([LogVol[-n:],y],axis=0)
-        test_set = pd.concat([predict_set[-n:],y],axis=0).reset_index(drop=True)
+        test_set = pd.concat([predict_set[-n:], y], axis=0).reset_index(drop=True)
 
         for initial in range(0, len(y)):
-                tested_vol.append(A.predict(test_set.loc[initial: initial+n-1].T))
+            tested_vol.append(A.predict(test_set.loc[initial: initial + n - 1].T))
         # PredictedVol = pd.Series(np.exp(PredictedLogVol[-len(test[1]):]))
 
-        tested_vol = pd.DataFrame(np.exp(tested_vol),index=y.index)
+        tested_vol = pd.DataFrame(np.exp(tested_vol), index=y.index)
         y = y.apply(np.exp)
         # y = np.exp(y.reset_index().drop('index',axis=1))
         # y.drop('index',axis=1)
@@ -133,7 +112,4 @@ def lin_reg_comb(data, n, warmup_period, name=None, test=False):
         # SE = [(y.values[i] - tested_vol.values[i]) ** 2 for i in range(len(y))]
         ln_SE = pd.DataFrame(np.log(SE))
 
-        return MSE, QL, ln_SE,tested_vol, b, c
-
-
-
+        return MSE, QL, ln_SE, tested_vol

@@ -49,6 +49,8 @@ def LR(train_set, test_set, warmup_period, name, count, n_seq, dictlist):
     ax_LR.set(title=name.replace(".csv", "") + ' MSE vs n (warmup: ' + str(warmup_period ) + ')\noptimal n=' + str(n), xlabel='number of regressors', ylabel='MSE')
     plt.savefig(name.replace(".csv", "") + ' LinearReg MSE vs n_warmup_' + str(warmup_period ) +'.png')
 
+    """--------Testing--------"""
+
     print('\nTesting ...\n')
     # LR test set. Use the entire training set as the fit for the test set. See code in LR.
     MSE_LR_test, QL_LR_test, ln_SE_LR_test, PredVol_LR_test, b_LR_test, c_LR_test = lr.lin_reg(train_set, n, warmup_period=warmup_period
