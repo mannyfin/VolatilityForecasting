@@ -51,8 +51,13 @@ def KRR_post_process(dictlist, names, kernels):
             krr1_PredVol = pd.DataFrame(dictlist['KRR'][kernel]['krr1_PredVol_list']).T
             krr1_PredVol.to_csv('KRR1_predictedVol.csv')
 
+        # added during run for combine all files
+        krr_test_results = pd.concat(
+            [pd.concat(dictlist['KRR'][kernel]['krr1_mse_list']), pd.concat(dictlist['KRR'][kernel]['krr1_ql_list']),
+             pd.DataFrame({'optimal_log_alpha': dictlist['KRR'][kernel]['krr_optimal_log_alpha_list']})], join='outer')
+        krr_test_results.to_csv(str(kernel)+'_KRR_test_MSE_QL.csv')
 
-
+        # dont use the below stuff
         krr_test_results_df = krr_test_results_df.set_index(np.transpose(names), drop=True)
         krr_test_results_df.to_csv(str(kernel)+'_KRR_test_MSE_QL.csv')
 
