@@ -32,7 +32,8 @@ param_range4 = np.exp(np.arange(-5, 3, 1))
 
 # for KRR
 # alpha must be a list, coef0 must be a list
-kernels = ['linear', 'polynomial', 'rbf', 'laplacian']
+# kernels = ['linear', 'polynomial', 'rbf', 'laplacian']
+kernels = ['polynomial']
 krr_alpha = [0.5, 1, 1.5]
 krr_coef0 = [0.5, 1, 1.5]
 krr_degree = [1, 3]
@@ -45,40 +46,40 @@ os.chdir('Data')
 train_set = pd.read_csv('train_set_comb.csv')
 test_set = pd.read_csv('test_set_comb.csv')
 os.chdir('..')
-os.chdir('Ridge')
+# os.chdir('Ridge')
 
 
-
-"""
-        PastAsPresent
-"""
-dictlist = PaP(test_set=test_set, train_set=train_set, name='Combined', dictlist=dictlist, filenames=names)
-
-
-"""
-        Linear Regression
-"""
-dictlist = LR(train_set=train_set, test_set=test_set, warmup_period=warmup_period, name='Combined',
-               n_seq=n_seq, dictlist=dictlist, filenames=names)
-
-
-"""
-        Ridge Regression
-"""
-n = 5
-
-dictlist = RR(train_set=train_set, test_set=test_set, warmup_period=warmup_period, name='Combined', n_seq=n,
-              lamda_seq=lamda_seq, lr_optimal_n_list_benchmark=lr_optimal_n_list_benchmark, dictlist=dictlist, filenames=filenames)
-
-
-"""
-        Bayesian Ridge Regression
-"""
-n = 5
-
-dictlist = BRR(train_set, test_set, warmup_period=warmup_period, name='Combined', n_seq=n, dictlist=dictlist,
-               param_range=(param_range1, param_range2, param_range3, param_range4), filenames=filenames)
-
+#
+# """
+#         PastAsPresent
+# """
+# dictlist = PaP(test_set=test_set, train_set=train_set, name='Combined', dictlist=dictlist, filenames=names)
+#
+#
+# """
+#         Linear Regression
+# """
+# dictlist = LR(train_set=train_set, test_set=test_set, warmup_period=warmup_period, name='Combined',
+#                n_seq=n_seq, dictlist=dictlist, filenames=names)
+#
+#
+# """
+#         Ridge Regression
+# """
+# n = 5
+#
+# dictlist = RR(train_set=train_set, test_set=test_set, warmup_period=warmup_period, name='Combined', n_seq=n,
+#               lamda_seq=lamda_seq, lr_optimal_n_list_benchmark=lr_optimal_n_list_benchmark, dictlist=dictlist, filenames=filenames)
+#
+#
+# """
+#         Bayesian Ridge Regression
+# """
+# n = 5
+#
+# dictlist = BRR(train_set, test_set, warmup_period=warmup_period, name='Combined', n_seq=n, dictlist=dictlist,
+#                param_range=(param_range1, param_range2, param_range3, param_range4), filenames=filenames)
+#
 
 """
         Kernel Ridge Regression

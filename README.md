@@ -10,3 +10,9 @@ This package has been created to forecast currency volatility using a variety of
 7. LASSO (in R)
 8. Ordered LASSO (in R)
 git 
+
+For the final project Make sure you go to:
+
+src-> ridge -> main.py or main_combined.py
+
+The zip file in the same folder contains the final code.
