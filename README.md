@@ -20,6 +20,7 @@ The zip file in the same folder titled "FinalprojectCode.zip" contains the final
 Alternatively, you can go to the folder titled "Final Submission to find the code and a PowerPoint presentation of the results"
 
 In the final project, I explore different kinds of Ridge Regression towards predicting volatility including:
+
  0. Linear Regression (base case)
  1. Ridge Regression
  2. Keneral Ridge Regression (KRR)
