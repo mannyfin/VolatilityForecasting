@@ -24,7 +24,7 @@ lr_optimal_n_list_benchmark = 3
 n_seq = np.arange(5, 8, 1)
 # for RR
 lamda_seq =  np.exp(np.arange(-1, 0, 0.5))
-# for BRR1
+# for BRR1. We use different param_ranges here for additional flexibility in fine tuning
 param_range1 = np.exp(np.arange(-5, 3, 1))
 param_range2 = np.exp(np.arange(-5, 3, 1))
 param_range3 = np.exp(np.arange(-5, 3, 1))
@@ -48,6 +48,9 @@ test_set = pd.read_csv('test_set_comb.csv')
 os.chdir('..')
 # os.chdir('Ridge')
 
+"""
+Comment/uncomment the desired method below
+"""
 
 #
 # """
